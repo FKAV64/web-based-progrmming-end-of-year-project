@@ -15,6 +15,8 @@ import { MarketModule } from './modules/market/market.module';
 import { WatchlistModule } from './modules/watchlist/watchlist.module';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
+import { PushModule } from './modules/push/push.module';
+import { DevModule } from './modules/dev/dev.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { AlertsModule } from './modules/alerts/alerts.module';
     WatchlistModule,
     PortfolioModule,
     AlertsModule,
+    PushModule,
+    DevModule,
   ],
   controllers: [HealthController],
   providers: [

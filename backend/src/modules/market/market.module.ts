@@ -31,5 +31,6 @@ import { NewsService } from './news.service';
     SentimentService,
     NewsService,
   ],
+  exports: [CoingeckoService],
 })
 export class MarketModule {}
