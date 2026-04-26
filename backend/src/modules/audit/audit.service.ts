@@ -18,7 +18,7 @@ export class AuditService {
         userId: userId ?? null,
         ip: ip ?? null,
         userAgent: ua ?? null,
-        meta: meta ?? undefined,
+        meta: meta ? (meta as object) : undefined,
       },
     });
   }

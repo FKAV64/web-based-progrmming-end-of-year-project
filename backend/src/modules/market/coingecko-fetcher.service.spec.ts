@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CoingeckoFetcherService } from './coingecko-fetcher.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ConfigService } from '@nestjs/config';
 
 describe('CoingeckoFetcherService', () => {
   let service: CoingeckoFetcherService;
@@ -20,6 +21,7 @@ describe('CoingeckoFetcherService', () => {
         CoingeckoFetcherService,
         { provide: CACHE_MANAGER, useValue: { set: cacheSetMock } },
         { provide: EventEmitter2, useValue: { emit: emitMock } },
+        { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue('dummy_key') } },
       ],
     }).compile();
 
