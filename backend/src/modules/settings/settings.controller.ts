@@ -1,0 +1,23 @@
+import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SettingsService } from './settings.service';
+import { UpdateSettingsDto } from './dto/update-settings.dto';
+
+@UseGuards(JwtAuthGuard)
+@Controller('settings')
+export class SettingsController {
+  constructor(private readonly settingsService: SettingsService) {}
+
+  @Get()
+  async getSettings(@Req() req: Request) {
+    const userId = (req.user as { userId: string }).userId;
+    return this.settingsService.findOne(userId);
+  }
+
+  @Patch()
+  async updateSettings(@Req() req: Request, @Body() dto: UpdateSettingsDto) {
+    const userId = (req.user as { userId: string }).userId;
+    return this.settingsService.update(userId, dto);
+  }
+}
