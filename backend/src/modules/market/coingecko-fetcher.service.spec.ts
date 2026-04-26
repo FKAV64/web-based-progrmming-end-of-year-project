@@ -4,17 +4,20 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';
 
+// Mock undici at the module level
+const mockFetch = jest.fn();
+jest.mock('undici', () => ({
+  fetch: (...args: any[]) => mockFetch(...args),
+}));
+
 describe('CoingeckoFetcherService', () => {
   let service: CoingeckoFetcherService;
   let cacheSetMock: jest.Mock;
   let emitMock: jest.Mock;
-  let globalFetchMock: jest.Mock;
 
   beforeEach(async () => {
     cacheSetMock = jest.fn();
     emitMock = jest.fn();
-    globalFetchMock = jest.fn();
-    global.fetch = globalFetchMock;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -38,20 +41,20 @@ describe('CoingeckoFetcherService', () => {
 
   it('should write to Redis and emit event on success', async () => {
     const mockData = [{ id: 'bitcoin', current_price: 50000 }];
-    globalFetchMock.mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       json: async () => mockData,
     });
 
     await service['fetchAndStore']();
 
-    expect(globalFetchMock).toHaveBeenCalled();
+    expect(mockFetch).toHaveBeenCalled();
     expect(cacheSetMock).toHaveBeenCalledWith('market:top', mockData, 60_000);
     expect(emitMock).toHaveBeenCalledWith('snapshot.updated', mockData);
   });
 
-  it('should ignore 429 and not touch cache', async () => {
-    globalFetchMock.mockResolvedValue({
+  it('should not touch cache on 429', async () => {
+    mockFetch.mockResolvedValue({
       ok: false,
       status: 429,
     });

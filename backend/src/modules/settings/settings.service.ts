@@ -20,7 +20,7 @@ export class SettingsService {
       data: dto,
     });
 
-    await this.auditService.log('user.settings_changed', userId, ip, ua, dto);
+    await this.auditService.log('user.settings_changed', userId, ip, ua, dto as unknown as Record<string, unknown>);
     return result;
   }
 }

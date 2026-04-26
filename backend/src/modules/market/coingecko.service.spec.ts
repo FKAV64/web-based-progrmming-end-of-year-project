@@ -3,6 +3,10 @@ import { CoingeckoService } from './coingecko.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 
+jest.mock('undici', () => ({
+  fetch: jest.fn(),
+}));
+
 describe('CoingeckoService', () => {
   let service: CoingeckoService;
 
