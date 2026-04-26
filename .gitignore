@@ -47,3 +47,8 @@ pnpm-debug.log*
 # Database dumps
 *.sql.gz
 *.dump
+
+# Word / Office documents (binary, not useful in git diff)
+*.docx
+*.xlsx
+*.pptx
