@@ -12,6 +12,9 @@ import { UsersModule } from './modules/users/users.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { HealthController } from './modules/health/health.controller';
 import { MarketModule } from './modules/market/market.module';
+import { WatchlistModule } from './modules/watchlist/watchlist.module';
+import { PortfolioModule } from './modules/portfolio/portfolio.module';
+import { AlertsModule } from './modules/alerts/alerts.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { MarketModule } from './modules/market/market.module';
     UsersModule,
     SettingsModule,
     MarketModule,
+    WatchlistModule,
+    PortfolioModule,
+    AlertsModule,
   ],
   controllers: [HealthController],
   providers: [

@@ -18,6 +18,8 @@ export class SettingsController {
   @Patch()
   async updateSettings(@Req() req: Request, @Body() dto: UpdateSettingsDto) {
     const userId = (req.user as { userId: string }).userId;
-    return this.settingsService.update(userId, dto);
+    const ip = req.ip || req.socket?.remoteAddress;
+    const ua = req.headers['user-agent'];
+    return this.settingsService.update(userId, dto, ip, ua);
   }
 }
