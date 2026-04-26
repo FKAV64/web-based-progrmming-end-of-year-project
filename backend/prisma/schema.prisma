@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AlertCondition {
+  ABOVE
+  BELOW
+}
+
+enum Currency {
+  USD
+  EUR
+  TRY
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum Locale {
+  TR
+  EN
+}
+
+model User {
+  id              String    @id @default(uuid()) @db.Uuid
+  email           String    @unique  @db.VarChar(255)
+  passwordHash    String    @map("password_hash")  @db.VarChar(255)
+  name            String?   @db.VarChar(100)
+  role            Role      @default(USER)
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  refreshTokens   RefreshToken[]
+  watchlistItems  WatchlistItem[]
+  positions       PortfolioPosition[]
+  alerts          PriceAlert[]
+  pushSubs        PushSubscription[]
+  settings        UserSettings?
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash") @db.VarChar(255)
+  expiresAt  DateTime  @map("expires_at")
+  revokedAt  DateTime? @map("revoked_at")
+  userAgent  String?   @map("user_agent") @db.VarChar(500)
+  ip         String?   @db.VarChar(45)
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@map("refresh_tokens")
+}
+
+model WatchlistItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  coinId    String   @map("coin_id") @db.VarChar(100)
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, coinId])
+  @@map("watchlist_items")
+}
+
+model PortfolioPosition {
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @map("user_id") @db.Uuid
+  coinId        String    @map("coin_id") @db.VarChar(100)
+  quantity      Decimal   @db.Decimal(24, 8)
+  avgBuyPrice   Decimal   @map("avg_buy_price") @db.Decimal(18, 2)
+  buyCurrency   Currency  @map("buy_currency")
+  notes         String?   @db.VarChar(500)
+  closedAt      DateTime? @map("closed_at")
+  closePrice    Decimal?  @map("close_price") @db.Decimal(18, 2)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, closedAt])
+  @@map("portfolio_positions")
+}
+
+model PriceAlert {
+  id            String          @id @default(uuid()) @db.Uuid
+  userId        String          @map("user_id") @db.Uuid
+  coinId        String          @map("coin_id") @db.VarChar(100)
+  condition     AlertCondition
+  targetPrice   Decimal         @map("target_price") @db.Decimal(18, 2)
+  currency      Currency
+  triggeredAt   DateTime?       @map("triggered_at")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, triggeredAt])
+  @@index([triggeredAt])
+  @@map("price_alerts")
+}
+
+model PushSubscription {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  endpoint    String   @unique @db.VarChar(1000)
+  p256dhKey   String   @map("p256dh_key") @db.VarChar(255)
+  authKey     String   @map("auth_key") @db.VarChar(100)
+  userAgent   String?  @map("user_agent") @db.VarChar(500)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+model UserSettings {
+  userId                 String   @id @map("user_id") @db.Uuid
+  theme                  Theme    @default(SYSTEM)
+  currency               Currency @default(USD)
+  locale                 Locale   @default(TR)
+  notificationsEnabled   Boolean  @default(true) @map("notifications_enabled")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  user                   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String?  @map("user_id") @db.Uuid
+  action       String   @db.VarChar(100)
+  resourceType String?  @map("resource_type") @db.VarChar(50)
+  resourceId   String?  @map("resource_id") @db.VarChar(100)
+  ip           String?  @db.VarChar(45)
+  userAgent    String?  @map("user_agent") @db.VarChar(500)
+  meta         Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_log")
+}

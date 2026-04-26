@@ -5,7 +5,7 @@ services:
       POSTGRES_USER: crypto
       POSTGRES_PASSWORD: crypto
       POSTGRES_DB: crypto_dashboard
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
     volumes: ["pgdata:/var/lib/postgresql/data"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U crypto"]
