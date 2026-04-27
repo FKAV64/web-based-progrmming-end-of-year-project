@@ -4,7 +4,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { type Cache } from 'cache-manager';
 import { ConfigService } from '@nestjs/config';
-import { fetch } from 'undici';
 
 @Injectable()
 export class CoingeckoFetcherService implements OnApplicationBootstrap {
@@ -55,7 +54,8 @@ export class CoingeckoFetcherService implements OnApplicationBootstrap {
   private async fetchAndStore() {
     try {
       const apiKey = this.configService.get<string>('COINGECKO_API_KEY') || '';
-      const response = await this.fetchWithRetry(this.url, {
+      const fetchUrl = apiKey ? `${this.url}&x_cg_demo_api_key=${apiKey}` : this.url;
+      const response = await this.fetchWithRetry(fetchUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Accept': 'application/json, text/plain, */*',
@@ -63,7 +63,6 @@ export class CoingeckoFetcherService implements OnApplicationBootstrap {
           'Accept-Encoding': 'gzip, deflate, br',
           'Referer': 'https://www.coingecko.com/',
           'Origin': 'https://www.coingecko.com',
-          'x-cg-demo-api-key': apiKey,
         },
         signal: AbortSignal.timeout(10000),
       });

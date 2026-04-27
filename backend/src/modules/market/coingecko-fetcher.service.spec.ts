@@ -4,11 +4,8 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';
 
-// Mock undici at the module level
+// Mock global fetch (service now uses Node.js built-in fetch, not undici)
 const mockFetch = jest.fn();
-jest.mock('undici', () => ({
-  fetch: (...args: any[]) => mockFetch(...args),
-}));
 
 describe('CoingeckoFetcherService', () => {
   let service: CoingeckoFetcherService;
@@ -18,6 +15,9 @@ describe('CoingeckoFetcherService', () => {
   beforeEach(async () => {
     cacheSetMock = jest.fn();
     emitMock = jest.fn();
+
+    // Replace global fetch with our mock
+    global.fetch = mockFetch as any;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
