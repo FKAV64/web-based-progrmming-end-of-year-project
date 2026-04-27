@@ -1,0 +1,35 @@
+/* Base table styles */
+table {
+  width: 100%;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+}
+
+/* Flash Animations */
+@keyframes flashUp {
+  0% { background-color: rgba(16, 185, 129, 0.2); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flashDown {
+  0% { background-color: rgba(239, 68, 68, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.flash-up {
+  animation: flashUp 0.3s ease-out;
+}
+
+.flash-down {
+  animation: flashDown 0.3s ease-out;
+}
+
+/* Respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  .flash-up, .flash-down {
+    animation: none;
+  }
+}
