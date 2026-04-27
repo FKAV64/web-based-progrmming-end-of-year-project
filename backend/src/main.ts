@@ -39,6 +39,8 @@ async function bootstrap() {
     '/api/auth/login',
     '/api/auth/register',
     '/api/auth/refresh',
+    '/api/dev/trigger-snapshot',
+    '/api/dev/seed-market-data',
   ]);
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (csrfSkip.has(req.path)) return next();
