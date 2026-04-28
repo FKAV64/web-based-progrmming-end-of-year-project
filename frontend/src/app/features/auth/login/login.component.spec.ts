@@ -36,7 +36,7 @@ describe('LoginComponent', () => {
 
   it('shows error message when login fails', async () => {
     authMock.login.mockRejectedValue({
-      error: { error: { message: 'E-posta veya şifre hatalı.' } },
+      error: { message: 'E-posta veya şifre hatalı.' },
     });
 
     component.form.setValue({ email: 'bad@test.com', password: 'wrongpassword1' });
