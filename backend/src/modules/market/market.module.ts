@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { redisStore } from 'cache-manager-ioredis-yet';
+import { createKeyv } from '@keyv/redis';
 import { MarketController } from './market.controller';
 import { MarketSnapshotService } from './market-snapshot.service';
 import { CoingeckoFetcherService } from './coingecko-fetcher.service';
@@ -13,12 +13,13 @@ import { NewsService } from './news.service';
 @Module({
   imports: [
     CacheModule.registerAsync({
+      isGlobal: true,
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        store: await redisStore({
-          url: configService.get<string>('REDIS_URL'),
-        }),
+      useFactory: (configService: ConfigService) => ({
+        stores: [
+          createKeyv(configService.get<string>('REDIS_URL')),
+        ],
       }),
     }),
   ],
