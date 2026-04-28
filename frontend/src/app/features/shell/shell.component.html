@@ -42,6 +42,9 @@
         </div>
       </div>
 
+      <!-- WebSocket connection status -->
+      <app-connection-status [state]="ws.connectionState()"></app-connection-status>
+
       <span class="flex-1"></span>
 
       <!-- Currency selector -->

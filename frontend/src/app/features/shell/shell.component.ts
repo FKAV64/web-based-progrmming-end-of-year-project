@@ -14,6 +14,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/state/auth.service';
 import { SettingsService } from '../../core/services/state/settings.service';
 import { Currency } from '../../core/models/user.model';
+import { BINANCE_WS } from '../../core/services/ws/binance-ws.token';
+import { ConnectionStatusComponent } from '../../shared/components/connection-status/connection-status.component';
 
 interface NavItem {
   label: string;
@@ -37,12 +39,14 @@ interface NavItem {
     MatMenuModule,
     MatSelectModule,
     MatDividerModule,
+    ConnectionStatusComponent,
   ],
   templateUrl: './shell.component.html',
 })
 export class ShellComponent {
   auth = inject(AuthService);
   settings = inject(SettingsService);
+  ws = inject(BINANCE_WS);
 
   isMobile = signal(false);
   sidenavOpen = signal(true);
