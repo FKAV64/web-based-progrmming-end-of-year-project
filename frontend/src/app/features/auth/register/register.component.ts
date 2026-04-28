@@ -57,7 +57,7 @@ export class RegisterComponent {
       await this.settings.load();
       this.router.navigate(['/dashboard']);
     } catch (err: any) {
-      const msg = err?.error?.error?.message ?? 'Kayıt başarısız. Lütfen tekrar deneyin.';
+      const msg = err?.error?.message ?? 'Kayıt başarısız. Lütfen tekrar deneyin.';
       this.errorMessage.set(msg);
     } finally {
       this.loading.set(false);

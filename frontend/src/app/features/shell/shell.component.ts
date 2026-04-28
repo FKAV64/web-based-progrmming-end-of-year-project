@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/state/auth.service';
@@ -35,6 +36,7 @@ interface NavItem {
     MatButtonModule,
     MatMenuModule,
     MatSelectModule,
+    MatDividerModule,
   ],
   templateUrl: './shell.component.html',
 })

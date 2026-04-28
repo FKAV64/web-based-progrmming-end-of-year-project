@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
 import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from './app.module';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -24,6 +26,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // CSRF protection: skip the auth entry points (no session yet) and apply to
   // every other route. The token is exposed to JS via the XSRF-TOKEN cookie

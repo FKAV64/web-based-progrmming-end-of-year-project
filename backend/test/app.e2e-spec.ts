@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { HttpExceptionFilter } from './../src/common/filters/http-exception.filter';
+import { TransformInterceptor } from './../src/common/interceptors/transform.interceptor';
 
 describe('Health (e2e)', () => {
   let app: INestApplication<App>;
@@ -14,6 +16,8 @@ describe('Health (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api');
+    app.useGlobalInterceptors(new TransformInterceptor());
+    app.useGlobalFilters(new HttpExceptionFilter());
     await app.init();
   });
 
@@ -26,8 +30,8 @@ describe('Health (e2e)', () => {
       .get('/api/health')
       .expect(200)
       .expect((res) => {
-        expect(res.body.status).toBe('ok');
-        expect(typeof res.body.uptime).toBe('number');
+        expect(res.body.data.status).toBe('ok');
+        expect(typeof res.body.data.uptime).toBe('number');
       });
   });
 });

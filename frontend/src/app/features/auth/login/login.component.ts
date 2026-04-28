@@ -49,7 +49,7 @@ export class LoginComponent {
       await this.settings.load();
       this.router.navigate(['/dashboard']);
     } catch (err: any) {
-      const msg = err?.error?.error?.message ?? 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
+      const msg = err?.error?.message ?? 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
       this.errorMessage.set(msg);
     } finally {
       this.loading.set(false);

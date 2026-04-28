@@ -1,8 +1,13 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
+import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
 
 async function createApp(): Promise<INestApplication> {
   const fixture = await Test.createTestingModule({
@@ -19,6 +24,8 @@ async function createApp(): Promise<INestApplication> {
       forbidNonWhitelisted: true,
     }),
   );
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.init();
   return app;
 }
@@ -49,11 +56,11 @@ describe('Auth flow (e2e)', () => {
       .send({ email: testEmail, password: testPassword })
       .expect(201);
 
-    expect(res.body.accessToken).toBeDefined();
-    expect(res.body.user.email).toBe(testEmail);
+    expect(res.body.data.accessToken).toBeDefined();
+    expect(res.body.data.user.email).toBe(testEmail);
     expect(res.headers['set-cookie']).toBeDefined();
 
-    accessToken = res.body.accessToken as string;
+    accessToken = res.body.data.accessToken as string;
     refreshCookie = (res.headers['set-cookie'] as string[])[0];
   });
 
@@ -63,12 +70,12 @@ describe('Auth flow (e2e)', () => {
       .send({ email: testEmail, password: testPassword })
       .expect(200);
 
-    expect(res.body.accessToken).toBeDefined();
-    expect(res.body.user.email).toBe(testEmail);
+    expect(res.body.data.accessToken).toBeDefined();
+    expect(res.body.data.user.email).toBe(testEmail);
     expect(res.headers['set-cookie']).toBeDefined();
 
     // Switch to the login-issued tokens for the rest of the flow
-    accessToken = res.body.accessToken as string;
+    accessToken = res.body.data.accessToken as string;
     refreshCookie = (res.headers['set-cookie'] as string[])[0];
   });
 
@@ -78,7 +85,7 @@ describe('Auth flow (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
 
-    expect(res.body.email).toBe(testEmail);
+    expect(res.body.data.email).toBe(testEmail);
   });
 
   it('POST /api/auth/refresh with cookie → 200 with rotated accessToken', async () => {
@@ -87,12 +94,12 @@ describe('Auth flow (e2e)', () => {
       .set('Cookie', refreshCookie)
       .expect(200);
 
-    expect(res.body.accessToken).toBeDefined();
-    expect(res.body.accessToken).not.toBe(accessToken);
+    expect(res.body.data.accessToken).toBeDefined();
+    expect(res.body.data.accessToken).not.toBe(accessToken);
     expect(res.headers['set-cookie']).toBeDefined();
 
     // Carry the new tokens for subsequent tests
-    accessToken = res.body.accessToken as string;
+    accessToken = res.body.data.accessToken as string;
     refreshCookie = (res.headers['set-cookie'] as string[])[0];
   });
 
@@ -103,7 +110,7 @@ describe('Auth flow (e2e)', () => {
       .set('Cookie', refreshCookie)
       .expect(200);
 
-    expect(res.body.message).toBe('Logged out');
+    expect(res.body.data.message).toBe('Logged out');
   });
 
   it('GET /api/auth/me without token → 401', async () => {

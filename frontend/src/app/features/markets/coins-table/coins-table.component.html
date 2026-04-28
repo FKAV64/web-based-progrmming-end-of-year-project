@@ -82,12 +82,12 @@
       <ng-container matColumnDef="sparkline">
         <th mat-header-cell *matHeaderCellDef>Son 7 Gün</th>
         <td mat-cell *matCellDef="let coin" class="w-32">
-          <apx-chart *ngIf="coin.sparkline_in_7d"
-            [series]="getSparklineOptions(coin).series"
-            [chart]="getSparklineOptions(coin).chart"
-            [stroke]="getSparklineOptions(coin).stroke"
-            [colors]="getSparklineOptions(coin).colors"
-            [tooltip]="getSparklineOptions(coin).tooltip">
+          <apx-chart *ngIf="getSparklineOptions(coin.id) as spark"
+            [series]="spark.series"
+            [chart]="spark.chart"
+            [stroke]="spark.stroke"
+            [colors]="spark.colors"
+            [tooltip]="spark.tooltip">
           </apx-chart>
         </td>
       </ng-container>

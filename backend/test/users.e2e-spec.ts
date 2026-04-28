@@ -3,6 +3,8 @@ import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
+import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
 import { PrismaService } from '../src/prisma/prisma.service';
 
 async function createApp(): Promise<INestApplication> {
@@ -20,6 +22,8 @@ async function createApp(): Promise<INestApplication> {
       forbidNonWhitelisted: true,
     }),
   );
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.init();
   return app;
 }
@@ -48,9 +52,9 @@ describe('Users + Settings + KVKK (e2e)', () => {
       .send({ email: testEmail, password: testPassword, name: 'Phase 3' })
       .expect(201);
 
-    expect(res.body.accessToken).toBeDefined();
-    accessToken = res.body.accessToken as string;
-    userId = res.body.user.id as string;
+    expect(res.body.data.accessToken).toBeDefined();
+    accessToken = res.body.data.accessToken as string;
+    userId = res.body.data.user.id as string;
   });
 
   it('PATCH /api/settings → applies partial update and returns the new row', async () => {
@@ -60,11 +64,11 @@ describe('Users + Settings + KVKK (e2e)', () => {
       .send({ theme: 'DARK', currency: 'TRY', notificationsEnabled: false })
       .expect(200);
 
-    expect(res.body.theme).toBe('DARK');
-    expect(res.body.currency).toBe('TRY');
-    expect(res.body.notificationsEnabled).toBe(false);
+    expect(res.body.data.theme).toBe('DARK');
+    expect(res.body.data.currency).toBe('TRY');
+    expect(res.body.data.notificationsEnabled).toBe(false);
     // Untouched field keeps its default
-    expect(res.body.locale).toBe('TR');
+    expect(res.body.data.locale).toBe('TR');
   });
 
   it('GET /api/me → returns user with the updated settings', async () => {
@@ -73,13 +77,13 @@ describe('Users + Settings + KVKK (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
 
-    expect(res.body.id).toBe(userId);
-    expect(res.body.email).toBe(testEmail);
-    expect(res.body.name).toBe('Phase 3');
-    expect(res.body.role).toBe('USER');
-    expect(res.body.settings.theme).toBe('DARK');
-    expect(res.body.settings.currency).toBe('TRY');
-    expect(res.body).not.toHaveProperty('passwordHash');
+    expect(res.body.data.id).toBe(userId);
+    expect(res.body.data.email).toBe(testEmail);
+    expect(res.body.data.name).toBe('Phase 3');
+    expect(res.body.data.role).toBe('USER');
+    expect(res.body.data.settings.theme).toBe('DARK');
+    expect(res.body.data.settings.currency).toBe('TRY');
+    expect(res.body.data).not.toHaveProperty('passwordHash');
   });
 
   it('GET /api/me/export → returns attachment JSON with all expected keys', async () => {
