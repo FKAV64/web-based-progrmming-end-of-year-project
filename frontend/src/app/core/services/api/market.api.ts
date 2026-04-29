@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, timer } from 'rxjs';
 import { switchMap, shareReplay, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
+import { ExchangeRatesResponse } from '../../models/exchange-rate.model';
 import { BinanceInterval, CoinDetail, CoinSnapshot, OHLC } from '../../models/market.model';
 
 @Injectable({
@@ -46,8 +47,8 @@ export class MarketApiService {
       .pipe(map(r => r.data));
   }
 
-  getExchangeRates(): Observable<any> {
-    return this.http.get<{ data: any }>(`${this.baseUrl}/exchange-rates`)
+  getExchangeRates(): Observable<ExchangeRatesResponse> {
+    return this.http.get<{ data: ExchangeRatesResponse }>(`${this.baseUrl}/exchange-rates`)
       .pipe(map(r => r.data));
   }
 

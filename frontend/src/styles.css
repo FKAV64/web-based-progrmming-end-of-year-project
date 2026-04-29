@@ -5,3 +5,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.app-snackbar-error .mdc-snackbar__surface {
+  background: #7f1d1d !important;
+  color: #fff !important;
+}
+
+.app-snackbar-success .mdc-snackbar__surface {
+  background: #14532d !important;
+  color: #fff !important;
+}

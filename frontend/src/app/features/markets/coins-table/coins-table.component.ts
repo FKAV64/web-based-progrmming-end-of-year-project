@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  inject,
   OnChanges,
   SimpleChanges,
   ViewChild,
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CoinSnapshot } from '../../../core/models/market.model';
+import { WatchlistService } from '../../../core/services/state/watchlist.service';
 import { PriceChangeBadgeComponent } from '../../../shared/components/price-change-badge/price-change-badge.component';
 
 interface SparklineOptions {
@@ -66,6 +68,8 @@ interface SparklineOptions {
 })
 export class CoinsTableComponent implements OnChanges, AfterViewInit {
   @Input() coins: CoinSnapshot[] | null = null;
+
+  watchlist = inject(WatchlistService);
 
   displayedColumns: string[] = [
     'market_cap_rank',
@@ -130,6 +134,16 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
 
   getSparklineOptions(coinId: string): SparklineOptions | null {
     return this.sparklineOptions.get(coinId) ?? null;
+  }
+
+  isWatched(coinId: string): boolean {
+    return this.watchlist.has(coinId)();
+  }
+
+  toggleWatchlist(event: MouseEvent, coinId: string): void {
+    event.stopPropagation();
+    event.preventDefault();
+    void this.watchlist.toggle(coinId);
   }
 
   private updateData(newCoins: CoinSnapshot[]) {

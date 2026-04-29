@@ -3,7 +3,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CoinsTableComponent } from './coins-table.component';
 import { CoinSnapshot } from '../../../core/models/market.model';
-import { SimpleChange } from '@angular/core';
+import { SimpleChange, signal } from '@angular/core';
+import { WatchlistService } from '../../../core/services/state/watchlist.service';
 
 describe('CoinsTableComponent', () => {
   let component: CoinsTableComponent;
@@ -62,7 +63,16 @@ describe('CoinsTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CoinsTableComponent, NoopAnimationsModule, RouterTestingModule]
+      imports: [CoinsTableComponent, NoopAnimationsModule, RouterTestingModule],
+      providers: [
+        {
+          provide: WatchlistService,
+          useValue: {
+            has: jest.fn(() => signal(false)),
+            toggle: jest.fn(),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CoinsTableComponent);

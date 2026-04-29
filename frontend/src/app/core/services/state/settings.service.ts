@@ -1,14 +1,17 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { debounceTime, Subject, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SettingsApiService, UpdateSettingsDto } from '../api/settings.api';
 import { Currency, Locale, Theme, UserSettings } from '../../models/user.model';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   private api = inject(SettingsApiService);
   private doc = inject(DOCUMENT);
+  private auth = inject(AuthService);
 
   readonly theme = signal<Theme>('SYSTEM');
   readonly currency = signal<Currency>('USD');
@@ -25,10 +28,17 @@ export class SettingsService {
     ).subscribe();
 
     effect(() => this.applyTheme(this.theme()));
+    effect(() => {
+      const settings = this.auth.currentUser()?.settings;
+      if (settings) {
+        this.applySettings(settings);
+      }
+    });
   }
 
   async load(): Promise<void> {
-    this.api.get().subscribe(s => this.applySettings(s));
+    const settings = await firstValueFrom(this.api.get());
+    this.applySettings(settings);
   }
 
   setTheme(theme: Theme): void {
