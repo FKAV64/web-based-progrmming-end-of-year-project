@@ -9,6 +9,8 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { AuthService } from './core/services/state/auth.service';
+import { xsrfInterceptor } from './core/interceptors/xsrf.interceptor';
+import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 
 function initApp(auth: AuthService) {
   return () => auth.init();
@@ -20,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     importProvidersFrom(MatSnackBarModule),
     provideHttpClient(
-      withInterceptors([authInterceptor]),
+      withInterceptors([credentialsInterceptor, authInterceptor, xsrfInterceptor]),
       withXsrfConfiguration({ cookieName: 'XSRF-TOKEN', headerName: 'X-XSRF-TOKEN' }),
     ),
     {

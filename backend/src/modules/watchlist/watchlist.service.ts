@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateWatchlistItemDto } from './dto/create-watchlist-item.dto';
 import { Prisma } from '@prisma/client';
@@ -44,8 +44,7 @@ export class WatchlistService {
       },
     });
 
-    if (result.count === 0) {
-      throw new NotFoundException('Watchlist item not found');
-    }
+    // Make DELETE idempotent: if it's already gone, still return 204.
+    // This avoids noisy 404s when the UI retries or users click quickly.
   }
 }

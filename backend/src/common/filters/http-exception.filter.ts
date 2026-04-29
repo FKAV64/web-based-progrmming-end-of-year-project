@@ -41,6 +41,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
           message = payload.error;
         }
       }
+    } else if (exception && typeof exception === 'object') {
+      // Handle non-Nest errors that still carry an HTTP status (e.g. csurf ForbiddenError).
+      const maybeStatus = (exception as { status?: unknown }).status;
+      if (typeof maybeStatus === 'number') {
+        status = maybeStatus;
+      }
+      const maybeCode = (exception as { code?: unknown }).code;
+      if (typeof maybeCode === 'string') {
+        code = maybeCode;
+      } else {
+        const maybeName = (exception as { name?: unknown }).name;
+        if (typeof maybeName === 'string' && maybeName) {
+          code = maybeName;
+        }
+      }
+      const maybeMsg = (exception as { message?: unknown }).message;
+      if (typeof maybeMsg === 'string' && maybeMsg) {
+        message = maybeMsg;
+      }
     } else if (exception instanceof Error) {
       code = exception.name || code;
       if (process.env.NODE_ENV !== 'production') {

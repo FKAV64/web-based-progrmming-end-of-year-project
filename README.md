@@ -71,7 +71,7 @@
 Local development için önce Docker servislerini başlatın:
 
 ```bash
-docker compose up -d   # PostgreSQL 16 + Redis 7
+docker compose up -d   # PostgreSQL 16 + Redis 7 + Prisma migrations
 ```
 
 ## 🚀 Kurulum
@@ -95,8 +95,10 @@ cp .env.example .env
 # 3) Bağımlılıkları yükle
 npm install
 
-# 4) Veritabanını hazırla (varsa)
-# (Bu projede migration yok)
+# 4) Docker servislerini başlat
+docker compose up -d
+# PostgreSQL ayağa kalktıktan sonra Prisma migration container'ı
+# schema'yı otomatik uygular.
 
 # 5) Çalıştır
 npm start

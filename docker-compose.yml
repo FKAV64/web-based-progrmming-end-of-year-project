@@ -10,6 +10,18 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U crypto"]
       interval: 5s
+
+  prisma-migrate:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.migrator
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://crypto:crypto@postgres:5432/crypto_dashboard?schema=public
+    restart: "no"
+
   redis:
     image: redis:7-alpine
     ports: ["6379:6379"]

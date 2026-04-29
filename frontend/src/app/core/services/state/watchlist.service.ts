@@ -108,7 +108,8 @@ export class WatchlistService {
   }
 
   async toggle(coinId: string): Promise<void> {
-    if (this.has(coinId)()) {
+    const currentlyHas = this.has(coinId)();
+    if (currentlyHas) {
       await this.remove(coinId);
       return;
     }

@@ -22,6 +22,7 @@ export class WatchlistApiService {
   }
 
   remove(coinId: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${encodeURIComponent(coinId)}`);
+    const url = `${this.baseUrl}/${encodeURIComponent(coinId)}`;
+    return this.http.delete<void>(url);
   }
 }
