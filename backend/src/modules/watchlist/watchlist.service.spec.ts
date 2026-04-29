@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WatchlistService } from './watchlist.service';
-import { ConflictException, NotFoundException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 describe('WatchlistService', () => {
@@ -61,8 +61,8 @@ describe('WatchlistService', () => {
     });
   });
 
-  it('remove throws NotFoundException if item does not exist', async () => {
+  it('remove is idempotent when item does not exist', async () => {
     prismaMock.watchlistItem.deleteMany.mockResolvedValue({ count: 0 });
-    await expect(service.remove('user-1', 'bitcoin')).rejects.toThrow(NotFoundException);
+    await expect(service.remove('user-1', 'bitcoin')).resolves.toBeUndefined();
   });
 });
