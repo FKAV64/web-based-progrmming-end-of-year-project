@@ -38,3 +38,44 @@ export interface OHLC {
   low: number;
   close: number;
 }
+
+export type BinanceInterval = '1m' | '5m' | '15m' | '30m' | '1h' | '4h' | '1d' | '1w' | '1M';
+
+export type ChartType = 'candle' | 'line' | 'area';
+
+export interface TimeframeOption {
+  label: string;
+  interval: BinanceInterval;
+  limit: number;
+}
+
+export interface CoinDetailMarketData {
+  current_price?: Record<string, number>;
+  market_cap?: Record<string, number>;
+  market_cap_rank?: number;
+  total_volume?: Record<string, number>;
+  high_24h?: Record<string, number>;
+  low_24h?: Record<string, number>;
+  price_change_24h?: number;
+  price_change_percentage_24h?: number;
+  ath?: Record<string, number>;
+  ath_date?: Record<string, string>;
+  atl?: Record<string, number>;
+  atl_date?: Record<string, string>;
+  circulating_supply?: number;
+  total_supply?: number;
+  max_supply?: number;
+}
+
+export interface CoinDetail {
+  id: string;
+  symbol: string;
+  name: string;
+  image?: {
+    thumb?: string;
+    small?: string;
+    large?: string;
+  };
+  market_cap_rank?: number;
+  market_data?: CoinDetailMarketData;
+}

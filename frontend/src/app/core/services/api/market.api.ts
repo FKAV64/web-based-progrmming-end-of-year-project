@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, timer } from 'rxjs';
 import { switchMap, shareReplay, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { CoinSnapshot, OHLC } from '../../models/market.model';
+import { BinanceInterval, CoinDetail, CoinSnapshot, OHLC } from '../../models/market.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +23,13 @@ export class MarketApiService {
       .pipe(map(r => r.data));
   }
 
-  getCoin(id: string): Observable<any> {
-    return this.http.get<{ data: any }>(`${this.baseUrl}/coin/${id}`)
+  getCoin(id: string): Observable<CoinDetail> {
+    return this.http.get<{ data: CoinDetail }>(`${this.baseUrl}/coin/${encodeURIComponent(id)}`)
       .pipe(map(r => r.data));
   }
 
-  getKlines(symbol: string, interval: string, limit?: number): Observable<OHLC[]> {
-    let url = `${this.baseUrl}/ohlc/${symbol}?interval=${interval}`;
+  getKlines(symbol: string, interval: BinanceInterval, limit?: number): Observable<OHLC[]> {
+    let url = `${this.baseUrl}/ohlc/${encodeURIComponent(symbol)}?interval=${encodeURIComponent(interval)}`;
     if (limit) {
       url += `&limit=${limit}`;
     }

@@ -35,7 +35,7 @@ export const routes: Routes = [
       {
         path: 'coin/:id',
         loadComponent: () =>
-          import('./features/markets/markets.component').then(m => m.MarketsComponent),
+          import('./features/coin-detail/coin-detail.component').then(m => m.CoinDetailComponent),
       },
       {
         path: 'watchlist',

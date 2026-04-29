@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable, merge } from 'rxjs';
 import {
@@ -28,6 +28,7 @@ function buildInitialMap(coins: CoinSnapshot[]): Map<string, CoinSnapshot> {
 export class PriceStreamService {
   private market = inject(MarketApiService);
   private ws = inject(BINANCE_WS);
+  private injector = inject(Injector);
 
   topCoins$: Observable<CoinSnapshot[]> = this.market.topCoins$.pipe(
     switchMap(coins => {
@@ -56,11 +57,13 @@ export class PriceStreamService {
     shareReplay(1),
   );
 
-  priceFor(sym: string) {
+  priceFor(sym: string, injector: Injector = this.injector) {
+    const target = sym.toUpperCase();
     return toSignal(
       this.topCoins$.pipe(
-        map(coins => coins.find(c => c.symbol === sym)),
+        map(coins => coins.find(c => c.symbol.toUpperCase() === target)),
       ),
+      { injector },
     );
   }
 }
