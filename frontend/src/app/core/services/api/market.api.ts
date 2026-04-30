@@ -4,7 +4,7 @@ import { Observable, timer } from 'rxjs';
 import { switchMap, shareReplay, map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ExchangeRatesResponse } from '../../models/exchange-rate.model';
-import { BinanceInterval, CoinDetail, CoinSnapshot, OHLC } from '../../models/market.model';
+import { BinanceInterval, CoinDetail, CoinSnapshot, NewsItem, OHLC, SentimentResponse } from '../../models/market.model';
 
 @Injectable({
   providedIn: 'root'
@@ -52,13 +52,13 @@ export class MarketApiService {
       .pipe(map(r => r.data));
   }
 
-  getSentiment(): Observable<any> {
-    return this.http.get<{ data: any }>(`${this.baseUrl}/sentiment`)
+  getSentiment(): Observable<SentimentResponse> {
+    return this.http.get<{ data: SentimentResponse }>(`${this.baseUrl}/sentiment`)
       .pipe(map(r => r.data));
   }
 
-  getNews(): Observable<any> {
-    return this.http.get<{ data: any }>(`${this.baseUrl}/news`)
+  getNews(): Observable<NewsItem[]> {
+    return this.http.get<{ data: NewsItem[] }>(`${this.baseUrl}/news`)
       .pipe(map(r => r.data));
   }
 }

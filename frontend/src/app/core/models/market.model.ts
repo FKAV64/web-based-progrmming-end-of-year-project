@@ -79,3 +79,25 @@ export interface CoinDetail {
   market_cap_rank?: number;
   market_data?: CoinDetailMarketData;
 }
+
+export type NewsSentiment = 'bullish' | 'bearish' | 'neutral';
+
+export interface NewsItem {
+  title: string;
+  link: string;
+  pubDate: string;
+  source: string;
+  sentiment: NewsSentiment;
+}
+
+export interface SentimentDataPoint {
+  value: string;
+  classification: string;
+  timestamp: string;
+}
+
+export interface SentimentResponse {
+  name: string;
+  data: SentimentDataPoint[];
+  metadata: { error: string | null };
+}

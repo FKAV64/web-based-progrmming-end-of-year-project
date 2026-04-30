@@ -34,7 +34,7 @@
       <ng-container matColumnDef="current_price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fiyat</th>
         <td mat-cell *matCellDef="let coin" class="font-medium">
-          {{coin.current_price | currency:'USD':'symbol':'1.2-6'}}
+          {{ coin.current_price | currencyConverter: settings.currency() : er.rates() : settings.locale() : 2 : 6 }}
         </td>
       </ng-container>
 
@@ -66,7 +66,7 @@
       <ng-container matColumnDef="market_cap">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Piyasa Değeri</th>
         <td mat-cell *matCellDef="let coin" class="text-gray-500">
-          {{coin.market_cap | currency:'USD':'symbol':'1.0-0'}}
+          {{ coin.market_cap | currencyConverter: settings.currency() : er.rates() : settings.locale() : 0 : 0 }}
         </td>
       </ng-container>
 
@@ -74,7 +74,7 @@
       <ng-container matColumnDef="total_volume">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Hacim (24s)</th>
         <td mat-cell *matCellDef="let coin" class="text-gray-500">
-          {{coin.total_volume | currency:'USD':'symbol':'1.0-0'}}
+          {{ coin.total_volume | currencyConverter: settings.currency() : er.rates() : settings.locale() : 0 : 0 }}
         </td>
       </ng-container>
 

@@ -20,7 +20,10 @@ import { RouterModule } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CoinSnapshot } from '../../../core/models/market.model';
 import { WatchlistService } from '../../../core/services/state/watchlist.service';
+import { SettingsService } from '../../../core/services/state/settings.service';
+import { ExchangeRatesService } from '../../../core/services/state/exchange-rates.service';
 import { PriceChangeBadgeComponent } from '../../../shared/components/price-change-badge/price-change-badge.component';
+import { CurrencyConverterPipe } from '../../../shared/pipes/currency-converter.pipe';
 
 interface SparklineOptions {
   series: { data: number[] }[];
@@ -61,6 +64,7 @@ interface SparklineOptions {
     RouterModule,
     NgApexchartsModule,
     PriceChangeBadgeComponent,
+    CurrencyConverterPipe,
   ],
   templateUrl: './coins-table.component.html',
   styleUrls: ['./coins-table.component.css'],
@@ -70,6 +74,8 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
   @Input() coins: CoinSnapshot[] | null = null;
 
   watchlist = inject(WatchlistService);
+  settings = inject(SettingsService);
+  er = inject(ExchangeRatesService);
 
   displayedColumns: string[] = [
     'market_cap_rank',

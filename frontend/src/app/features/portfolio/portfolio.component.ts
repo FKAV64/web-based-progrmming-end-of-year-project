@@ -10,10 +10,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ApexNonAxisChartSeries, ApexChart, ApexLegend, ApexResponsive } from 'ng-apexcharts';
 import { PortfolioPosition, UpdatePortfolioPositionDto } from '../../core/models/portfolio.model';
-import { Currency, Locale } from '../../core/models/user.model';
-import { PortfolioService } from '../../core/services/state/portfolio.service';
+import { PortfolioService, PortfolioPositionView } from '../../core/services/state/portfolio.service';
 import { SettingsService } from '../../core/services/state/settings.service';
 import { PriceChangeBadgeComponent } from '../../shared/components/price-change-badge/price-change-badge.component';
+import { CurrencyConverterPipe } from '../../shared/pipes/currency-converter.pipe';
 import { AddPositionDialogComponent } from './dialogs/add-position-dialog.component';
 import { ClosePositionDialogComponent } from './dialogs/close-position-dialog.component';
 import { EditPositionDialogComponent } from './dialogs/edit-position-dialog.component';
@@ -40,6 +40,7 @@ interface AllocationChartOptions {
     MatTabsModule,
     NgApexchartsModule,
     PriceChangeBadgeComponent,
+    CurrencyConverterPipe,
   ],
   template: `
     <div class="min-h-full bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
@@ -64,7 +65,7 @@ interface AllocationChartOptions {
           <mat-card-content class="space-y-2 p-5">
             <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Deger</div>
             <div class="text-2xl font-semibold text-gray-950 dark:text-white">
-              {{ formatCurrency(portfolio.totalValue()) }}
+              {{ portfolio.totalValue() | currencyConverter: settings.currency() : null : settings.locale() }}
             </div>
           </mat-card-content>
         </mat-card>
@@ -73,7 +74,7 @@ interface AllocationChartOptions {
           <mat-card-content class="space-y-2 p-5">
             <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Maliyet</div>
             <div class="text-2xl font-semibold text-gray-950 dark:text-white">
-              {{ formatCurrency(portfolio.totalCost()) }}
+              {{ portfolio.totalCost() | currencyConverter: settings.currency() : null : settings.locale() }}
             </div>
           </mat-card-content>
         </mat-card>
@@ -82,7 +83,7 @@ interface AllocationChartOptions {
           <mat-card-content class="space-y-2 p-5">
             <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Kar/Zarar</div>
             <div class="text-2xl font-semibold" [class.text-emerald-500]="portfolio.totalPnL() >= 0" [class.text-red-500]="portfolio.totalPnL() < 0">
-              {{ formatCurrency(portfolio.totalPnL()) }}
+              {{ portfolio.totalPnL() | currencyConverter: settings.currency() : null : settings.locale() }}
             </div>
           </mat-card-content>
         </mat-card>
@@ -133,17 +134,17 @@ interface AllocationChartOptions {
                           {{ formatNumber(row.quantity, 8) }}
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
-                          {{ formatCurrency(row.avgBuyPriceConverted) }}
+                          {{ row.avgBuyPriceConverted | currencyConverter: settings.currency() : null : settings.locale() }}
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
-                          {{ row.currentPriceConverted !== null ? formatCurrency(row.currentPriceConverted) : '-' }}
+                          {{ row.currentPriceConverted | currencyConverter: settings.currency() : null : settings.locale() }}
                         </td>
                         <td class="px-4 py-4 text-sm font-semibold text-gray-950 dark:text-white">
-                          {{ formatCurrency(row.currentValue) }}
+                          {{ row.currentValue | currencyConverter: settings.currency() : null : settings.locale() }}
                         </td>
                         <td class="px-4 py-4 text-sm">
                           <div class="font-semibold" [class.text-emerald-500]="row.pnl >= 0" [class.text-red-500]="row.pnl < 0">
-                            {{ formatCurrency(row.pnl) }}
+                            {{ row.pnl | currencyConverter: settings.currency() : null : settings.locale() }}
                           </div>
                           <div class="mt-1">
                             <app-price-change-badge [percentage]="row.pnlPercent"></app-price-change-badge>
@@ -202,13 +203,13 @@ interface AllocationChartOptions {
                           {{ formatNumber(row.quantity, 8) }}
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
-                          {{ formatCurrency(row.totalCost) }}
+                          {{ row.totalCost | currencyConverter: settings.currency() : null : settings.locale() }}
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
-                          {{ row.closePriceConverted !== null ? formatCurrency(row.closePriceConverted) : '-' }}
+                          {{ row.closePriceConverted | currencyConverter: settings.currency() : null : settings.locale() }}
                         </td>
                         <td class="px-4 py-4 text-sm font-semibold" [class.text-emerald-500]="(row.closeValue ?? 0) - row.totalCost >= 0" [class.text-red-500]="(row.closeValue ?? 0) - row.totalCost < 0">
-                          {{ row.closeValue !== null ? formatCurrency(row.closeValue - row.totalCost) : '-' }}
+                          {{ closedPnl(row) | currencyConverter: settings.currency() : null : settings.locale() }}
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
                           {{ formatDate(row.position.closedAt) }}
@@ -368,12 +369,8 @@ export class PortfolioComponent {
     void this.portfolio.remove(id);
   }
 
-  formatCurrency(value: number, currency: Currency = this.settings.currency()): string {
-    return new Intl.NumberFormat(this.localeCode(), {
-      style: 'currency',
-      currency,
-      maximumFractionDigits: 2,
-    }).format(value);
+  closedPnl(row: PortfolioPositionView): number | null {
+    return row.closeValue !== null ? row.closeValue - row.totalCost : null;
   }
 
   formatNumber(value: number, maxDigits = 2): string {
