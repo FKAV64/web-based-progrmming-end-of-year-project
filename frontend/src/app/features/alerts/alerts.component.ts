@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AlertsService } from '../../core/services/state/alerts.service';
 import { SettingsService } from '../../core/services/state/settings.service';
+import { PushService } from '../../core/services/push.service';
 import { CreateAlertDialogComponent } from './create-alert-dialog.component';
 
 @Component({
@@ -128,6 +129,7 @@ import { CreateAlertDialogComponent } from './create-alert-dialog.component';
 export class AlertsComponent {
   alerts = inject(AlertsService);
   settings = inject(SettingsService);
+  push = inject(PushService);
 
   private dialog = inject(MatDialog);
 
@@ -146,7 +148,15 @@ export class AlertsComponent {
     );
 
     if (result) {
+      const isFirstAlert = this.alerts.active().length === 0;
       await this.alerts.add(result);
+
+      if (isFirstAlert && this.push.state() === 'default') {
+        await this.push.requestPermission();
+        if (this.push.state() === 'granted') {
+          await this.push.subscribe();
+        }
+      }
     }
   }
 

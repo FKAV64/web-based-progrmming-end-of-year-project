@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
       deps: [AuthService],
       multi: true,
     },
-    provideServiceWorker('ngsw-worker.js', {
+    provideServiceWorker('combined-sw.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
