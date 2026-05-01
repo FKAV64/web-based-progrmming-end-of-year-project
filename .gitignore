@@ -53,6 +53,10 @@ pnpm-debug.log*
 *.xlsx
 *.pptx
 
+# Playwright
+playwright-report/
+test-results/
+
 # Graphify
 graphify-out/
 .claude/settings.json
