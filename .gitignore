@@ -57,3 +57,5 @@ pnpm-debug.log*
 graphify-out/
 .claude/settings.json
 CLAUDE.md
+graphify_query.py
+graphify_query.py
