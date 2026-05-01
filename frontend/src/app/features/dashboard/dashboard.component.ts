@@ -31,7 +31,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
   ],
   template: `
     <div class="min-h-full bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
-      <h1 class="mb-6 text-3xl font-semibold tracking-tight text-gray-950 dark:text-white">
+      <h1 class="mb-6 text-3xl font-semibold tracking-tight text-gray-950 dark:text-white" i18n="@@dashboard.title">
         Dashboard
       </h1>
 
@@ -44,7 +44,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-300">
                 <mat-icon>account_balance_wallet</mat-icon>
               </div>
-              <div class="text-sm text-gray-500 dark:text-gray-400">Portföy Değeri</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@dashboard.portfolio-value">Portföy Değeri</div>
             </div>
             <div class="mt-3 text-2xl font-bold text-gray-950 dark:text-white">
               {{
@@ -52,7 +52,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                   | currencyConverter: settings.currency() : er.rates() : settings.locale()
               }}
             </div>
-            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400" i18n="@@dashboard.active-positions">
               {{ portfolio.activeRows().length }} aktif pozisyon
             </div>
           </mat-card-content>
@@ -65,7 +65,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300">
                 <mat-icon>trending_up</mat-icon>
               </div>
-              <div class="text-sm text-gray-500 dark:text-gray-400">En Çok Yükselen (24s)</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@dashboard.top-gainer">En Çok Yükselen (24s)</div>
             </div>
             <ng-container *ngIf="topGainer() as coin; else kpiSkeleton">
               <a [routerLink]="['/coin', coin.id]" class="mt-3 flex items-center gap-2">
@@ -95,7 +95,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/60 dark:text-red-300">
                 <mat-icon>trending_down</mat-icon>
               </div>
-              <div class="text-sm text-gray-500 dark:text-gray-400">En Çok Düşen (24s)</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@dashboard.top-loser">En Çok Düşen (24s)</div>
             </div>
             <ng-container *ngIf="topLoser() as coin; else kpiSkeleton2">
               <a [routerLink]="['/coin', coin.id]" class="mt-3 flex items-center gap-2">
@@ -124,7 +124,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
         <!-- Fear & Greed Gauge -->
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="p-5">
-            <div class="mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400">Korku & Açgözlülük</div>
+            <div class="mb-2 text-sm font-semibold text-gray-500 dark:text-gray-400" i18n="@@dashboard.fear-greed">Korku & Açgözlülük</div>
             <app-fear-greed-card
               [value]="sentimentValue()"
               [classification]="sentimentClassification()"
@@ -138,8 +138,8 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900 lg:col-span-2">
           <mat-card-content class="p-5">
             <div class="mb-3 flex items-center justify-between">
-              <div class="text-sm font-semibold text-gray-500 dark:text-gray-400">En Hareketliler</div>
-              <a routerLink="/markets" mat-button color="primary" class="text-xs">Tümünü Gör</a>
+              <div class="text-sm font-semibold text-gray-500 dark:text-gray-400" i18n="@@dashboard.top-movers">En Hareketliler</div>
+              <a routerLink="/markets" mat-button color="primary" class="text-xs" i18n="@@dashboard.view-all">Tümünü Gör</a>
             </div>
 
             <ng-container *ngIf="topMovers().length > 0; else moversLoading">
@@ -179,8 +179,8 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="p-5">
             <div class="mb-3 flex items-center justify-between">
-              <div class="text-sm font-semibold text-gray-500 dark:text-gray-400">İzleme Listesi</div>
-              <a routerLink="/watchlist" mat-button color="primary" class="text-xs">Tümünü Gör</a>
+              <div class="text-sm font-semibold text-gray-500 dark:text-gray-400" i18n="@@nav.watchlist">İzleme Listesi</div>
+              <a routerLink="/watchlist" mat-button color="primary" class="text-xs" i18n="@@dashboard.view-all">Tümünü Gör</a>
             </div>
 
             <ng-container *ngIf="watchlistPreview().length > 0; else watchlistEmpty">
@@ -209,8 +209,8 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
             <ng-template #watchlistEmpty>
               <div class="py-6 text-center">
                 <div class="text-sm text-gray-500 dark:text-gray-400">
-                  İzleme listeni oluştur —
-                  <a routerLink="/markets" class="text-blue-600 underline dark:text-blue-400">Piyasalara Git</a>
+                  <span i18n="@@dashboard.watchlist-cta">İzleme listeni oluştur —</span>
+                  <a routerLink="/markets" class="text-blue-600 underline dark:text-blue-400" i18n="@@dashboard.go-to-markets">Piyasalara Git</a>
                 </div>
               </div>
             </ng-template>
@@ -223,8 +223,8 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="p-5">
             <div class="mb-3 flex items-center justify-between">
-              <div class="text-sm font-semibold text-gray-500 dark:text-gray-400">Son Haberler</div>
-              <a routerLink="/news" mat-button color="primary" class="text-xs">Tümünü Gör</a>
+              <div class="text-sm font-semibold text-gray-500 dark:text-gray-400" i18n="@@dashboard.latest-news">Son Haberler</div>
+              <a routerLink="/news" mat-button color="primary" class="text-xs" i18n="@@dashboard.view-all">Tümünü Gör</a>
             </div>
 
             <ng-container *ngIf="newsLoading()">
@@ -234,7 +234,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
             </ng-container>
 
             <ng-container *ngIf="newsError() && !newsLoading()">
-              <div class="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <div class="py-6 text-center text-sm text-gray-500 dark:text-gray-400" i18n="@@dashboard.news-load-error">
                 Haberler yüklenemedi.
               </div>
             </ng-container>
@@ -264,7 +264,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                 </div>
               </ng-container>
               <ng-template #noNews>
-                <div class="py-6 text-center text-sm text-gray-500 dark:text-gray-400">Haber bulunamadı.</div>
+                <div class="py-6 text-center text-sm text-gray-500 dark:text-gray-400" i18n="@@news.empty">Haber bulunamadı.</div>
               </ng-template>
             </ng-container>
           </mat-card-content>
@@ -361,16 +361,16 @@ export class DashboardComponent {
   relativeTime(pubDate: string): string {
     const diff = Date.now() - new Date(pubDate).getTime();
     const minutes = Math.floor(diff / 60_000);
-    if (minutes < 60) return `${minutes}dk önce`;
+    if (minutes < 60) return $localize`:@@time.minutes-ago:${minutes} dk önce`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}s önce`;
-    return `${Math.floor(hours / 24)}g önce`;
+    if (hours < 24) return $localize`:@@time.hours-ago:${hours} s önce`;
+    return $localize`:@@time.days-ago:${Math.floor(hours / 24)} g önce`;
   }
 
   sentimentLabel(sentiment: string): string {
-    if (sentiment === 'bullish') return 'Yükseliş';
-    if (sentiment === 'bearish') return 'Düşüş';
-    return 'Nötr';
+    if (sentiment === 'bullish') return $localize`:@@news.bullish:Yükseliş`;
+    if (sentiment === 'bearish') return $localize`:@@news.bearish:Düşüş`;
+    return $localize`:@@news.neutral:Nötr`;
   }
 
   sentimentBadgeClass(sentiment: string): string {

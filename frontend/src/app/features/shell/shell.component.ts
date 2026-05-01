@@ -52,13 +52,13 @@ export class ShellComponent {
   sidenavOpen = signal(true);
 
   readonly navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
-    { label: 'Piyasalar', icon: 'show_chart', route: '/markets' },
-    { label: 'İzleme Listesi', icon: 'star', route: '/watchlist' },
-    { label: 'Portföy', icon: 'account_balance_wallet', route: '/portfolio' },
-    { label: 'Alarmlar', icon: 'notifications', route: '/alerts' },
-    { label: 'Haberler', icon: 'newspaper', route: '/news' },
-    { label: 'Ayarlar', icon: 'settings', route: '/settings' },
+    { label: $localize`:@@nav.dashboard:Dashboard`, icon: 'dashboard', route: '/dashboard' },
+    { label: $localize`:@@nav.markets:Piyasalar`, icon: 'show_chart', route: '/markets' },
+    { label: $localize`:@@nav.watchlist:İzleme Listesi`, icon: 'star', route: '/watchlist' },
+    { label: $localize`:@@nav.portfolio:Portföy`, icon: 'account_balance_wallet', route: '/portfolio' },
+    { label: $localize`:@@nav.alerts:Alarmlar`, icon: 'notifications', route: '/alerts' },
+    { label: $localize`:@@nav.news:Haberler`, icon: 'newspaper', route: '/news' },
+    { label: $localize`:@@nav.settings:Ayarlar`, icon: 'settings', route: '/settings' },
   ];
 
   readonly currencies: Currency[] = ['USD', 'EUR', 'TRY'];

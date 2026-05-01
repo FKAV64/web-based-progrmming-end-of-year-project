@@ -9,6 +9,15 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "tr",
+        "locales": {
+          "en": {
+            "translation": "src/locale/messages.en.xlf",
+            "baseHref": "/en/"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -53,6 +62,18 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "tr": {
+              "localize": ["tr"],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "en": {
+              "localize": ["en"],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -65,6 +86,12 @@
             },
             "development": {
               "buildTarget": "crypto-dashboard-frontend:build:development"
+            },
+            "tr": {
+              "buildTarget": "crypto-dashboard-frontend:build:tr"
+            },
+            "en": {
+              "buildTarget": "crypto-dashboard-frontend:build:en"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +99,8 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "crypto-dashboard-frontend:build"
+            "buildTarget": "crypto-dashboard-frontend:build",
+            "outputPath": "src/locale"
           }
         },
         "test": {

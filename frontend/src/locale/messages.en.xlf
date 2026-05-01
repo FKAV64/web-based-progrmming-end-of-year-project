@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="tr" target-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="alerts.title" datatype="html">
+        <source> Fiyat Alarmları </source>
+        <target> Price Alerts </target>
+      </trans-unit>
+      <trans-unit id="alerts.subtitle" datatype="html">
+        <source> Aktif alarmlar snapshot evaluator ile backend tarafında izlenir, tetiklenenler burada arşivlenir. </source>
+        <target> Active alerts are monitored by the backend snapshot evaluator; triggered ones are archived here. </target>
+      </trans-unit>
+      <trans-unit id="alerts.new-btn" datatype="html">
+        <source>Yeni Alarm</source>
+        <target>New Alert</target>
+      </trans-unit>
+      <trans-unit id="alerts.tab-active" datatype="html">
+        <source>Aktif</source>
+        <target>Active</target>
+      </trans-unit>
+      <trans-unit id="alerts.status-pending" datatype="html">
+        <source> Durum: Beklemede </source>
+        <target> Status: Pending </target>
+      </trans-unit>
+      <trans-unit id="alerts.badge-active" datatype="html">
+        <source> Aktif </source>
+        <target> Active </target>
+      </trans-unit>
+      <trans-unit id="alerts.delete-btn" datatype="html">
+        <source>Alarmı sil</source>
+        <target>Delete alert</target>
+      </trans-unit>
+      <trans-unit id="alerts.tab-triggered" datatype="html">
+        <source>Tetiklenen</source>
+        <target>Triggered</target>
+      </trans-unit>
+      <trans-unit id="alerts.status-label" datatype="html">
+        <source>Durum:</source>
+        <target>Status:</target>
+      </trans-unit>
+      <trans-unit id="alerts.badge-triggered" datatype="html">
+        <source> Tetiklendi </source>
+        <target> Triggered </target>
+      </trans-unit>
+      <trans-unit id="alerts.empty-active-title" datatype="html">
+        <source>Aktif alarm yok</source>
+        <target>No active alerts</target>
+      </trans-unit>
+      <trans-unit id="alerts.empty-active-desc" datatype="html">
+        <source> Hedef fiyatı belirleyerek ilk alarmı oluşturabilirsin. </source>
+        <target> Set a target price to create your first alert. </target>
+      </trans-unit>
+      <trans-unit id="alerts.empty-triggered" datatype="html">
+        <source> Tetiklenen alarmlar burada listelenecek. </source>
+        <target> Triggered alerts will be listed here. </target>
+      </trans-unit>
+      <trans-unit id="alerts.condition-above" datatype="html">
+        <source>Fiyat üstünde</source>
+        <target>Price above</target>
+      </trans-unit>
+      <trans-unit id="alerts.condition-below" datatype="html">
+        <source>Fiyat altında</source>
+        <target>Price below</target>
+      </trans-unit>
+      <trans-unit id="alerts.pending" datatype="html">
+        <source>Beklemede</source>
+        <target>Pending</target>
+      </trans-unit>
+      <trans-unit id="app.title" datatype="html">
+        <source>Kripto Dashboard</source>
+        <target>Crypto Dashboard</target>
+      </trans-unit>
+      <trans-unit id="login.heading" datatype="html">
+        <source>Giriş Yap</source>
+        <target>Sign In</target>
+      </trans-unit>
+      <trans-unit id="form.email" datatype="html">
+        <source>E-posta</source>
+        <target>Email</target>
+      </trans-unit>
+      <trans-unit id="form.email-required" datatype="html">
+        <source>E-posta zorunludur</source>
+        <target>Email is required</target>
+      </trans-unit>
+      <trans-unit id="form.email-invalid" datatype="html">
+        <source>Geçerli bir e-posta girin</source>
+        <target>Enter a valid email address</target>
+      </trans-unit>
+      <trans-unit id="form.password" datatype="html">
+        <source>Şifre</source>
+        <target>Password</target>
+      </trans-unit>
+      <trans-unit id="form.password-required" datatype="html">
+        <source>Şifre zorunludur</source>
+        <target>Password is required</target>
+      </trans-unit>
+      <trans-unit id="form.password-minlength" datatype="html">
+        <source>Şifre en az 8 karakter olmalıdır</source>
+        <target>Password must be at least 8 characters</target>
+      </trans-unit>
+      <trans-unit id="login.submit" datatype="html">
+        <source>Giriş Yap</source>
+        <target>Sign In</target>
+      </trans-unit>
+      <trans-unit id="login.no-account" datatype="html">
+        <source>Hesabın yok mu?</source>
+        <target>Don't have an account?</target>
+      </trans-unit>
+      <trans-unit id="login.register-link" datatype="html">
+        <source>Kayıt Ol</source>
+        <target>Register</target>
+      </trans-unit>
+      <trans-unit id="register.heading" datatype="html">
+        <source>Hesap Oluştur</source>
+        <target>Create Account</target>
+      </trans-unit>
+      <trans-unit id="form.full-name" datatype="html">
+        <source>Ad Soyad (isteğe bağlı)</source>
+        <target>Full Name (optional)</target>
+      </trans-unit>
+      <trans-unit id="form.password-complexity" datatype="html">
+        <source>Şifre en az bir harf ve bir rakam içermelidir</source>
+        <target>Password must contain at least one letter and one digit</target>
+      </trans-unit>
+      <trans-unit id="register.submit" datatype="html">
+        <source>Kayıt Ol</source>
+        <target>Register</target>
+      </trans-unit>
+      <trans-unit id="register.have-account" datatype="html">
+        <source>Hesabın var mı?</source>
+        <target>Already have an account?</target>
+      </trans-unit>
+      <trans-unit id="register.login-link" datatype="html">
+        <source>Giriş Yap</source>
+        <target>Sign In</target>
+      </trans-unit>
+      <trans-unit id="dashboard.title" datatype="html">
+        <source> Dashboard </source>
+        <target> Dashboard </target>
+      </trans-unit>
+      <trans-unit id="dashboard.portfolio-value" datatype="html">
+        <source>Portföy Değeri</source>
+        <target>Portfolio Value</target>
+      </trans-unit>
+      <trans-unit id="dashboard.active-positions" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ portfolio.activeRows().length }}"/> aktif pozisyon </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{ portfolio.activeRows().length }}"/> active positions </target>
+      </trans-unit>
+      <trans-unit id="dashboard.top-gainer" datatype="html">
+        <source>En Çok Yükselen (24s)</source>
+        <target>Top Gainer (24h)</target>
+      </trans-unit>
+      <trans-unit id="dashboard.top-loser" datatype="html">
+        <source>En Çok Düşen (24s)</source>
+        <target>Top Loser (24h)</target>
+      </trans-unit>
+      <trans-unit id="dashboard.fear-greed" datatype="html">
+        <source>Korku &amp; Açgözlülük</source>
+        <target>Fear &amp; Greed</target>
+      </trans-unit>
+      <trans-unit id="dashboard.top-movers" datatype="html">
+        <source>En Hareketliler</source>
+        <target>Top Movers</target>
+      </trans-unit>
+      <trans-unit id="dashboard.view-all" datatype="html">
+        <source>Tümünü Gör</source>
+        <target>View All</target>
+      </trans-unit>
+      <trans-unit id="nav.watchlist" datatype="html">
+        <source>İzleme Listesi</source>
+        <target>Watchlist</target>
+      </trans-unit>
+      <trans-unit id="dashboard.watchlist-cta" datatype="html">
+        <source>İzleme listeni oluştur —</source>
+        <target>Build your watchlist —</target>
+      </trans-unit>
+      <trans-unit id="dashboard.go-to-markets" datatype="html">
+        <source>Piyasalara Git</source>
+        <target>Go to Markets</target>
+      </trans-unit>
+      <trans-unit id="dashboard.latest-news" datatype="html">
+        <source>Son Haberler</source>
+        <target>Latest News</target>
+      </trans-unit>
+      <trans-unit id="dashboard.news-load-error" datatype="html">
+        <source> Haberler yüklenemedi. </source>
+        <target> Failed to load news. </target>
+      </trans-unit>
+      <trans-unit id="news.empty" datatype="html">
+        <source>Haber bulunamadı.</source>
+        <target>No news found.</target>
+      </trans-unit>
+      <trans-unit id="time.minutes-ago" datatype="html">
+        <source><x id="PH" equiv-text="minutes"/> dk önce</source>
+        <target><x id="PH" equiv-text="minutes"/> min ago</target>
+      </trans-unit>
+      <trans-unit id="time.hours-ago" datatype="html">
+        <source><x id="PH" equiv-text="hours"/> s önce</source>
+        <target><x id="PH" equiv-text="hours"/> h ago</target>
+      </trans-unit>
+      <trans-unit id="time.days-ago" datatype="html">
+        <source><x id="PH" equiv-text="Math.floor(hours / 24)"/> g önce</source>
+        <target><x id="PH" equiv-text="Math.floor(hours / 24)"/> d ago</target>
+      </trans-unit>
+      <trans-unit id="news.bullish" datatype="html">
+        <source>Yükseliş</source>
+        <target>Bullish</target>
+      </trans-unit>
+      <trans-unit id="news.bearish" datatype="html">
+        <source>Düşüş</source>
+        <target>Bearish</target>
+      </trans-unit>
+      <trans-unit id="news.neutral" datatype="html">
+        <source>Nötr</source>
+        <target>Neutral</target>
+      </trans-unit>
+      <trans-unit id="table.search" datatype="html">
+        <source>Ara...</source>
+        <target>Search...</target>
+      </trans-unit>
+      <trans-unit id="table.search-placeholder" datatype="html">
+        <source>Örn. Bitcoin</source>
+        <target>e.g. Bitcoin</target>
+      </trans-unit>
+      <trans-unit id="table.col-coin" datatype="html">
+        <source>Coin</source>
+        <target>Coin</target>
+      </trans-unit>
+      <trans-unit id="table.col-price" datatype="html">
+        <source>Fiyat</source>
+        <target>Price</target>
+      </trans-unit>
+      <trans-unit id="table.col-1h" datatype="html">
+        <source>1s %</source>
+        <target>1h %</target>
+      </trans-unit>
+      <trans-unit id="table.col-24h" datatype="html">
+        <source>24s %</source>
+        <target>24h %</target>
+      </trans-unit>
+      <trans-unit id="table.col-7d" datatype="html">
+        <source>7g %</source>
+        <target>7d %</target>
+      </trans-unit>
+      <trans-unit id="table.col-market-cap" datatype="html">
+        <source>Piyasa Değeri</source>
+        <target>Market Cap</target>
+      </trans-unit>
+      <trans-unit id="table.col-volume" datatype="html">
+        <source>Hacim (24s)</source>
+        <target>Volume (24h)</target>
+      </trans-unit>
+      <trans-unit id="table.col-sparkline" datatype="html">
+        <source>Son 7 Gün</source>
+        <target>Last 7 Days</target>
+      </trans-unit>
+      <trans-unit id="table.no-results" datatype="html">
+        <source>&quot;<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-medium&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{input.value}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>&quot; ile eşleşen sonuç bulunamadı.</source>
+        <target>No results matching &quot;<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-medium&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{input.value}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>&quot;.</target>
+      </trans-unit>
+      <trans-unit id="table.paginator" datatype="html">
+        <source>Sayfa seçin</source>
+        <target>Select page</target>
+      </trans-unit>
+      <trans-unit id="table.watchlist-add" datatype="html">
+        <source>İzleme listesine ekle</source>
+        <target>Add to watchlist</target>
+      </trans-unit>
+      <trans-unit id="table.watchlist-remove" datatype="html">
+        <source>İzleme listesinden kaldır</source>
+        <target>Remove from watchlist</target>
+      </trans-unit>
+      <trans-unit id="news.title" datatype="html">
+        <source>Kripto Haberleri</source>
+        <target>Crypto News</target>
+      </trans-unit>
+      <trans-unit id="news.subtitle" datatype="html">
+        <source> CoinDesk ve CoinTelegraph&apos;dan gerçek zamanlı haberler </source>
+        <target> Real-time news from CoinDesk and CoinTelegraph </target>
+      </trans-unit>
+      <trans-unit id="news.load-error" datatype="html">
+        <source>Haberler yüklenemedi.</source>
+        <target>Failed to load news.</target>
+      </trans-unit>
+      <trans-unit id="common.retry" datatype="html">
+        <source>Tekrar Dene</source>
+        <target>Try Again</target>
+      </trans-unit>
+      <trans-unit id="news.read-btn" datatype="html">
+        <source> Oku <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;!text-sm&quot;&gt;"/>open_in_new<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <target> Read <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;!text-sm&quot;&gt;"/>open_in_new<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="news.filter-all" datatype="html">
+        <source>Tümü</source>
+        <target>All</target>
+      </trans-unit>
+      <trans-unit id="time.just-now" datatype="html">
+        <source>Az önce</source>
+        <target>Just now</target>
+      </trans-unit>
+      <trans-unit id="portfolio.title" datatype="html">
+        <source> Portföy </source>
+        <target> Portfolio </target>
+      </trans-unit>
+      <trans-unit id="portfolio.subtitle" datatype="html">
+        <source> Açık pozisyonların canlı piyasa verileriyle izlenir, kapatılan işlemler ise ayrı sekmede tutulur. </source>
+        <target> Open positions are tracked with live market data; closed trades are kept in a separate tab. </target>
+      </trans-unit>
+      <trans-unit id="portfolio.new-position" datatype="html">
+        <source>Yeni Pozisyon</source>
+        <target>New Position</target>
+      </trans-unit>
+      <trans-unit id="portfolio.total-value" datatype="html">
+        <source>Toplam Değer</source>
+        <target>Total Value</target>
+      </trans-unit>
+      <trans-unit id="portfolio.total-cost" datatype="html">
+        <source>Toplam Maliyet</source>
+        <target>Total Cost</target>
+      </trans-unit>
+      <trans-unit id="portfolio.total-pnl" datatype="html">
+        <source>Toplam Kar/Zarar</source>
+        <target>Total P&amp;L</target>
+      </trans-unit>
+      <trans-unit id="portfolio.total-pnl-pct" datatype="html">
+        <source>Toplam Kar/Zarar %</source>
+        <target>Total P&amp;L %</target>
+      </trans-unit>
+      <trans-unit id="portfolio.tab-active" datatype="html">
+        <source>Aktif Pozisyonlar</source>
+        <target>Active Positions</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-qty" datatype="html">
+        <source>Adet</source>
+        <target>Qty</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-avg" datatype="html">
+        <source>Ortalama</source>
+        <target>Avg Buy</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-current" datatype="html">
+        <source>Anlık</source>
+        <target>Current</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-value" datatype="html">
+        <source>Değer</source>
+        <target>Value</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-action" datatype="html">
+        <source>Aksiyon</source>
+        <target>Action</target>
+      </trans-unit>
+      <trans-unit id="portfolio.edit-btn" datatype="html">
+        <source>Düzenle</source>
+        <target>Edit</target>
+      </trans-unit>
+      <trans-unit id="portfolio.close-btn" datatype="html">
+        <source>Kapat</source>
+        <target>Close</target>
+      </trans-unit>
+      <trans-unit id="portfolio.delete-btn" datatype="html">
+        <source>Sil</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="portfolio.tab-closed" datatype="html">
+        <source>Kapalı Pozisyonlar</source>
+        <target>Closed Positions</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-close-price" datatype="html">
+        <source>Kapanış</source>
+        <target>Close Price</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-realized" datatype="html">
+        <source>Gerçekleşen</source>
+        <target>Realized</target>
+      </trans-unit>
+      <trans-unit id="portfolio.col-date" datatype="html">
+        <source>Tarih</source>
+        <target>Date</target>
+      </trans-unit>
+      <trans-unit id="portfolio.allocation-title" datatype="html">
+        <source>Dağılım</source>
+        <target>Allocation</target>
+      </trans-unit>
+      <trans-unit id="portfolio.allocation-subtitle" datatype="html">
+        <source> Aktif pozisyonların anlık değerine göre </source>
+        <target> Based on current value of active positions </target>
+      </trans-unit>
+      <trans-unit id="portfolio.empty-title" datatype="html">
+        <source>Aktif pozisyon yok</source>
+        <target>No active positions</target>
+      </trans-unit>
+      <trans-unit id="portfolio.empty-desc" datatype="html">
+        <source> İlk işlemini ekleyerek toplam değer ve canlı kar/zarar hesaplarını görebilirsin. </source>
+        <target> Add your first trade to see total value and live P&amp;L calculations. </target>
+      </trans-unit>
+      <trans-unit id="portfolio.closed-empty" datatype="html">
+        <source> Kapatılan pozisyonlar burada listelenecek. </source>
+        <target> Closed positions will be listed here. </target>
+      </trans-unit>
+      <trans-unit id="portfolio.allocation-empty" datatype="html">
+        <source>Dağılım grafiği için en az bir aktif pozisyon ekle.</source>
+        <target>Add at least one active position to see the allocation chart.</target>
+      </trans-unit>
+      <trans-unit id="settings.title" datatype="html">
+        <source>Ayarlar</source>
+        <target>Settings</target>
+      </trans-unit>
+      <trans-unit id="settings.theme" datatype="html">
+        <source>Tema</source>
+        <target>Theme</target>
+      </trans-unit>
+      <trans-unit id="settings.theme-select" datatype="html">
+        <source>Tema seç</source>
+        <target>Select theme</target>
+      </trans-unit>
+      <trans-unit id="settings.theme-light" datatype="html">
+        <source>Açık</source>
+        <target>Light</target>
+      </trans-unit>
+      <trans-unit id="settings.theme-dark" datatype="html">
+        <source>Koyu</source>
+        <target>Dark</target>
+      </trans-unit>
+      <trans-unit id="settings.theme-system" datatype="html">
+        <source>Sistem</source>
+        <target>System</target>
+      </trans-unit>
+      <trans-unit id="settings.currency" datatype="html">
+        <source>Para Birimi</source>
+        <target>Currency</target>
+      </trans-unit>
+      <trans-unit id="settings.currency-select" datatype="html">
+        <source>Para birimi seç</source>
+        <target>Select currency</target>
+      </trans-unit>
+      <trans-unit id="settings.language" datatype="html">
+        <source>Dil</source>
+        <target>Language</target>
+      </trans-unit>
+      <trans-unit id="settings.language-select" datatype="html">
+        <source>Dil seç</source>
+        <target>Select language</target>
+      </trans-unit>
+      <trans-unit id="settings.lang-tr" datatype="html">
+        <source>Türkçe</source>
+        <target>Türkçe</target>
+      </trans-unit>
+      <trans-unit id="settings.lang-en" datatype="html">
+        <source>English</source>
+        <target>English</target>
+      </trans-unit>
+      <trans-unit id="settings.notifications" datatype="html">
+        <source>Bildirimler</source>
+        <target>Notifications</target>
+      </trans-unit>
+      <trans-unit id="settings.push-title" datatype="html">
+        <source>Tarayıcı bildirimleri</source>
+        <target>Browser notifications</target>
+      </trans-unit>
+      <trans-unit id="settings.push-unsupported" datatype="html">
+        <source>Bu tarayıcı bildirimleri desteklemiyor.</source>
+        <target>This browser does not support notifications.</target>
+      </trans-unit>
+      <trans-unit id="settings.push-denied" datatype="html">
+        <source>Bildirimler engellendi. Tarayıcı ayarlarından izin verin.</source>
+        <target>Notifications are blocked. Allow them in your browser settings.</target>
+      </trans-unit>
+      <trans-unit id="settings.push-granted" datatype="html">
+        <source>Bildirimler etkin — alarm tetiklenince haber alırsınız.</source>
+        <target>Notifications enabled — you'll be notified when an alert triggers.</target>
+      </trans-unit>
+      <trans-unit id="settings.push-default" datatype="html">
+        <source>Etkinleştirince izin isteyeceğiz.</source>
+        <target>We'll ask for permission when you enable this.</target>
+      </trans-unit>
+      <trans-unit id="settings.push-toggle" datatype="html">
+        <source>Tarayıcı bildirimlerini etkinleştir</source>
+        <target>Enable browser notifications</target>
+      </trans-unit>
+      <trans-unit id="shell.toggle-menu" datatype="html">
+        <source>Menüyü aç/kapat</source>
+        <target>Toggle menu</target>
+      </trans-unit>
+      <trans-unit id="shell.search-placeholder" datatype="html">
+        <source>Coin ara...</source>
+        <target>Search coin...</target>
+      </trans-unit>
+      <trans-unit id="shell.currency-select" datatype="html">
+        <source>Para birimi seç</source>
+        <target>Select currency</target>
+      </trans-unit>
+      <trans-unit id="shell.user-menu" datatype="html">
+        <source>Kullanıcı menüsü</source>
+        <target>User menu</target>
+      </trans-unit>
+      <trans-unit id="shell.menu-settings" datatype="html">
+        <source>Ayarlar</source>
+        <target>Settings</target>
+      </trans-unit>
+      <trans-unit id="shell.menu-logout" datatype="html">
+        <source>Çıkış Yap</source>
+        <target>Sign Out</target>
+      </trans-unit>
+      <trans-unit id="nav.dashboard" datatype="html">
+        <source>Dashboard</source>
+        <target>Dashboard</target>
+      </trans-unit>
+      <trans-unit id="nav.markets" datatype="html">
+        <source>Piyasalar</source>
+        <target>Markets</target>
+      </trans-unit>
+      <trans-unit id="nav.portfolio" datatype="html">
+        <source>Portföy</source>
+        <target>Portfolio</target>
+      </trans-unit>
+      <trans-unit id="nav.alerts" datatype="html">
+        <source>Alarmlar</source>
+        <target>Alerts</target>
+      </trans-unit>
+      <trans-unit id="nav.news" datatype="html">
+        <source>Haberler</source>
+        <target>News</target>
+      </trans-unit>
+      <trans-unit id="nav.settings" datatype="html">
+        <source>Ayarlar</source>
+        <target>Settings</target>
+      </trans-unit>
+      <trans-unit id="watchlist.title" datatype="html">
+        <source> İzleme Listesi </source>
+        <target> Watchlist </target>
+      </trans-unit>
+      <trans-unit id="watchlist.subtitle" datatype="html">
+        <source> Takip ettiğin coinler burada canlı fiyat akışı ile birlikte görünür. </source>
+        <target> The coins you follow appear here with a live price stream. </target>
+      </trans-unit>
+      <trans-unit id="watchlist.add-coin" datatype="html">
+        <source>Coin Ekle</source>
+        <target>Add Coin</target>
+      </trans-unit>
+      <trans-unit id="watchlist.outside-top100" datatype="html">
+        <source> Top 100 dışındaki kayıtlar </source>
+        <target> Records outside the Top 100 </target>
+      </trans-unit>
+      <trans-unit id="watchlist.coin-id-label" datatype="html">
+        <source>Coin ID</source>
+        <target>Coin ID</target>
+      </trans-unit>
+      <trans-unit id="watchlist.outside-note" datatype="html">
+        <source> Bu coin için şu anda sadece kayıt tutuluyor. Canlı fiyat verisi Top 100 snapshot içinde geldiğinde tabloya eklenecek. </source>
+        <target> Only a record is kept for this coin right now. It will appear in the table once live price data arrives in the Top 100 snapshot. </target>
+      </trans-unit>
+      <trans-unit id="watchlist.remove-btn" datatype="html">
+        <source>İzleme listesinden kaldır</source>
+        <target>Remove from watchlist</target>
+      </trans-unit>
+      <trans-unit id="watchlist.empty-title" datatype="html">
+        <source> Henüz izlediğin coin yok </source>
+        <target> You have no coins in your watchlist yet </target>
+      </trans-unit>
+      <trans-unit id="watchlist.empty-desc" datatype="html">
+        <source> Piyasalar sayfasındaki yıldız düğmesini kullanarak coin ekleyebilir, sonra bu sayfadan hepsini tek yerde takip edebilirsin. </source>
+        <target> Use the star button on the Markets page to add coins, then track them all in one place here. </target>
+      </trans-unit>
+      <trans-unit id="watchlist.go-to-markets" datatype="html">
+        <source> Piyasalara Git </source>
+        <target> Go to Markets </target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

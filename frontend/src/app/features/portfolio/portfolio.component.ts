@@ -46,24 +46,24 @@ interface AllocationChartOptions {
     <div class="min-h-full bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
       <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white">
-            Portfoy
+          <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white" i18n="@@portfolio.title">
+            Portföy
           </h1>
-          <p class="mt-2 max-w-2xl text-sm text-gray-600 dark:text-gray-400">
-            Acik pozisyonlarin canli piyasa verileriyle izlenir, kapatilan islemler ise ayri sekmede tutulur.
+          <p class="mt-2 max-w-2xl text-sm text-gray-600 dark:text-gray-400" i18n="@@portfolio.subtitle">
+            Açık pozisyonların canlı piyasa verileriyle izlenir, kapatılan işlemler ise ayrı sekmede tutulur.
           </p>
         </div>
 
         <button mat-flat-button color="primary" type="button" (click)="openAddDialog()">
           <mat-icon>add</mat-icon>
-          Yeni Pozisyon
+          <span i18n="@@portfolio.new-position">Yeni Pozisyon</span>
         </button>
       </div>
 
       <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="space-y-2 p-5">
-            <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Deger</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@portfolio.total-value">Toplam Değer</div>
             <div class="text-2xl font-semibold text-gray-950 dark:text-white">
               {{ portfolio.totalValue() | currencyConverter: settings.currency() : null : settings.locale() }}
             </div>
@@ -72,7 +72,7 @@ interface AllocationChartOptions {
 
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="space-y-2 p-5">
-            <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Maliyet</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@portfolio.total-cost">Toplam Maliyet</div>
             <div class="text-2xl font-semibold text-gray-950 dark:text-white">
               {{ portfolio.totalCost() | currencyConverter: settings.currency() : null : settings.locale() }}
             </div>
@@ -81,7 +81,7 @@ interface AllocationChartOptions {
 
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="space-y-2 p-5">
-            <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Kar/Zarar</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@portfolio.total-pnl">Toplam Kar/Zarar</div>
             <div class="text-2xl font-semibold" [class.text-emerald-500]="portfolio.totalPnL() >= 0" [class.text-red-500]="portfolio.totalPnL() < 0">
               {{ portfolio.totalPnL() | currencyConverter: settings.currency() : null : settings.locale() }}
             </div>
@@ -90,7 +90,7 @@ interface AllocationChartOptions {
 
         <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-card-content class="space-y-2 p-5">
-            <div class="text-sm text-gray-500 dark:text-gray-400">Toplam Kar/Zarar %</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@portfolio.total-pnl-pct">Toplam Kar/Zarar %</div>
             <div class="text-2xl font-semibold" [class.text-emerald-500]="portfolio.totalPnLPercent() >= 0" [class.text-red-500]="portfolio.totalPnLPercent() < 0">
               {{ formatPercent(portfolio.totalPnLPercent()) }}
             </div>
@@ -101,19 +101,20 @@ interface AllocationChartOptions {
       <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <section class="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-tab-group class="portfolio-tabs" (selectedIndexChange)="onTabChange($event)">
-            <mat-tab label="Aktif Pozisyonlar">
+            <mat-tab>
+              <ng-template mat-tab-label><span i18n="@@portfolio.tab-active">Aktif Pozisyonlar</span></ng-template>
               <ng-container *ngIf="portfolio.activeRows().length > 0; else activeEmpty">
                 <div class="overflow-x-auto">
                   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                     <thead class="bg-gray-50 dark:bg-gray-950/60">
                       <tr class="text-left text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-                        <th class="px-4 py-3">Coin</th>
-                        <th class="px-4 py-3">Adet</th>
-                        <th class="px-4 py-3">Ortalama</th>
-                        <th class="px-4 py-3">Anlik</th>
-                        <th class="px-4 py-3">Deger</th>
-                        <th class="px-4 py-3">P&L</th>
-                        <th class="px-4 py-3 text-right">Aksiyon</th>
+                        <th class="px-4 py-3" i18n="@@table.col-coin">Coin</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-qty">Adet</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-avg">Ortalama</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-current">Anlık</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-value">Değer</th>
+                        <th class="px-4 py-3">P&amp;L</th>
+                        <th class="px-4 py-3 text-right" i18n="@@portfolio.col-action">Aksiyon</th>
                       </tr>
                     </thead>
 
@@ -152,13 +153,19 @@ interface AllocationChartOptions {
                         </td>
                         <td class="px-4 py-4">
                           <div class="flex justify-end gap-1">
-                            <button mat-icon-button type="button" aria-label="Duzenle" (click)="openEditDialog(row.position)">
+                            <button mat-icon-button type="button"
+                                    i18n-aria-label="@@portfolio.edit-btn" aria-label="Düzenle"
+                                    (click)="openEditDialog(row.position)">
                               <mat-icon>edit</mat-icon>
                             </button>
-                            <button mat-icon-button type="button" aria-label="Kapat" (click)="openCloseDialog(row.position)">
+                            <button mat-icon-button type="button"
+                                    i18n-aria-label="@@portfolio.close-btn" aria-label="Kapat"
+                                    (click)="openCloseDialog(row.position)">
                               <mat-icon>task_alt</mat-icon>
                             </button>
-                            <button mat-icon-button type="button" aria-label="Sil" (click)="remove(row.position.id)">
+                            <button mat-icon-button type="button"
+                                    i18n-aria-label="@@portfolio.delete-btn" aria-label="Sil"
+                                    (click)="remove(row.position.id)">
                               <mat-icon>delete</mat-icon>
                             </button>
                           </div>
@@ -170,19 +177,20 @@ interface AllocationChartOptions {
               </ng-container>
             </mat-tab>
 
-            <mat-tab label="Kapali Pozisyonlar">
+            <mat-tab>
+              <ng-template mat-tab-label><span i18n="@@portfolio.tab-closed">Kapalı Pozisyonlar</span></ng-template>
               <ng-container *ngIf="portfolio.closedRows().length > 0; else closedEmpty">
                 <div class="overflow-x-auto">
                   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                     <thead class="bg-gray-50 dark:bg-gray-950/60">
                       <tr class="text-left text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-                        <th class="px-4 py-3">Coin</th>
-                        <th class="px-4 py-3">Adet</th>
-                        <th class="px-4 py-3">Maliyet</th>
-                        <th class="px-4 py-3">Kapanis</th>
-                        <th class="px-4 py-3">Gerceklesen</th>
-                        <th class="px-4 py-3">Tarih</th>
-                        <th class="px-4 py-3 text-right">Aksiyon</th>
+                        <th class="px-4 py-3" i18n="@@table.col-coin">Coin</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-qty">Adet</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.total-cost">Toplam Maliyet</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-close-price">Kapanış</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-realized">Gerçekleşen</th>
+                        <th class="px-4 py-3" i18n="@@portfolio.col-date">Tarih</th>
+                        <th class="px-4 py-3 text-right" i18n="@@portfolio.col-action">Aksiyon</th>
                       </tr>
                     </thead>
 
@@ -216,7 +224,9 @@ interface AllocationChartOptions {
                         </td>
                         <td class="px-4 py-4">
                           <div class="flex justify-end gap-1">
-                            <button mat-icon-button type="button" aria-label="Sil" (click)="remove(row.position.id)">
+                            <button mat-icon-button type="button"
+                                    i18n-aria-label="@@portfolio.delete-btn" aria-label="Sil"
+                                    (click)="remove(row.position.id)">
                               <mat-icon>delete</mat-icon>
                             </button>
                           </div>
@@ -234,9 +244,9 @@ interface AllocationChartOptions {
           <mat-card-content class="p-5">
             <div class="mb-4 flex items-center justify-between">
               <div>
-                <h2 class="text-lg font-semibold text-gray-950 dark:text-white">Dagilim</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                  Aktif pozisyonlarin anlik degerine gore
+                <h2 class="text-lg font-semibold text-gray-950 dark:text-white" i18n="@@portfolio.allocation-title">Dağılım</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400" i18n="@@portfolio.allocation-subtitle">
+                  Aktif pozisyonların anlık değerine göre
                 </p>
               </div>
             </div>
@@ -260,22 +270,22 @@ interface AllocationChartOptions {
           <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-300">
             <mat-icon>account_balance_wallet</mat-icon>
           </div>
-          <h2 class="mt-4 text-xl font-semibold text-gray-950 dark:text-white">Aktif pozisyon yok</h2>
-          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Ilk islemini ekleyerek toplam deger ve canli kar/zarar hesaplarini gorebilirsin.
+          <h2 class="mt-4 text-xl font-semibold text-gray-950 dark:text-white" i18n="@@portfolio.empty-title">Aktif pozisyon yok</h2>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400" i18n="@@portfolio.empty-desc">
+            İlk işlemini ekleyerek toplam değer ve canlı kar/zarar hesaplarını görebilirsin.
           </p>
         </div>
       </ng-template>
 
       <ng-template #closedEmpty>
-        <div class="px-6 py-12 text-center text-sm text-gray-600 dark:text-gray-400">
-          Kapatilan pozisyonlar burada listelenecek.
+        <div class="px-6 py-12 text-center text-sm text-gray-600 dark:text-gray-400" i18n="@@portfolio.closed-empty">
+          Kapatılan pozisyonlar burada listelenecek.
         </div>
       </ng-template>
 
       <ng-template #allocationEmpty>
         <div class="rounded-2xl border border-dashed border-gray-300 px-6 py-10 text-center text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
-          Dagilim grafigi icin en az bir aktif pozisyon ekle.
+          <span i18n="@@portfolio.allocation-empty">Dağılım grafiği için en az bir aktif pozisyon ekle.</span>
         </div>
       </ng-template>
     </div>

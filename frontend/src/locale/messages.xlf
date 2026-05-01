@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="tr" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="alerts.title" datatype="html">
+        <source> Fiyat Alarmları </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.subtitle" datatype="html">
+        <source> Aktif alarmlar snapshot evaluator ile backend tarafında izlenir, tetiklenenler burada arşivlenir. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.new-btn" datatype="html">
+        <source>Yeni Alarm</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.tab-active" datatype="html">
+        <source>Aktif</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.status-pending" datatype="html">
+        <source> Durum: Beklemede </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.badge-active" datatype="html">
+        <source> Aktif </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.delete-btn" datatype="html">
+        <source>Alarmı sil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">105,106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.tab-triggered" datatype="html">
+        <source>Tetiklenen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">80,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.status-label" datatype="html">
+        <source>Durum:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.badge-triggered" datatype="html">
+        <source> Tetiklendi </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">102,103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.empty-active-title" datatype="html">
+        <source>Aktif alarm yok</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">122,123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.empty-active-desc" datatype="html">
+        <source> Hedef fiyatı belirleyerek ilk alarmı oluşturabilirsin. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">124,126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.empty-triggered" datatype="html">
+        <source> Tetiklenen alarmlar burada listelenecek. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">131,133</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.condition-above" datatype="html">
+        <source>Fiyat üstünde</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.condition-below" datatype="html">
+        <source>Fiyat altında</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alerts.pending" datatype="html">
+        <source>Beklemede</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.title" datatype="html">
+        <source>Kripto Dashboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="login.heading" datatype="html">
+        <source>Giriş Yap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.email" datatype="html">
+        <source>E-posta</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.email-required" datatype="html">
+        <source>E-posta zorunludur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">22,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.email-invalid" datatype="html">
+        <source>Geçerli bir e-posta girin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">20,22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">25,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.password" datatype="html">
+        <source>Şifre</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">25,26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.password-required" datatype="html">
+        <source>Şifre zorunludur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.password-minlength" datatype="html">
+        <source>Şifre en az 8 karakter olmalıdır</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="login.submit" datatype="html">
+        <source>Giriş Yap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="login.no-account" datatype="html">
+        <source>Hesabın yok mu?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="login.register-link" datatype="html">
+        <source>Kayıt Ol</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/login/login.component.html</context>
+          <context context-type="linenumber">48,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="register.heading" datatype="html">
+        <source>Hesap Oluştur</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.full-name" datatype="html">
+        <source>Ad Soyad (isteğe bağlı)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="form.password-complexity" datatype="html">
+        <source>Şifre en az bir harf ve bir rakam içermelidir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">42,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="register.submit" datatype="html">
+        <source>Kayıt Ol</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">50,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="register.have-account" datatype="html">
+        <source>Hesabın var mı?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="register.login-link" datatype="html">
+        <source>Giriş Yap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/auth/register/register.component.html</context>
+          <context context-type="linenumber">56,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.title" datatype="html">
+        <source> Dashboard </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.portfolio-value" datatype="html">
+        <source>Portföy Değeri</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">47,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.active-positions" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ portfolio.activeRows().length }}"/> aktif pozisyon </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.top-gainer" datatype="html">
+        <source>En Çok Yükselen (24s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.top-loser" datatype="html">
+        <source>En Çok Düşen (24s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">98,100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.fear-greed" datatype="html">
+        <source>Korku &amp; Açgözlülük</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">127,128</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.top-movers" datatype="html">
+        <source>En Hareketliler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">141,142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.view-all" datatype="html">
+        <source>Tümünü Gör</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">142,145</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">183,186</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">227,230</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.watchlist" datatype="html">
+        <source>İzleme Listesi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">182,183</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.watchlist-cta" datatype="html">
+        <source>İzleme listeni oluştur —</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">212,213</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.go-to-markets" datatype="html">
+        <source>Piyasalara Git</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">213,215</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.latest-news" datatype="html">
+        <source>Son Haberler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">226,227</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.news-load-error" datatype="html">
+        <source> Haberler yüklenemedi. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">238,240</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.empty" datatype="html">
+        <source>Haber bulunamadı.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">267,268</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">101,103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="time.minutes-ago" datatype="html">
+        <source><x id="PH" equiv-text="minutes"/> dk önce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">364</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="time.hours-ago" datatype="html">
+        <source><x id="PH" equiv-text="hours"/> s önce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">366</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="time.days-ago" datatype="html">
+        <source><x id="PH" equiv-text="Math.floor(hours / 24)"/> g önce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">367</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.bullish" datatype="html">
+        <source>Yükseliş</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">371</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.bearish" datatype="html">
+        <source>Düşüş</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">372</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.neutral" datatype="html">
+        <source>Nötr</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">373</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.search" datatype="html">
+        <source>Ara...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">4,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.search-placeholder" datatype="html">
+        <source>Örn. Bitcoin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">5,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-coin" datatype="html">
+        <source>Coin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">111,112</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">187,188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-price" datatype="html">
+        <source>Fiyat</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-1h" datatype="html">
+        <source>1s %</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-24h" datatype="html">
+        <source>24s %</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-7d" datatype="html">
+        <source>7g %</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-market-cap" datatype="html">
+        <source>Piyasa Değeri</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">67,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-volume" datatype="html">
+        <source>Hacim (24s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">75,76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.col-sparkline" datatype="html">
+        <source>Son 7 Gün</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">83,84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.no-results" datatype="html">
+        <source>&quot;<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-medium&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{input.value}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>&quot; ile eşleşen sonuç bulunamadı.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">129,130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.paginator" datatype="html">
+        <source>Sayfa seçin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
+          <context context-type="linenumber">135,137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.watchlist-add" datatype="html">
+        <source>İzleme listesine ekle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.ts</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="table.watchlist-remove" datatype="html">
+        <source>İzleme listesinden kaldır</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.ts</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.title" datatype="html">
+        <source>Kripto Haberleri</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.subtitle" datatype="html">
+        <source> CoinDesk ve CoinTelegraph&apos;dan gerçek zamanlı haberler </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.load-error" datatype="html">
+        <source>Haberler yüklenemedi.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.retry" datatype="html">
+        <source>Tekrar Dene</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">51,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.read-btn" datatype="html">
+        <source> Oku <x id="START_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;mat-icon class=&quot;!text-sm&quot;&gt;"/>open_in_new<x id="CLOSE_TAG_MAT_ICON" ctype="x-mat_icon" equiv-text="&lt;/mat-icon&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">88,91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="news.filter-all" datatype="html">
+        <source>Tümü</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="time.just-now" datatype="html">
+        <source>Az önce</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/news/news.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.title" datatype="html">
+        <source> Portföy </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.subtitle" datatype="html">
+        <source> Açık pozisyonların canlı piyasa verileriyle izlenir, kapatılan işlemler ise ayrı sekmede tutulur. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.new-position" datatype="html">
+        <source>Yeni Pozisyon</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">59,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.total-value" datatype="html">
+        <source>Toplam Değer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.total-cost" datatype="html">
+        <source>Toplam Maliyet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">75,76</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">189,190</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.total-pnl" datatype="html">
+        <source>Toplam Kar/Zarar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">84,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.total-pnl-pct" datatype="html">
+        <source>Toplam Kar/Zarar %</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">93,94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.tab-active" datatype="html">
+        <source>Aktif Pozisyonlar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">105,106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-qty" datatype="html">
+        <source>Adet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">112,113</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">188,189</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-avg" datatype="html">
+        <source>Ortalama</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">113,114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-current" datatype="html">
+        <source>Anlık</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">114,115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-value" datatype="html">
+        <source>Değer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">115,116</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-action" datatype="html">
+        <source>Aksiyon</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">117,118</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">193,194</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.edit-btn" datatype="html">
+        <source>Düzenle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">157,158</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.close-btn" datatype="html">
+        <source>Kapat</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.delete-btn" datatype="html">
+        <source>Sil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.tab-closed" datatype="html">
+        <source>Kapalı Pozisyonlar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">181,182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-close-price" datatype="html">
+        <source>Kapanış</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">190,191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-realized" datatype="html">
+        <source>Gerçekleşen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">191,192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.col-date" datatype="html">
+        <source>Tarih</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">192,193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.allocation-title" datatype="html">
+        <source>Dağılım</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">247,248</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.allocation-subtitle" datatype="html">
+        <source> Aktif pozisyonların anlık değerine göre </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">249,251</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.empty-title" datatype="html">
+        <source>Aktif pozisyon yok</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">273,274</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.empty-desc" datatype="html">
+        <source> İlk işlemini ekleyerek toplam değer ve canlı kar/zarar hesaplarını görebilirsin. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">275,277</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.closed-empty" datatype="html">
+        <source> Kapatılan pozisyonlar burada listelenecek. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">282,284</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="portfolio.allocation-empty" datatype="html">
+        <source>Dağılım grafiği için en az bir aktif pozisyon ekle.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/portfolio/portfolio.component.ts</context>
+          <context context-type="linenumber">288,290</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.title" datatype="html">
+        <source>Ayarlar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">23,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.theme" datatype="html">
+        <source>Tema</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.theme-select" datatype="html">
+        <source>Tema seç</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.theme-light" datatype="html">
+        <source>Açık</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.theme-dark" datatype="html">
+        <source>Koyu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">33,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.theme-system" datatype="html">
+        <source>Sistem</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.currency" datatype="html">
+        <source>Para Birimi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.currency-select" datatype="html">
+        <source>Para birimi seç</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.language" datatype="html">
+        <source>Dil</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.language-select" datatype="html">
+        <source>Dil seç</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.lang-tr" datatype="html">
+        <source>Türkçe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">60,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.lang-en" datatype="html">
+        <source>English</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">61,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.notifications" datatype="html">
+        <source>Bildirimler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.push-title" datatype="html">
+        <source>Tarayıcı bildirimleri</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">73,74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.push-unsupported" datatype="html">
+        <source>Bu tarayıcı bildirimleri desteklemiyor.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">77,79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.push-denied" datatype="html">
+        <source>Bildirimler engellendi. Tarayıcı ayarlarından izin verin.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.push-granted" datatype="html">
+        <source>Bildirimler etkin — alarm tetiklenince haber alırsınız.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.push-default" datatype="html">
+        <source>Etkinleştirince izin isteyeceğiz.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">86,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings.push-toggle" datatype="html">
+        <source>Tarayıcı bildirimlerini etkinleştir</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/settings/settings-page.component.ts</context>
+          <context context-type="linenumber">95,97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shell.toggle-menu" datatype="html">
+        <source>Menüyü aç/kapat</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shell.search-placeholder" datatype="html">
+        <source>Coin ara...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.html</context>
+          <context context-type="linenumber">42,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shell.currency-select" datatype="html">
+        <source>Para birimi seç</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.html</context>
+          <context context-type="linenumber">56,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shell.user-menu" datatype="html">
+        <source>Kullanıcı menüsü</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.html</context>
+          <context context-type="linenumber">70,71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shell.menu-settings" datatype="html">
+        <source>Ayarlar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.html</context>
+          <context context-type="linenumber">80,82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shell.menu-logout" datatype="html">
+        <source>Çıkış Yap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.html</context>
+          <context context-type="linenumber">84,86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.dashboard" datatype="html">
+        <source>Dashboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.markets" datatype="html">
+        <source>Piyasalar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.portfolio" datatype="html">
+        <source>Portföy</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.alerts" datatype="html">
+        <source>Alarmlar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.news" datatype="html">
+        <source>Haberler</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.settings" datatype="html">
+        <source>Ayarlar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.title" datatype="html">
+        <source> İzleme Listesi </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.subtitle" datatype="html">
+        <source> Takip ettiğin coinler burada canlı fiyat akışı ile birlikte görünür. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">29,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.add-coin" datatype="html">
+        <source>Coin Ekle</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.outside-top100" datatype="html">
+        <source> Top 100 dışındaki kayıtlar </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.coin-id-label" datatype="html">
+        <source>Coin ID</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.outside-note" datatype="html">
+        <source> Bu coin için şu anda sadece kayıt tutuluyor. Canlı fiyat verisi Top 100 snapshot içinde geldiğinde tabloya eklenecek. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">71,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.remove-btn" datatype="html">
+        <source>İzleme listesinden kaldır</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">79,80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.empty-title" datatype="html">
+        <source> Henüz izlediğin coin yok </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">96,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.empty-desc" datatype="html">
+        <source> Piyasalar sayfasındaki yıldız düğmesini kullanarak coin ekleyebilir, sonra bu sayfadan hepsini tek yerde takip edebilirsin. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">99,101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="watchlist.go-to-markets" datatype="html">
+        <source> Piyasalara Git </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
+          <context context-type="linenumber">109,111</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

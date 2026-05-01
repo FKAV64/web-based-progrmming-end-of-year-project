@@ -22,11 +22,11 @@ import { WatchlistService } from '../../core/services/state/watchlist.service';
     <div class="min-h-full bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
       <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white">
-            Izleme Listesi
+          <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white" i18n="@@watchlist.title">
+            İzleme Listesi
           </h1>
-          <p class="mt-2 max-w-2xl text-sm text-gray-600 dark:text-gray-400">
-            Takip ettigin coinler burada canli fiyat akisi ile birlikte gorunur.
+          <p class="mt-2 max-w-2xl text-sm text-gray-600 dark:text-gray-400" i18n="@@watchlist.subtitle">
+            Takip ettiğin coinler burada canlı fiyat akışı ile birlikte görünür.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ import { WatchlistService } from '../../core/services/state/watchlist.service';
           class="w-fit"
         >
           <mat-icon>add</mat-icon>
-          Coin Ekle
+          <span i18n="@@watchlist.add-coin">Coin Ekle</span>
         </a>
       </div>
 
@@ -51,8 +51,8 @@ import { WatchlistService } from '../../core/services/state/watchlist.service';
         >
           <div class="mb-4 flex items-center gap-2">
             <mat-icon class="text-amber-500">info</mat-icon>
-            <h2 class="text-lg font-semibold text-gray-950 dark:text-white">
-              Top 100 disindaki kayitlar
+            <h2 class="text-lg font-semibold text-gray-950 dark:text-white" i18n="@@watchlist.outside-top100">
+              Top 100 dışındaki kayıtlar
             </h2>
           </div>
 
@@ -63,20 +63,20 @@ import { WatchlistService } from '../../core/services/state/watchlist.service';
             >
               <div class="flex items-start justify-between gap-3">
                 <div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">Coin ID</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@watchlist.coin-id-label">Coin ID</div>
                   <div class="text-base font-semibold text-gray-950 dark:text-white">
                     {{ item.coinId }}
                   </div>
-                  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                    Bu coin icin su anda sadece kayit tutuluyor. Canli fiyat verisi Top 100
-                    snapshot icinde geldiginde tabloya eklenecek.
+                  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400" i18n="@@watchlist.outside-note">
+                    Bu coin için şu anda sadece kayıt tutuluyor. Canlı fiyat verisi Top 100
+                    snapshot içinde geldiğinde tabloya eklenecek.
                   </p>
                 </div>
 
                 <button
                   mat-icon-button
                   type="button"
-                  aria-label="Izleme listesinden kaldir"
+                  i18n-aria-label="@@watchlist.remove-btn" aria-label="İzleme listesinden kaldır"
                   (click)="remove(item.coinId)"
                 >
                   <mat-icon>delete</mat-icon>
@@ -92,11 +92,11 @@ import { WatchlistService } from '../../core/services/state/watchlist.service';
           <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-300">
             <mat-icon>star</mat-icon>
           </div>
-          <h2 class="mt-4 text-2xl font-semibold text-gray-950 dark:text-white">
-            Henuz izledigin coin yok
+          <h2 class="mt-4 text-2xl font-semibold text-gray-950 dark:text-white" i18n="@@watchlist.empty-title">
+            Henüz izlediğin coin yok
           </h2>
-          <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-400">
-            Piyasalar sayfasindaki yildiz dugmesini kullanarak coin ekleyebilir, sonra bu sayfadan
+          <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-400" i18n="@@watchlist.empty-desc">
+            Piyasalar sayfasındaki yıldız düğmesini kullanarak coin ekleyebilir, sonra bu sayfadan
             hepsini tek yerde takip edebilirsin.
           </p>
           <a
@@ -104,6 +104,7 @@ import { WatchlistService } from '../../core/services/state/watchlist.service';
             color="primary"
             routerLink="/markets"
             class="mt-6 inline-flex"
+            i18n="@@watchlist.go-to-markets"
           >
             Piyasalara Git
           </a>

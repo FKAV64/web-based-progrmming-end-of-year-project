@@ -13,8 +13,8 @@ import { MarketApiService } from '../../core/services/api/market.api';
   template: `
     <div class="min-h-full bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
       <div class="mb-6">
-        <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white">Kripto Haberleri</h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <h1 class="text-3xl font-semibold tracking-tight text-gray-950 dark:text-white" i18n="@@news.title">Kripto Haberleri</h1>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400" i18n="@@news.subtitle">
           CoinDesk ve CoinTelegraph'dan gerçek zamanlı haberler
         </p>
       </div>
@@ -30,7 +30,7 @@ import { MarketApiService } from '../../core/services/api/market.api';
             : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'"
           (click)="activeSource.set(src)"
         >
-          {{ src === 'all' ? 'Tümü' : src }}
+          {{ src === 'all' ? allLabel : src }}
           <span class="ml-1 text-xs opacity-70">({{ countFor(src) }})</span>
         </button>
       </div>
@@ -47,8 +47,8 @@ import { MarketApiService } from '../../core/services/api/market.api';
       <ng-container *ngIf="error() && !loading()">
         <div class="rounded-3xl border border-dashed border-gray-300 bg-white p-10 text-center dark:border-gray-700 dark:bg-gray-900">
           <mat-icon class="text-gray-400">error_outline</mat-icon>
-          <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">Haberler yüklenemedi.</p>
-          <button mat-stroked-button class="mt-4" (click)="reload()">Tekrar Dene</button>
+          <p class="mt-3 text-sm text-gray-600 dark:text-gray-400" i18n="@@news.load-error">Haberler yüklenemedi.</p>
+          <button mat-stroked-button class="mt-4" (click)="reload()" i18n="@@common.retry">Tekrar Dene</button>
         </div>
       </ng-container>
 
@@ -83,6 +83,7 @@ import { MarketApiService } from '../../core/services/api/market.api';
                   mat-stroked-button
                   class="!text-xs"
                   color="primary"
+                  i18n="@@news.read-btn"
                 >
                   Oku
                   <mat-icon class="!text-sm">open_in_new</mat-icon>
@@ -97,7 +98,7 @@ import { MarketApiService } from '../../core/services/api/market.api';
             <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
               <mat-icon>newspaper</mat-icon>
             </div>
-            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Bu kaynakta haber bulunamadı.</p>
+            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400" i18n="@@news.empty">Haber bulunamadı.</p>
           </div>
         </ng-template>
       </ng-container>
@@ -106,6 +107,8 @@ import { MarketApiService } from '../../core/services/api/market.api';
 })
 export class NewsComponent {
   private marketApi = inject(MarketApiService);
+
+  readonly allLabel = $localize`:@@news.filter-all:Tümü`;
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -141,17 +144,17 @@ export class NewsComponent {
   relativeTime(pubDate: string): string {
     const diff = Date.now() - new Date(pubDate).getTime();
     const minutes = Math.floor(diff / 60_000);
-    if (minutes < 1) return 'Az önce';
-    if (minutes < 60) return `${minutes}dk önce`;
+    if (minutes < 1) return $localize`:@@time.just-now:Az önce`;
+    if (minutes < 60) return $localize`:@@time.minutes-ago:${minutes} dk önce`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}s önce`;
-    return `${Math.floor(hours / 24)}g önce`;
+    if (hours < 24) return $localize`:@@time.hours-ago:${hours} s önce`;
+    return $localize`:@@time.days-ago:${Math.floor(hours / 24)} g önce`;
   }
 
   sentimentLabel(sentiment: string): string {
-    if (sentiment === 'bullish') return 'Yükseliş';
-    if (sentiment === 'bearish') return 'Düşüş';
-    return 'Nötr';
+    if (sentiment === 'bullish') return $localize`:@@news.bullish:Yükseliş`;
+    if (sentiment === 'bearish') return $localize`:@@news.bearish:Düşüş`;
+    return $localize`:@@news.neutral:Nötr`;
   }
 
   sentimentBadgeClass(sentiment: string): string {

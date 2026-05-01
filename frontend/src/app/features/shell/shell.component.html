@@ -30,7 +30,8 @@
   <mat-sidenav-content class="flex flex-col">
     <!-- Top bar -->
     <mat-toolbar color="primary" class="flex items-center gap-2 shadow-md flex-shrink-0">
-      <button mat-icon-button (click)="sidenavOpen.set(!sidenavOpen())" aria-label="Menüyü aç/kapat">
+      <button mat-icon-button (click)="sidenavOpen.set(!sidenavOpen())"
+              i18n-aria-label="@@shell.toggle-menu" aria-label="Menüyü aç/kapat">
         <mat-icon>menu</mat-icon>
       </button>
 
@@ -38,7 +39,7 @@
       <div class="flex-1 max-w-xs mx-4">
         <div class="flex items-center bg-white/10 rounded-lg px-3 py-1 gap-2 cursor-not-allowed opacity-60">
           <mat-icon class="text-white/70 text-base">search</mat-icon>
-          <span class="text-white/70 text-sm">Coin ara...</span>
+          <span class="text-white/70 text-sm" i18n="@@shell.search-placeholder">Coin ara...</span>
         </div>
       </div>
 
@@ -52,7 +53,7 @@
         [value]="settings.currency()"
         (selectionChange)="setCurrency($event.value)"
         class="text-white w-20"
-        aria-label="Para birimi seç"
+        i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
       >
         @for (c of currencies; track c) {
           <mat-option [value]="c">{{ c }}</mat-option>
@@ -65,7 +66,8 @@
       </button>
 
       <!-- User menu -->
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Kullanıcı menüsü">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu"
+              i18n-aria-label="@@shell.user-menu" aria-label="Kullanıcı menüsü">
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #userMenu="matMenu">
@@ -74,10 +76,12 @@
         </div>
         <mat-divider></mat-divider>
         <button mat-menu-item routerLink="/settings">
-          <mat-icon>settings</mat-icon> Ayarlar
+          <mat-icon>settings</mat-icon>
+          <span i18n="@@shell.menu-settings">Ayarlar</span>
         </button>
         <button mat-menu-item (click)="auth.logout()">
-          <mat-icon>logout</mat-icon> Çıkış Yap
+          <mat-icon>logout</mat-icon>
+          <span i18n="@@shell.menu-logout">Çıkış Yap</span>
         </button>
       </mat-menu>
     </mat-toolbar>

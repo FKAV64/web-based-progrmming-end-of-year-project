@@ -77,6 +77,9 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
   settings = inject(SettingsService);
   er = inject(ExchangeRatesService);
 
+  readonly watchlistAddLabel = $localize`:@@table.watchlist-add:İzleme listesine ekle`;
+  readonly watchlistRemoveLabel = $localize`:@@table.watchlist-remove:İzleme listesinden kaldır`;
+
   displayedColumns: string[] = [
     'market_cap_rank',
     'name',
