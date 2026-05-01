@@ -1,8 +1,8 @@
 {
-  "name": "crypto-dashboard-frontend",
-  "short_name": "crypto-dashboard-frontend",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "Kripto Dashboard",
+  "short_name": "Kripto",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

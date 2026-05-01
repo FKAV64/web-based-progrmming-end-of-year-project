@@ -16,6 +16,7 @@ import { SettingsService } from '../../core/services/state/settings.service';
 import { Currency } from '../../core/models/user.model';
 import { BINANCE_WS } from '../../core/services/ws/binance-ws.token';
 import { ConnectionStatusComponent } from '../../shared/components/connection-status/connection-status.component';
+import { PwaService } from '../../core/services/pwa.service';
 
 interface NavItem {
   label: string;
@@ -47,6 +48,7 @@ export class ShellComponent {
   auth = inject(AuthService);
   settings = inject(SettingsService);
   ws = inject(BINANCE_WS);
+  pwa = inject(PwaService);
 
   isMobile = signal(false);
   sidenavOpen = signal(true);

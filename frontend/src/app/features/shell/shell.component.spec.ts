@@ -8,6 +8,7 @@ import { ShellComponent } from './shell.component';
 import { AuthService } from '../../core/services/state/auth.service';
 import { SettingsService } from '../../core/services/state/settings.service';
 import { BINANCE_WS } from '../../core/services/ws/binance-ws.token';
+import { PwaService } from '../../core/services/pwa.service';
 
 describe('ShellComponent — a11y', () => {
   let fixture: ComponentFixture<ShellComponent>;
@@ -39,6 +40,14 @@ describe('ShellComponent — a11y', () => {
           provide: BreakpointObserver,
           useValue: { observe: jest.fn(() => of({ matches: false, breakpoints: {} })) },
         },
+        {
+          provide: PwaService,
+          useValue: {
+            canInstall: signal(false),
+            isOnline: signal(true),
+            install: jest.fn(),
+          },
+        },
       ],
     }).compileComponents();
 
@@ -67,5 +76,32 @@ describe('ShellComponent — a11y', () => {
     navLinks.forEach(link => {
       expect(link.getAttribute('aria-label')).toBeTruthy();
     });
+  });
+
+  it('offline banner is hidden when isOnline is true', () => {
+    const banner = el.querySelector('#offline-banner');
+    expect(banner).toBeNull();
+  });
+
+  it('offline banner is visible when isOnline is false', async () => {
+    const pwaService = TestBed.inject(PwaService) as unknown as { isOnline: ReturnType<typeof signal<boolean>> };
+    pwaService.isOnline.set(false);
+    fixture.detectChanges();
+    const banner = el.querySelector('#offline-banner');
+    expect(banner).not.toBeNull();
+    expect(banner?.textContent).toContain('Çevrimdışı');
+  });
+
+  it('install button is hidden when canInstall is false', () => {
+    const installBtn = el.querySelector('button[aria-label="Uygulamayı yükle"]');
+    expect(installBtn).toBeNull();
+  });
+
+  it('install button appears when canInstall is true', () => {
+    const pwaService = TestBed.inject(PwaService) as unknown as { canInstall: ReturnType<typeof signal<boolean>> };
+    pwaService.canInstall.set(true);
+    fixture.detectChanges();
+    const installBtn = el.querySelector('button[aria-label="Uygulamayı yükle"]');
+    expect(installBtn).not.toBeNull();
   });
 });

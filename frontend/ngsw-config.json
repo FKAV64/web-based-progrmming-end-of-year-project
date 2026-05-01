@@ -26,5 +26,26 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "market-top",
+      "urls": ["/api/market/top"],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 10,
+        "maxAge": "30s",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "market-static",
+      "urls": ["/api/market/coin/**", "/api/market/ohlc/**"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 100,
+        "maxAge": "1h"
+      }
+    }
   ]
 }

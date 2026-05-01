@@ -65,6 +65,15 @@
         <mat-icon>{{ settings.theme() === 'DARK' ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
+      <!-- PWA install button — visible when beforeinstallprompt has fired -->
+      @if (pwa.canInstall()) {
+        <button mat-button (click)="pwa.install()" class="text-white hidden sm:flex items-center gap-1"
+                aria-label="Uygulamayı yükle">
+          <mat-icon>install_desktop</mat-icon>
+          <span class="text-sm" i18n="@@shell.install-app">Yükle</span>
+        </button>
+      }
+
       <!-- User menu -->
       <button mat-icon-button [matMenuTriggerFor]="userMenu"
               i18n-aria-label="@@shell.user-menu" aria-label="Kullanıcı menüsü">
@@ -102,6 +111,16 @@
 
     <!-- Accessible live region for toast announcements -->
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="toast-announcer"></div>
+
+    <!-- Offline banner -->
+    @if (!pwa.isOnline()) {
+      <div role="status" aria-live="assertive"
+           class="flex items-center gap-2 bg-yellow-500 text-yellow-950 px-4 py-2 text-sm font-medium"
+           id="offline-banner">
+        <mat-icon class="text-base">wifi_off</mat-icon>
+        <span i18n="@@shell.offline-banner">Çevrimdışı — veriler güncel olmayabilir</span>
+      </div>
+    }
 
     <!-- Page content -->
     <div class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
