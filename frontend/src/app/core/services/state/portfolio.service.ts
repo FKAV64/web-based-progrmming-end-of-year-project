@@ -60,6 +60,7 @@ export class PortfolioService {
   private priceStream = inject(PriceStreamService);
   private notifications = inject(NotificationService);
 
+  readonly loading = signal(true);
   readonly positions = signal<PortfolioPosition[]>([]);
   readonly closedPositions = signal<PortfolioPosition[]>([]);
   readonly totalValue = computed(() =>
@@ -94,6 +95,7 @@ export class PortfolioService {
       if (!userId) {
         this.loadedUserId = null;
         this.closedLoaded = false;
+        this.loading.set(true);
         this.positions.set([]);
         this.closedPositions.set([]);
         this.exchangeRates.set(null);
@@ -103,10 +105,11 @@ export class PortfolioService {
       if (this.loadedUserId !== userId) {
         this.loadedUserId = userId;
         this.closedLoaded = false;
+        this.loading.set(true);
         void this.loadActive(true);
         void this.loadExchangeRates();
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   async loadActive(silent = false): Promise<void> {
@@ -118,6 +121,8 @@ export class PortfolioService {
       if (!silent) {
         this.notifications.showError(error, 'Portfoy yuklenemedi.');
       }
+    } finally {
+      this.loading.set(false);
     }
   }
 

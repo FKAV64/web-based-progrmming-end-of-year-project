@@ -127,8 +127,13 @@ import { CreateAlertDialogComponent } from './create-alert-dialog.component';
       </ng-template>
 
       <ng-template #triggeredEmpty>
-        <div class="px-6 py-12 text-center text-sm text-gray-600 dark:text-gray-400" i18n="@@alerts.empty-triggered">
-          Tetiklenen alarmlar burada listelenecek.
+        <div class="px-6 py-12 text-center">
+          <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
+            <mat-icon>history</mat-icon>
+          </div>
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400" i18n="@@alerts.empty-triggered">
+            Tetiklenen alarmlar burada listelenecek.
+          </p>
         </div>
       </ng-template>
     </div>

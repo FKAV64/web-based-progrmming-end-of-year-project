@@ -113,8 +113,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns();"
           [routerLink]="['/coin', row.id]"
           class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           [ngClass]="{

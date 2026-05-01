@@ -6,6 +6,45 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* ── Focus ring (WCAG 2.4.7 / 2.4.11) ─────────────────────────────────── */
+:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Override Material's own focus style so our ring shows */
+.mdc-button:focus-visible,
+.mat-mdc-icon-button:focus-visible,
+.mat-mdc-menu-item:focus-visible,
+.mat-mdc-list-item:focus-visible {
+  outline: 3px solid #1d4ed8 !important;
+  outline-offset: 2px;
+}
+
+/* ── Touch targets ≥ 44×44 px (WCAG 2.5.5) ────────────────────────────── */
+.mat-mdc-icon-button.mat-mdc-button-base {
+  width: 44px !important;
+  height: 44px !important;
+  padding: 10px !important;
+}
+
+/* ── Reduce motion (WCAG 2.3.3) ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-pulse {
+    animation: none !important;
+    background: #e5e7eb;
+  }
+}
+
+/* ── Snackbar colours ───────────────────────────────────────────────────── */
 .app-snackbar-error .mdc-snackbar__surface {
   background: #7f1d1d !important;
   color: #fff !important;

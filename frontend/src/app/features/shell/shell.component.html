@@ -35,9 +35,9 @@
         <mat-icon>menu</mat-icon>
       </button>
 
-      <!-- Search placeholder -->
-      <div class="flex-1 max-w-xs mx-4">
-        <div class="flex items-center bg-white/10 rounded-lg px-3 py-1 gap-2 cursor-not-allowed opacity-60">
+      <!-- Search placeholder — hidden on small screens to prevent overflow -->
+      <div class="hidden md:flex flex-1 max-w-xs mx-4">
+        <div class="flex items-center bg-white/10 rounded-lg px-3 py-1 gap-2 cursor-not-allowed opacity-60 w-full">
           <mat-icon class="text-white/70 text-base">search</mat-icon>
           <span class="text-white/70 text-sm" i18n="@@shell.search-placeholder">Coin ara...</span>
         </div>
@@ -48,11 +48,11 @@
 
       <span class="flex-1"></span>
 
-      <!-- Currency selector -->
+      <!-- Currency selector — hidden on xs, shown from sm -->
       <mat-select
         [value]="settings.currency()"
         (selectionChange)="setCurrency($event.value)"
-        class="text-white w-20"
+        class="text-white w-20 hidden sm:block"
         i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
       >
         @for (c of currencies; track c) {
@@ -75,6 +75,20 @@
           {{ auth.currentUser()?.email }}
         </div>
         <mat-divider></mat-divider>
+        <!-- Currency in menu on mobile -->
+        <div class="px-4 py-2 sm:hidden">
+          <mat-select
+            [value]="settings.currency()"
+            (selectionChange)="setCurrency($event.value)"
+            class="w-full"
+            i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
+          >
+            @for (c of currencies; track c) {
+              <mat-option [value]="c">{{ c }}</mat-option>
+            }
+          </mat-select>
+        </div>
+        <mat-divider class="sm:hidden"></mat-divider>
         <button mat-menu-item routerLink="/settings">
           <mat-icon>settings</mat-icon>
           <span i18n="@@shell.menu-settings">Ayarlar</span>
@@ -85,6 +99,9 @@
         </button>
       </mat-menu>
     </mat-toolbar>
+
+    <!-- Accessible live region for toast announcements -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="toast-announcer"></div>
 
     <!-- Page content -->
     <div class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">

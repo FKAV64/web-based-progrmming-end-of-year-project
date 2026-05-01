@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
   Input,
   inject,
   OnChanges,
@@ -18,6 +19,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CoinSnapshot } from '../../../core/models/market.model';
 import { WatchlistService } from '../../../core/services/state/watchlist.service';
 import { SettingsService } from '../../../core/services/state/settings.service';
@@ -80,18 +84,29 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
   readonly watchlistAddLabel = $localize`:@@table.watchlist-add:İzleme listesine ekle`;
   readonly watchlistRemoveLabel = $localize`:@@table.watchlist-remove:İzleme listesinden kaldır`;
 
-  displayedColumns: string[] = [
-    'market_cap_rank',
-    'name',
-    'current_price',
-    'price_change_percentage_1h_in_currency',
-    'price_change_percentage_24h',
-    'price_change_percentage_7d_in_currency',
-    'market_cap',
-    'total_volume',
-    'sparkline',
-    'watchlist',
-  ];
+  private readonly isMobile = toSignal(
+    inject(BreakpointObserver)
+      .observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
+      .pipe(map(r => r.matches)),
+    { initialValue: false },
+  );
+
+  readonly displayedColumns = computed<string[]>(() =>
+    this.isMobile()
+      ? ['market_cap_rank', 'name', 'current_price', 'price_change_percentage_24h', 'watchlist']
+      : [
+          'market_cap_rank',
+          'name',
+          'current_price',
+          'price_change_percentage_1h_in_currency',
+          'price_change_percentage_24h',
+          'price_change_percentage_7d_in_currency',
+          'market_cap',
+          'total_volume',
+          'sparkline',
+          'watchlist',
+        ],
+  );
   dataSource = new MatTableDataSource<CoinSnapshot>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

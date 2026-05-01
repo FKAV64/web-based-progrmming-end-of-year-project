@@ -98,7 +98,29 @@ interface AllocationChartOptions {
         </mat-card>
       </section>
 
-      <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <!-- Skeleton while loading initial positions -->
+      <ng-container *ngIf="portfolio.loading()">
+        <div class="mt-6 overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900"
+             role="status" aria-label="Portföy yükleniyor" i18n-aria-label="@@portfolio.loading">
+          <div class="h-10 animate-pulse bg-gray-100 dark:bg-gray-800"></div>
+          <div *ngFor="let _ of skeletonRows" class="flex items-center gap-4 border-t border-gray-100 px-5 py-4 dark:border-gray-800">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
+              <div class="space-y-1">
+                <div class="h-4 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                <div class="h-3 w-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+              </div>
+            </div>
+            <div class="ml-auto flex gap-6">
+              <div class="h-4 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+              <div class="hidden h-4 w-20 animate-pulse rounded bg-gray-200 dark:bg-gray-700 md:block"></div>
+              <div class="hidden h-4 w-20 animate-pulse rounded bg-gray-200 dark:bg-gray-700 lg:block"></div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]" *ngIf="!portfolio.loading()">
         <section class="overflow-hidden rounded-[28px] border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <mat-tab-group class="portfolio-tabs" (selectedIndexChange)="onTabChange($event)">
             <mat-tab>
@@ -274,6 +296,10 @@ interface AllocationChartOptions {
           <p class="mt-2 text-sm text-gray-600 dark:text-gray-400" i18n="@@portfolio.empty-desc">
             İlk işlemini ekleyerek toplam değer ve canlı kar/zarar hesaplarını görebilirsin.
           </p>
+          <button mat-flat-button color="primary" type="button" class="mt-6" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+            <span i18n="@@portfolio.new-position">Yeni Pozisyon</span>
+          </button>
         </div>
       </ng-template>
 
@@ -294,6 +320,7 @@ interface AllocationChartOptions {
 export class PortfolioComponent {
   portfolio = inject(PortfolioService);
   settings = inject(SettingsService);
+  readonly skeletonRows = Array(5).fill(0);
 
   private dialog = inject(MatDialog);
 
