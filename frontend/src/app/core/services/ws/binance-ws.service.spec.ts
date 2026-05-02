@@ -58,14 +58,16 @@ describe('BinanceWsService', () => {
   }));
 
   // -------------------------------------------------------------------------
-  // 4. timeout fires after 10 s of silence → connectionState → 'reconnecting'
+  // 4. per-symbol timeout fires after 30 s of silence for that symbol
+  //    (timeout was moved from connection$ to tick$() per-symbol in Fix 3)
   // -------------------------------------------------------------------------
-  it('transitions to reconnecting after 10 s of silence', fakeAsync(() => {
-    service.connection$.subscribe({ error: () => {} });
+  it('tick$() errors after 30 s of silence for that symbol', fakeAsync(() => {
+    let timedOut = false;
+    service.tick$('BTCUSDT').subscribe({ error: () => { timedOut = true; } });
 
-    tick(10_100); // past 10 s timeout
+    tick(30_100); // past the 30 s per-symbol timeout
 
-    expect(service.connectionState()).toBe('reconnecting');
+    expect(timedOut).toBe(true);
 
     discardPeriodicTasks();
   }));
