@@ -112,6 +112,8 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  trackByCoinId = (_index: number, coin: CoinSnapshot): string => coin.id;
+
   private previousPrices = new Map<string, number>();
   private sparklineOptions = new Map<string, SparklineOptions>();
   flashingRows = new Map<string, 'up' | 'down'>();

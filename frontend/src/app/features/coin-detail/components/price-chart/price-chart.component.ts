@@ -8,11 +8,13 @@ import {
   ViewChild,
   effect,
   inject,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgApexchartsModule, ChartComponent } from 'ng-apexcharts';
-import { Subscription, catchError, of } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Subscription, catchError, finalize, of } from 'rxjs';
 import { BinanceInterval, ChartType, OHLC } from '../../../../core/models/market.model';
 import { MarketApiService } from '../../../../core/services/api/market.api';
 import { SettingsService } from '../../../../core/services/state/settings.service';
@@ -33,19 +35,19 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
 @Component({
   selector: 'app-price-chart',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule, MatProgressSpinnerModule],
   template: `
     <div class="relative min-h-[430px] rounded border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-      <div *ngIf="loading" class="absolute inset-0 animate-pulse p-4">
-        <div class="h-full rounded bg-gray-100 dark:bg-gray-900"></div>
+      <div *ngIf="loading()" class="absolute inset-0 z-10 flex items-center justify-center bg-white/60 dark:bg-gray-950/60">
+        <mat-spinner [diameter]="48"></mat-spinner>
       </div>
 
-      <div *ngIf="errorMessage && !loading" class="flex min-h-[430px] items-center justify-center px-6 text-center text-sm text-red-600 dark:text-red-400">
+      <div *ngIf="errorMessage && !loading()" class="flex min-h-[430px] items-center justify-center px-6 text-center text-sm text-red-600 dark:text-red-400">
         {{ errorMessage }}
       </div>
 
       <apx-chart
-        *ngIf="!loading && !errorMessage"
+        *ngIf="!errorMessage"
         #chart
         [series]="series"
         [chart]="chartOptions"
@@ -76,7 +78,7 @@ export class PriceChartComponent implements OnChanges {
   @Input({ required: true }) limit = 168;
   @Input({ required: true }) chartType: ChartType = 'candle';
 
-  loading = false;
+  loading = signal(false);
   errorMessage = '';
   klines: OHLC[] = [];
 
@@ -128,24 +130,24 @@ export class PriceChartComponent implements OnChanges {
     if (cached) {
       this.klines = cached;
       this.errorMessage = '';
-      this.loading = false;
+      this.loading.set(false);
       this.syncSeries(false);
       return;
     }
 
-    this.loading = true;
+    this.loading.set(true);
     this.errorMessage = '';
     this.api.getKlines(this.symbol, this.interval, this.limit).pipe(
       catchError(() => {
         this.errorMessage = 'Chart data could not be loaded.';
         return of([]);
       }),
+      finalize(() => this.loading.set(false)),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(klines => {
       if (this.fetchKey !== key) return;
       this.klines = klines.map(k => ({ ...k }));
       this.cache.set(key, this.klines);
-      this.loading = false;
       this.syncSeries(false);
     });
   }
@@ -205,6 +207,15 @@ export class PriceChartComponent implements OnChanges {
       },
       animations: { enabled: false },
       background: 'transparent',
+      events: {
+        mounted: (chart: any) => {
+          chart.el.addEventListener(
+            'wheel',
+            (e: Event) => e.stopPropagation(),
+            { passive: true }
+          );
+        },
+      },
     };
 
     this.xaxis = {

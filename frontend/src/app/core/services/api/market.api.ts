@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, timer } from 'rxjs';
-import { switchMap, shareReplay, map } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
+import { switchMap, shareReplay, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ExchangeRatesResponse } from '../../models/exchange-rate.model';
 import { BinanceInterval, CoinDetail, CoinSnapshot, NewsItem, OHLC, SentimentResponse } from '../../models/market.model';
@@ -13,10 +13,12 @@ export class MarketApiService {
   private http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiBaseUrl}/market`;
 
-  // The Top-100 stream, aligned with backend snapshot cadence
+  private klineCache = new Map<string, { data: OHLC[]; fetchedAt: number }>();
+
+  // refCount:false keeps the observable alive with zero subscribers (between navigations)
   topCoins$ = timer(0, 15_000).pipe(
     switchMap(() => this.getTop()),
-    shareReplay(1)
+    shareReplay({ bufferSize: 1, refCount: false })
   );
 
   getTop(): Observable<CoinSnapshot[]> {
@@ -30,12 +32,20 @@ export class MarketApiService {
   }
 
   getKlines(symbol: string, interval: BinanceInterval, limit?: number): Observable<OHLC[]> {
+    const key = `${symbol}|${interval}|${limit}`;
+    const cached = this.klineCache.get(key);
+    if (cached && Date.now() - cached.fetchedAt < 60_000) {
+      return of(cached.data);
+    }
     let url = `${this.baseUrl}/ohlc/${encodeURIComponent(symbol)}?interval=${encodeURIComponent(interval)}`;
     if (limit) {
       url += `&limit=${limit}`;
     }
     return this.http.get<{ data: OHLC[] }>(url)
-      .pipe(map(r => r.data));
+      .pipe(
+        map(r => r.data),
+        tap(data => this.klineCache.set(key, { data, fetchedAt: Date.now() }))
+      );
   }
 
   getChart(id: string, days?: string): Observable<any> {

@@ -49,10 +49,7 @@ export class BinanceWsService implements OnDestroy {
     });
 
     this.connection$ = this.socket$.pipe(
-      // (1) Detect silent half-open sockets: throw if no message for 10s
-      timeout({ each: 10_000 }),
-
-      // (2) Multicast to all subscribers sharing one socket
+      // Multicast to all subscribers sharing one socket
       share({
         connector: () => new ReplaySubject(1),
         resetOnError: true,
@@ -60,7 +57,7 @@ export class BinanceWsService implements OnDestroy {
         resetOnRefCountZero: true,
       }),
 
-      // (3) Reconnect with exponential backoff capped at 30s
+      // Reconnect with exponential backoff capped at 30s
       retry({
         count: Infinity,
         delay: (_, attempt) => {
@@ -78,6 +75,8 @@ export class BinanceWsService implements OnDestroy {
 
       const sub = this.connection$.pipe(
         filter((msg: any) => msg?.s === symbol),
+        // timeout per-symbol so cross-symbol traffic doesn't reset the clock
+        timeout({ each: 30_000 }),
         map((msg: any): PriceTick => ({
           symbol: msg.s,
           price: parseFloat(msg.c),
