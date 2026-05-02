@@ -47,6 +47,13 @@ export class AuthService {
     }
   }
 
+  async deleteAccount(): Promise<void> {
+    await firstValueFrom(this.api.deleteMe());
+    this.accessToken.set(null);
+    this.currentUser.set(null);
+    this.router.navigate(['/login']);
+  }
+
   setToken(token: string): void {
     this.accessToken.set(token);
   }

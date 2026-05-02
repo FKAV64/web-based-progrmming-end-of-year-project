@@ -18,10 +18,16 @@ test('2. Login + add coin to watchlist + reload → still there', async ({ page,
   const firstToggle = page.getByRole('button', { name: 'İzleme listesine ekle' }).first();
   await firstToggle.dispatchEvent('click');
 
+  // WatchlistService does an optimistic update, so the button label flips to
+  // "remove" immediately after the click. Wait for it before reloading so
+  // the API call that persists the entry has had time to start.
+  await expect(page.getByRole('button', { name: 'İzleme listesinden kaldır' }).first()).toBeVisible({ timeout: 5_000 });
+
   // Reload and visit the watchlist page — entry must persist.
   await page.reload();
   await page.goto('/watchlist');
 
-  // The watchlist page should show at least one row.
-  await expect(page.locator('table tr.mat-mdc-row, [data-testid="watchlist-row"]').first()).toBeVisible({ timeout: 15_000 });
+  // The watchlist page should show at least one entry — either in the main price
+  // table (mat-mdc-row) or in the "outside Top 100" section (article card).
+  await expect(page.locator('table tr.mat-mdc-row, article').first()).toBeVisible({ timeout: 15_000 });
 });

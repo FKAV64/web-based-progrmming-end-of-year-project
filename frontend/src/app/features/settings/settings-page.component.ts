@@ -1,20 +1,26 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsService } from '../../core/services/state/settings.service';
 import { PushService } from '../../core/services/push.service';
+import { AuthService } from '../../core/services/state/auth.service';
 import { Locale } from '../../core/models/user.model';
+import { DeleteAccountDialogComponent } from './delete-account-dialog.component';
 
 @Component({
   selector: 'app-settings-page',
   standalone: true,
   imports: [
     CommonModule,
+    MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
+    MatDialogModule,
     MatSlideToggleModule,
     MatIconModule,
   ],
@@ -63,7 +69,7 @@ import { Locale } from '../../core/models/user.model';
         </mat-card-content>
       </mat-card>
 
-      <mat-card>
+      <mat-card class="mb-4">
         <mat-card-header>
           <mat-card-title i18n="@@settings.notifications">Bildirimler</mat-card-title>
         </mat-card-header>
@@ -97,12 +103,32 @@ import { Locale } from '../../core/models/user.model';
           </div>
         </mat-card-content>
       </mat-card>
+
+      <mat-card class="border border-red-200 dark:border-red-900">
+        <mat-card-header>
+          <mat-card-title class="text-red-600 dark:text-red-400" i18n="@@settings.danger-zone">Tehlikeli Bölge</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-4">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-medium text-gray-900 dark:text-white" i18n="@@settings.delete-account-title">Hesabı sil</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" i18n="@@settings.delete-account-desc">
+                Hesabınızı ve tüm verilerinizi kalıcı olarak silin.
+              </p>
+            </div>
+            <button mat-flat-button color="warn" type="button" (click)="openDeleteDialog()"
+                    i18n="@@settings.delete-btn">Hesabı Sil</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   `,
 })
 export class SettingsPageComponent {
   settings = inject(SettingsService);
   push = inject(PushService);
+  private auth = inject(AuthService);
+  private dialog = inject(MatDialog);
 
   onPushToggle(enable: boolean): void {
     void this.push.toggle(enable);
@@ -112,5 +138,14 @@ export class SettingsPageComponent {
     this.settings.setLocale(locale);
     const target = locale === 'EN' ? '/en/' : '/';
     window.location.href = target;
+  }
+
+  openDeleteDialog(): void {
+    const ref = this.dialog.open(DeleteAccountDialogComponent, { width: '400px' });
+    ref.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        void this.auth.deleteAccount();
+      }
+    });
   }
 }

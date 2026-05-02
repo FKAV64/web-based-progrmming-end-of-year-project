@@ -8,7 +8,7 @@ test('3. Create position 0.5 BTC @ $30k → P&L renders', async ({ page, request
   await registerViaUi(page, email, 'Password1!');
 
   await page.goto('/portfolio');
-  await page.getByRole('button', { name: /Yeni Pozisyon/i }).click();
+  await page.getByRole('button', { name: /Yeni Pozisyon/i }).first().click();
 
   // Add-position dialog opens.
   const dialog = page.getByRole('dialog');

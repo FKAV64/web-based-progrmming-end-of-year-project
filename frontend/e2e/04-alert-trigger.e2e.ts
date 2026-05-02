@@ -40,12 +40,11 @@ test('4. Create alert at price below current → backend triggers it within ~35 
   // The evaluator retries CoinGecko 3× before falling back, so triggering takes ~5 s.
   await request.post(`${BACKEND_API}/dev/trigger-snapshot`, { failOnStatusCode: false });
 
-  // NOTE: AlertsService.loadTriggered() gates on a `triggeredLoaded` flag, so
-  // bouncing the tab does not refresh the list once the first call has run.
-  // (Real bug — flagged separately, will be fixed outside Phase 18.) Reloading
-  // the page is the user-facing workaround and what we use here in the test.
+  // Tab switch now always re-fetches triggered alerts from the backend.
+  // Bounce via the Aktif tab each iteration so selectedIndexChange fires and
+  // loadTriggered() is called even when we were already on the Tetiklenen tab.
   await expect(async () => {
-    await page.reload();
+    await page.getByRole('tab', { name: 'Aktif' }).click();
     await page.getByRole('tab', { name: 'Tetiklenen' }).click();
     await expect(
       page.getByRole('tabpanel').locator('article').first(),

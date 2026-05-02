@@ -15,7 +15,6 @@ export class AlertsService {
   readonly triggered = signal<PriceAlert[]>([]);
 
   private loadedUserId: string | null = null;
-  private triggeredLoaded = false;
 
   constructor() {
     effect(() => {
@@ -23,7 +22,6 @@ export class AlertsService {
 
       if (!userId) {
         this.loadedUserId = null;
-        this.triggeredLoaded = false;
         this.active.set([]);
         this.triggered.set([]);
         return;
@@ -31,7 +29,6 @@ export class AlertsService {
 
       if (this.loadedUserId !== userId) {
         this.loadedUserId = userId;
-        this.triggeredLoaded = false;
         void this.loadActive(true);
       }
     });
@@ -49,15 +46,10 @@ export class AlertsService {
     }
   }
 
-  async loadTriggered(force = false): Promise<void> {
-    if (this.triggeredLoaded && !force) {
-      return;
-    }
-
+  async loadTriggered(): Promise<void> {
     try {
       const alerts = await firstValueFrom(this.api.list(true));
       this.triggered.set(alerts.filter(alert => !!alert.triggeredAt));
-      this.triggeredLoaded = true;
     } catch (error) {
       this.triggered.set([]);
       this.notifications.showError(error, 'Tetiklenen alarmlar yuklenemedi.');

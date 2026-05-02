@@ -39,4 +39,8 @@ export class AuthApiService {
       .get<{ data: User }>(`${this.base}/me`)
       .pipe(map(r => r.data));
   }
+
+  deleteMe(): Observable<void> {
+    return this.http.delete<void>(`${this.base}/me`);
+  }
 }
