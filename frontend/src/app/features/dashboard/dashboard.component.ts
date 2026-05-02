@@ -38,7 +38,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
       <!-- Row 1: KPI Cards -->
       <section class="grid gap-4 md:grid-cols-3">
         <!-- Portfolio Value -->
-        <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900 border-l-4 border-l-blue-500">
           <mat-card-content class="p-5">
             <div class="flex items-center gap-3">
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-300">
@@ -46,7 +46,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
               </div>
               <div class="text-sm text-gray-500 dark:text-gray-400" i18n="@@dashboard.portfolio-value">Portföy Değeri</div>
             </div>
-            <div class="mt-3 text-2xl font-bold text-gray-950 dark:text-white">
+            <div class="mt-3 text-2xl font-bold font-mono text-gray-950 dark:text-white">
               {{
                 portfolio.totalValue()
                   | currencyConverter: settings.currency() : er.rates() : settings.locale()
@@ -59,7 +59,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
         </mat-card>
 
         <!-- Top Gainer -->
-        <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900 border-l-4 border-l-green-500">
           <mat-card-content class="p-5">
             <div class="flex items-center gap-3">
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300">
@@ -75,7 +75,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                   <app-price-change-badge [percentage]="coin.price_change_percentage_24h"></app-price-change-badge>
                 </div>
               </a>
-              <div class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+              <div class="mt-1 text-sm font-mono text-gray-700 dark:text-gray-300">
                 {{
                   coin.current_price
                     | currencyConverter: settings.currency() : er.rates() : settings.locale() : 2 : 6
@@ -89,7 +89,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
         </mat-card>
 
         <!-- Top Loser -->
-        <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <mat-card class="rounded-3xl border border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900 border-l-4 border-l-red-500">
           <mat-card-content class="p-5">
             <div class="flex items-center gap-3">
               <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/60 dark:text-red-300">
@@ -105,7 +105,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                   <app-price-change-badge [percentage]="coin.price_change_percentage_24h"></app-price-change-badge>
                 </div>
               </a>
-              <div class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+              <div class="mt-1 text-sm font-mono text-gray-700 dark:text-gray-300">
                 {{
                   coin.current_price
                     | currencyConverter: settings.currency() : er.rates() : settings.locale() : 2 : 6
@@ -144,7 +144,8 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
 
             <ng-container *ngIf="topMovers().length > 0; else moversLoading">
               <div class="divide-y divide-gray-100 dark:divide-gray-800">
-                <div *ngFor="let coin of topMovers()" class="flex items-center gap-3 py-2">
+                <div *ngFor="let coin of topMovers()" class="flex items-center gap-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors rounded">
+                  <div class="w-1 self-stretch rounded-full flex-shrink-0" [class]="coin.price_change_percentage_24h >= 0 ? 'bg-emerald-500' : 'bg-red-500'"></div>
                   <img [src]="coin.image" [alt]="coin.name" class="h-8 w-8 rounded-full">
                   <div class="min-w-0 flex-1">
                     <a [routerLink]="['/coin', coin.id]" class="truncate font-medium text-gray-950 dark:text-white">
@@ -153,7 +154,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                     <div class="text-xs text-gray-500 uppercase dark:text-gray-400">{{ coin.symbol }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-sm font-medium text-gray-950 dark:text-white">
+                    <div class="text-sm font-medium font-mono text-gray-950 dark:text-white">
                       {{
                         coin.current_price
                           | currencyConverter: settings.currency() : er.rates() : settings.locale() : 2 : 6
@@ -185,7 +186,8 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
 
             <ng-container *ngIf="watchlistPreview().length > 0; else watchlistEmpty">
               <div class="divide-y divide-gray-100 dark:divide-gray-800">
-                <div *ngFor="let coin of watchlistPreview()" class="flex items-center gap-3 py-2">
+                <div *ngFor="let coin of watchlistPreview()" class="flex items-center gap-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors rounded">
+                  <mat-icon class="text-blue-500 flex-shrink-0 !w-4 !h-4 !text-base">star</mat-icon>
                   <img [src]="coin.image" [alt]="coin.name" class="h-8 w-8 rounded-full">
                   <div class="min-w-0 flex-1">
                     <a [routerLink]="['/coin', coin.id]" class="truncate font-medium text-gray-950 dark:text-white">
@@ -194,7 +196,7 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                     <div class="text-xs uppercase text-gray-500 dark:text-gray-400">{{ coin.symbol }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-sm font-medium text-gray-950 dark:text-white">
+                    <div class="text-sm font-medium font-mono text-gray-950 dark:text-white">
                       {{
                         coin.current_price
                           | currencyConverter: settings.currency() : er.rates() : settings.locale() : 2 : 6
@@ -245,10 +247,15 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
                   <div *ngFor="let item of newsPreview()" class="py-3">
                     <div class="flex items-start justify-between gap-3">
                       <div class="min-w-0 flex-1">
-                        <a [href]="item.link" target="_blank" rel="noopener noreferrer"
-                           class="line-clamp-2 text-sm font-medium text-gray-950 hover:text-blue-600 dark:text-white dark:hover:text-blue-400">
-                          {{ item.title }}
-                        </a>
+                        <div class="flex items-start gap-2">
+                          <span class="mt-1.5 h-2 w-2 rounded-full flex-shrink-0"
+                                [class]="item.sentiment === 'bullish' ? 'bg-emerald-500' : item.sentiment === 'bearish' ? 'bg-red-500' : 'bg-gray-400'">
+                          </span>
+                          <a [href]="item.link" target="_blank" rel="noopener noreferrer"
+                             class="line-clamp-2 text-sm font-medium text-gray-950 hover:text-blue-600 dark:text-white dark:hover:text-blue-400">
+                            {{ item.title }}
+                          </a>
+                        </div>
                         <div class="mt-1 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                           <span>{{ item.source }}</span>
                           <span>·</span>

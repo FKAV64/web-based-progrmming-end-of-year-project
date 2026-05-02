@@ -6,40 +6,49 @@
     (closedStart)="sidenavOpen.set(false)"
     class="w-56 bg-white dark:bg-gray-900"
   >
-    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-      <span class="font-bold text-lg tracking-tight text-gray-900 dark:text-white">₿ Kripto</span>
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500/15 text-yellow-500 font-bold text-lg flex-shrink-0">₿</div>
+      <span class="font-bold text-lg tracking-tight text-gray-900 dark:text-white">Kripto</span>
     </div>
     <mat-nav-list class="pt-2">
       @for (item of navItems; track item.route) {
         <a
           mat-list-item
           [routerLink]="item.route"
-          routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-          class="text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded mx-2 mb-1"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [class]="rla.isActive
+            ? 'border-l-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded mx-2 mb-1'
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 rounded mx-2 mb-1'"
           (click)="isMobile() && sidenavOpen.set(false)"
           [attr.aria-label]="item.label"
         >
-          <mat-icon matListItemIcon class="text-gray-500 dark:text-gray-400">{{ item.icon }}</mat-icon>
+          <mat-icon matListItemIcon [class]="rla.isActive ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'">{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label }}</span>
         </a>
       }
     </mat-nav-list>
+    <!-- Bottom version tag -->
+    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+      <span class="text-xs text-gray-400">BMU1208</span>
+    </div>
   </mat-sidenav>
 
   <!-- Main content -->
   <mat-sidenav-content class="flex flex-col">
     <!-- Top bar -->
-    <mat-toolbar color="primary" class="flex items-center gap-2 shadow-md flex-shrink-0">
+    <mat-toolbar class="flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-900 text-gray-900 dark:text-white !h-14">
       <button mat-icon-button (click)="sidenavOpen.set(!sidenavOpen())"
+              class="text-gray-700 dark:text-gray-200"
               i18n-aria-label="@@shell.toggle-menu" aria-label="Menüyü aç/kapat">
         <mat-icon>menu</mat-icon>
       </button>
 
-      <!-- Search placeholder — hidden on small screens to prevent overflow -->
-      <div class="hidden md:flex flex-1 max-w-xs mx-4">
-        <div class="flex items-center bg-white/10 rounded-lg px-3 py-1 gap-2 cursor-not-allowed opacity-60 w-full">
-          <mat-icon class="text-white/70 text-base">search</mat-icon>
-          <span class="text-white/70 text-sm" i18n="@@shell.search-placeholder">Coin ara...</span>
+      <!-- Search box -->
+      <div class="hidden md:flex max-w-xs w-64 mx-4">
+        <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-1.5 gap-2 cursor-not-allowed opacity-70 w-full border border-gray-200 dark:border-gray-700">
+          <mat-icon class="text-gray-400 dark:text-gray-500 !text-base">search</mat-icon>
+          <span class="text-gray-400 dark:text-gray-500 text-sm" i18n="@@shell.search-placeholder">Coin ara...</span>
         </div>
       </div>
 
@@ -52,7 +61,7 @@
       <mat-select
         [value]="settings.currency()"
         (selectionChange)="setCurrency($event.value)"
-        class="text-white w-20 hidden sm:block"
+        class="text-gray-700 dark:text-gray-200 w-20 hidden sm:block"
         i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
       >
         @for (c of currencies; track c) {
@@ -61,23 +70,25 @@
       </mat-select>
 
       <!-- Theme toggle -->
-      <button mat-icon-button (click)="toggleTheme()" [attr.aria-label]="'Temayı değiştir: ' + settings.theme()">
+      <button mat-icon-button (click)="toggleTheme()" class="text-gray-700 dark:text-gray-200" [attr.aria-label]="'Temayı değiştir: ' + settings.theme()">
         <mat-icon>{{ settings.theme() === 'DARK' ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
       <!-- PWA install button — visible when beforeinstallprompt has fired -->
       @if (pwa.canInstall()) {
-        <button mat-button (click)="pwa.install()" class="text-white hidden sm:flex items-center gap-1"
+        <button mat-button (click)="pwa.install()" class="text-gray-700 dark:text-gray-200 hidden sm:flex items-center gap-1"
                 aria-label="Uygulamayı yükle">
           <mat-icon>install_desktop</mat-icon>
           <span class="text-sm" i18n="@@shell.install-app">Yükle</span>
         </button>
       }
 
-      <!-- User menu -->
+      <!-- User menu with avatar -->
       <button mat-icon-button [matMenuTriggerFor]="userMenu"
               i18n-aria-label="@@shell.user-menu" aria-label="Kullanıcı menüsü">
-        <mat-icon>account_circle</mat-icon>
+        <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+          {{ (auth.currentUser()?.name || auth.currentUser()?.email || '?').charAt(0).toUpperCase() }}
+        </div>
       </button>
       <mat-menu #userMenu="matMenu">
         <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200">

@@ -1,51 +1,78 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-  <div class="w-full max-w-sm bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center" i18n="@@app.title">Kripto Dashboard</h1>
-    <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-6 text-center" i18n="@@login.heading">Giriş Yap</h2>
+<div class="min-h-screen flex bg-gray-950">
+  <!-- Left branding panel (hidden on mobile) -->
+  <div class="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden bg-[#0f1117] p-12">
+    <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="relative z-10 max-w-xs text-center">
+      <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-yellow-500/10 text-5xl font-bold text-yellow-400">₿</div>
+      <h1 class="mb-2 text-4xl font-bold text-white">B Kripto</h1>
+      <p class="mb-8 text-gray-400 text-lg">Kripto piyasalarını gerçek zamanlı takip edin</p>
+      <ul class="space-y-3 text-left text-gray-300 text-sm">
+        <li class="flex items-center gap-3">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-green-400 text-xs font-bold">✓</span>
+          Canlı fiyat takibi
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-green-400 text-xs font-bold">✓</span>
+          Portföy yönetimi
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-green-400 text-xs font-bold">✓</span>
+          Fiyat alarmları
+        </li>
+      </ul>
+    </div>
+  </div>
 
-    @if (errorMessage()) {
-      <div role="alert" class="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-sm">
-        {{ errorMessage() }}
-      </div>
-    }
+  <!-- Right: login form -->
+  <div class="flex flex-1 items-center justify-center bg-gray-900 px-4 py-12">
+    <div class="w-full max-w-sm rounded-xl border border-gray-700 bg-[#1a1f2e] p-8 shadow-2xl">
+      <h1 class="mb-1 text-2xl font-bold text-white text-center" i18n="@@app.title">Kripto Dashboard</h1>
+      <h2 class="mb-6 text-sm text-gray-400 text-center" i18n="@@login.heading">Giriş Yap</h2>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="flex flex-col gap-4">
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label i18n="@@form.email">E-posta</mat-label>
-        <input matInput type="email" formControlName="email" autocomplete="email" />
-        @if (form.controls.email.errors?.['required'] && form.controls.email.touched) {
-          <mat-error i18n="@@form.email-required">E-posta zorunludur</mat-error>
-        }
-        @if (form.controls.email.errors?.['email'] && form.controls.email.touched) {
-          <mat-error i18n="@@form.email-invalid">Geçerli bir e-posta girin</mat-error>
-        }
-      </mat-form-field>
+      @if (errorMessage()) {
+        <div role="alert" class="mb-4 p-3 rounded-lg bg-red-900/30 text-red-400 text-sm">
+          {{ errorMessage() }}
+        </div>
+      }
 
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label i18n="@@form.password">Şifre</mat-label>
-        <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="current-password" />
-        <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())" [attr.aria-label]="'Şifreyi ' + (hidePassword() ? 'göster' : 'gizle')">
-          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="flex flex-col gap-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label i18n="@@form.email">E-posta</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email" />
+          @if (form.controls.email.errors?.['required'] && form.controls.email.touched) {
+            <mat-error i18n="@@form.email-required">E-posta zorunludur</mat-error>
+          }
+          @if (form.controls.email.errors?.['email'] && form.controls.email.touched) {
+            <mat-error i18n="@@form.email-invalid">Geçerli bir e-posta girin</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label i18n="@@form.password">Şifre</mat-label>
+          <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="current-password" />
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())" [attr.aria-label]="'Şifreyi ' + (hidePassword() ? 'göster' : 'gizle')">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.controls.password.errors?.['required'] && form.controls.password.touched) {
+            <mat-error i18n="@@form.password-required">Şifre zorunludur</mat-error>
+          }
+          @if (form.controls.password.errors?.['minlength'] && form.controls.password.touched) {
+            <mat-error i18n="@@form.password-minlength">Şifre en az 8 karakter olmalıdır</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading()" class="w-full h-11 bg-blue-600 hover:bg-blue-500 font-semibold transition-colors duration-200">
+          @if (loading()) {
+            <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
+          }
+          <span i18n="@@login.submit">Giriş Yap</span>
         </button>
-        @if (form.controls.password.errors?.['required'] && form.controls.password.touched) {
-          <mat-error i18n="@@form.password-required">Şifre zorunludur</mat-error>
-        }
-        @if (form.controls.password.errors?.['minlength'] && form.controls.password.touched) {
-          <mat-error i18n="@@form.password-minlength">Şifre en az 8 karakter olmalıdır</mat-error>
-        }
-      </mat-form-field>
+      </form>
 
-      <button mat-flat-button color="primary" type="submit" [disabled]="loading()" class="w-full h-11">
-        @if (loading()) {
-          <mat-spinner diameter="20" class="inline-block mr-2"></mat-spinner>
-        }
-        <span i18n="@@login.submit">Giriş Yap</span>
-      </button>
-    </form>
-
-    <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-      <span i18n="@@login.no-account">Hesabın yok mu?</span>
-      <a routerLink="/register" class="text-indigo-600 dark:text-indigo-400 font-medium hover:underline" i18n="@@login.register-link">Kayıt Ol</a>
-    </p>
+      <p class="mt-6 text-center text-sm text-gray-400">
+        <span i18n="@@login.no-account">Hesabın yok mu?</span>
+        <a routerLink="/register" class="text-blue-400 font-medium hover:underline ml-1" i18n="@@login.register-link">Kayıt Ol</a>
+      </p>
+    </div>
   </div>
 </div>

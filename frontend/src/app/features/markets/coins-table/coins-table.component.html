@@ -12,19 +12,19 @@
 
       <!-- Rank Column -->
       <ng-container matColumnDef="market_cap_rank">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-        <td mat-cell *matCellDef="let coin" class="w-12 text-gray-500">{{coin.market_cap_rank}}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">#</th>
+        <td mat-cell *matCellDef="let coin" class="w-12 font-mono text-sm text-gray-400 dark:text-gray-500">{{coin.market_cap_rank}}</td>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-coin">Coin</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-coin">Coin</th>
         <td mat-cell *matCellDef="let coin">
           <div class="flex items-center space-x-3">
             <img [src]="coin.image" [alt]="coin.name" class="w-6 h-6 rounded-full">
             <div class="flex flex-col">
-              <span class="font-medium text-gray-900 dark:text-white">{{coin.name}}</span>
-              <span class="text-xs text-gray-500 uppercase">{{coin.symbol}}</span>
+              <span class="font-semibold text-gray-900 dark:text-white">{{coin.name}}</span>
+              <span class="text-xs text-gray-400 uppercase">{{coin.symbol}}</span>
             </div>
           </div>
         </td>
@@ -32,15 +32,15 @@
 
       <!-- Price Column -->
       <ng-container matColumnDef="current_price">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-price">Fiyat</th>
-        <td mat-cell *matCellDef="let coin" class="font-medium">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-price">Fiyat</th>
+        <td mat-cell *matCellDef="let coin" class="font-mono font-medium">
           {{ coin.current_price | currencyConverter: settings.currency() : er.rates() : settings.locale() : 2 : 6 }}
         </td>
       </ng-container>
 
       <!-- 1h Change Column -->
       <ng-container matColumnDef="price_change_percentage_1h_in_currency">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-1h">1s %</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-1h">1s %</th>
         <td mat-cell *matCellDef="let coin">
           <app-price-change-badge [percentage]="coin.price_change_percentage_1h_in_currency || 0"></app-price-change-badge>
         </td>
@@ -48,7 +48,7 @@
 
       <!-- 24h Change Column -->
       <ng-container matColumnDef="price_change_percentage_24h">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-24h">24s %</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-24h">24s %</th>
         <td mat-cell *matCellDef="let coin">
           <app-price-change-badge [percentage]="coin.price_change_percentage_24h || 0"></app-price-change-badge>
         </td>
@@ -56,7 +56,7 @@
 
       <!-- 7d Change Column -->
       <ng-container matColumnDef="price_change_percentage_7d_in_currency">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-7d">7g %</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-7d">7g %</th>
         <td mat-cell *matCellDef="let coin">
           <app-price-change-badge [percentage]="coin.price_change_percentage_7d_in_currency || 0"></app-price-change-badge>
         </td>
@@ -64,23 +64,23 @@
 
       <!-- Market Cap Column -->
       <ng-container matColumnDef="market_cap">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-market-cap">Piyasa Değeri</th>
-        <td mat-cell *matCellDef="let coin" class="text-gray-500">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-market-cap">Piyasa Değeri</th>
+        <td mat-cell *matCellDef="let coin" class="font-mono text-sm text-gray-600 dark:text-gray-400">
           {{ coin.market_cap | currencyConverter: settings.currency() : er.rates() : settings.locale() : 0 : 0 }}
         </td>
       </ng-container>
 
       <!-- Volume Column -->
       <ng-container matColumnDef="total_volume">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header i18n="@@table.col-volume">Hacim (24s)</th>
-        <td mat-cell *matCellDef="let coin" class="text-gray-500">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-volume">Hacim (24s)</th>
+        <td mat-cell *matCellDef="let coin" class="font-mono text-sm text-gray-600 dark:text-gray-400">
           {{ coin.total_volume | currencyConverter: settings.currency() : er.rates() : settings.locale() : 0 : 0 }}
         </td>
       </ng-container>
 
       <!-- Sparkline Column -->
       <ng-container matColumnDef="sparkline">
-        <th mat-header-cell *matHeaderCellDef i18n="@@table.col-sparkline">Son 7 Gün</th>
+        <th mat-header-cell *matHeaderCellDef class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" i18n="@@table.col-sparkline">Son 7 Gün</th>
         <td mat-cell *matCellDef="let coin" class="w-32">
           <apx-chart *ngIf="getSparklineOptions(coin.id) as spark"
             [series]="spark.series"
@@ -113,10 +113,10 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()" class="bg-gray-50 dark:bg-gray-900"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns();"
           [routerLink]="['/coin', row.id]"
-          class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-100 border-b border-gray-100 dark:border-gray-800"
           [ngClass]="{
             'flash-up': flashingRows.get(row.id) === 'up',
             'flash-down': flashingRows.get(row.id) === 'down'
