@@ -4,22 +4,22 @@
     [mode]="isMobile() ? 'over' : 'side'"
     [opened]="sidenavOpen()"
     (closedStart)="sidenavOpen.set(false)"
-    class="w-56 bg-gray-900 dark:bg-gray-950 text-white"
+    class="w-56 bg-white dark:bg-gray-900"
   >
-    <div class="p-4 border-b border-gray-700">
-      <span class="font-bold text-lg tracking-tight">₿ Kripto</span>
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <span class="font-bold text-lg tracking-tight text-gray-900 dark:text-white">₿ Kripto</span>
     </div>
     <mat-nav-list class="pt-2">
       @for (item of navItems; track item.route) {
         <a
           mat-list-item
           [routerLink]="item.route"
-          routerLinkActive="bg-indigo-600 text-white"
-          class="text-gray-300 hover:bg-gray-700 rounded mx-2 mb-1"
+          routerLinkActive="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+          class="text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 rounded mx-2 mb-1"
           (click)="isMobile() && sidenavOpen.set(false)"
           [attr.aria-label]="item.label"
         >
-          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <mat-icon matListItemIcon class="text-gray-500 dark:text-gray-400">{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label }}</span>
         </a>
       }
@@ -80,7 +80,7 @@
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #userMenu="matMenu">
-        <div class="px-4 py-2 text-sm text-gray-700">
+        <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200">
           {{ auth.currentUser()?.email }}
         </div>
         <mat-divider></mat-divider>
