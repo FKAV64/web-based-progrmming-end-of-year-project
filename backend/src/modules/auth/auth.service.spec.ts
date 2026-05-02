@@ -20,6 +20,9 @@ const makeUser = (overrides: Record<string, unknown> = {}) => ({
   name: null,
   role: 'USER',
   emailVerifiedAt: null,
+  failedLoginAttempts: 0,
+  lastFailedLoginAt: null,
+  lockedUntil: null,
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,
@@ -46,6 +49,7 @@ describe('AuthService', () => {
       user: {
         findUnique: jest.fn(),
         create: jest.fn(),
+        update: jest.fn(),
         findUniqueOrThrow: jest.fn(),
       },
       userSettings: { create: jest.fn() },
@@ -217,6 +221,96 @@ describe('AuthService', () => {
         '1.2.3.4',
         'ua',
       );
+    });
+  });
+
+  // ── lockout ───────────────────────────────────────────────────────────────
+  describe('account lockout', () => {
+    it('rejects login with 429 when lockedUntil is in the future', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(
+        makeUser({ lockedUntil: new Date(Date.now() + 60_000) }),
+      );
+
+      await expect(
+        service.login(
+          { email: 'test@example.com', password: 'Test1234' },
+          '1.2.3.4',
+          'ua',
+        ),
+      ).rejects.toMatchObject({ status: 429 });
+
+      expect(auditMock.log).toHaveBeenCalledWith(
+        'auth.login_locked',
+        'user-1',
+        '1.2.3.4',
+        'ua',
+      );
+    });
+
+    it('sets lockedUntil and resets counter when 10th failed attempt arrives within window', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(
+        makeUser({
+          failedLoginAttempts: 9,
+          lastFailedLoginAt: new Date(Date.now() - 60_000),
+        }),
+      );
+      jest.mocked(argon2.verify).mockResolvedValueOnce(false);
+
+      await expect(
+        service.login(
+          { email: 'test@example.com', password: 'Wrong1' },
+          '',
+          '',
+        ),
+      ).rejects.toThrow(UnauthorizedException);
+
+      const updateCall = prismaMock.user.update.mock.calls[0][0];
+      expect(updateCall.where).toEqual({ id: 'user-1' });
+      expect(updateCall.data.failedLoginAttempts).toBe(0);
+      expect(updateCall.data.lockedUntil).toBeInstanceOf(Date);
+    });
+
+    it('resets counter to 1 when last failure was outside the 15min window', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(
+        makeUser({
+          failedLoginAttempts: 9,
+          lastFailedLoginAt: new Date(Date.now() - 16 * 60 * 1000),
+        }),
+      );
+      jest.mocked(argon2.verify).mockResolvedValueOnce(false);
+
+      await expect(
+        service.login(
+          { email: 'test@example.com', password: 'Wrong1' },
+          '',
+          '',
+        ),
+      ).rejects.toThrow(UnauthorizedException);
+
+      const updateCall = prismaMock.user.update.mock.calls[0][0];
+      expect(updateCall.data.failedLoginAttempts).toBe(1);
+      expect(updateCall.data.lockedUntil).toBeNull();
+    });
+
+    it('clears lockout state on successful login', async () => {
+      prismaMock.user.findUnique.mockResolvedValue(
+        makeUser({ failedLoginAttempts: 4, lastFailedLoginAt: new Date() }),
+      );
+      jest.mocked(argon2.verify).mockResolvedValueOnce(true);
+      prismaMock.refreshToken.create.mockResolvedValue({});
+
+      await service.login(
+        { email: 'test@example.com', password: 'Test1234' },
+        '',
+        '',
+      );
+
+      const updateCall = prismaMock.user.update.mock.calls[0][0];
+      expect(updateCall.data).toEqual({
+        failedLoginAttempts: 0,
+        lastFailedLoginAt: null,
+        lockedUntil: null,
+      });
     });
   });
 

@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,6 +13,10 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+
+const LOCKOUT_MAX_ATTEMPTS = 10;
+const LOCKOUT_WINDOW_MS = 15 * 60 * 1000;
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -65,10 +71,34 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      await this.audit.log('auth.login_locked', user.id, ip, ua);
+      throw new HttpException(
+        'Account temporarily locked. Try again later.',
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
     const valid = await argon2.verify(user.passwordHash, dto.password);
     if (!valid) {
+      await this.recordFailedAttempt(
+        user.id,
+        user.lastFailedLoginAt,
+        user.failedLoginAttempts,
+      );
       await this.audit.log('auth.login_failed', user.id, ip, ua);
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (user.failedLoginAttempts > 0 || user.lockedUntil) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          failedLoginAttempts: 0,
+          lastFailedLoginAt: null,
+          lockedUntil: null,
+        },
+      });
     }
 
     const tokens = await this.issueTokenPair(
@@ -81,6 +111,30 @@ export class AuthService {
     await this.audit.log('auth.login_success', user.id, ip, ua);
 
     return { user: this.sanitizeUser(user), ...tokens };
+  }
+
+  private async recordFailedAttempt(
+    userId: string,
+    lastFailedAt: Date | null | undefined,
+    currentCount: number | undefined,
+  ) {
+    const now = new Date();
+    const windowStillOpen =
+      !!lastFailedAt &&
+      now.getTime() - lastFailedAt.getTime() < LOCKOUT_WINDOW_MS;
+    const nextCount = windowStillOpen ? (currentCount ?? 0) + 1 : 1;
+    const reachedThreshold = nextCount >= LOCKOUT_MAX_ATTEMPTS;
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        failedLoginAttempts: reachedThreshold ? 0 : nextCount,
+        lastFailedLoginAt: now,
+        lockedUntil: reachedThreshold
+          ? new Date(now.getTime() + LOCKOUT_DURATION_MS)
+          : null,
+      },
+    });
   }
 
   async refresh(rawToken: string, ip: string, ua: string) {
@@ -189,9 +243,19 @@ export class AuthService {
     createdAt: Date;
     updatedAt: Date;
     passwordHash: string;
+    failedLoginAttempts?: number;
+    lastFailedLoginAt?: Date | null;
+    lockedUntil?: Date | null;
   }) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { passwordHash, ...rest } = user;
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    const {
+      passwordHash,
+      failedLoginAttempts,
+      lastFailedLoginAt,
+      lockedUntil,
+      ...rest
+    } = user;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return rest;
   }
 }

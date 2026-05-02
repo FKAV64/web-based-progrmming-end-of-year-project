@@ -9,7 +9,30 @@ import { AppModule } from './app.module';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
+// Outbound HTTP allowlist (informational — enforced by code review, not a runtime egress filter):
+//   - api.coingecko.com         (market data, fetched by CoingeckoService)
+//   - api.alternative.me        (Fear & Greed index, fetched by SentimentService)
+//   - *.binance.com / fapi      (REST klines + websocket ticks)
+// Any new outbound destination must be added to this list and reviewed.
+const OUTBOUND_HTTP_ALLOWLIST = [
+  'api.coingecko.com',
+  'api.alternative.me',
+  '.binance.com',
+];
+void OUTBOUND_HTTP_ALLOWLIST;
+
+function assertSecretsHardened() {
+  const required = ['JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
+  for (const name of required) {
+    const value = process.env[name];
+    if (!value || Buffer.byteLength(value, 'utf8') < 32) {
+      throw new Error(`${name} must be set and at least 32 bytes`);
+    }
+  }
+}
+
 async function bootstrap() {
+  assertSecretsHardened();
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(Logger));
   app.use(helmet());
