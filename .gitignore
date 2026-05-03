@@ -61,7 +61,10 @@ test-results/
 graphify-out/
 CLAUDE.md
 graphify_query.py
-graphify_query.py
 
-#claude lockfiles
+# Claude lockfiles
 .claude/
+
+# Security scan tooling (local configs, not for CI)
+zap.yaml
+zap_out.json
