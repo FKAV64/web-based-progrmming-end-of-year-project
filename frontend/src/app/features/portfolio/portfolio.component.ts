@@ -185,11 +185,6 @@ interface AllocationChartOptions {
                                     (click)="openCloseDialog(row)">
                               <mat-icon>task_alt</mat-icon>
                             </button>
-                            <button mat-icon-button type="button"
-                                    i18n-aria-label="@@portfolio.delete-btn" aria-label="Sil"
-                                    (click)="remove(row.position.id)">
-                              <mat-icon>delete</mat-icon>
-                            </button>
                           </div>
                         </td>
                       </tr>
@@ -212,7 +207,6 @@ interface AllocationChartOptions {
                         <th class="px-4 py-3" i18n="@@portfolio.col-close-price">Kapanış</th>
                         <th class="px-4 py-3" i18n="@@portfolio.col-realized">Gerçekleşen</th>
                         <th class="px-4 py-3" i18n="@@portfolio.col-date">Tarih</th>
-                        <th class="px-4 py-3 text-right" i18n="@@portfolio.col-action">Aksiyon</th>
                       </tr>
                     </thead>
 
@@ -243,15 +237,6 @@ interface AllocationChartOptions {
                         </td>
                         <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
                           {{ formatDate(row.position.closedAt) }}
-                        </td>
-                        <td class="px-4 py-4">
-                          <div class="flex justify-end gap-1">
-                            <button mat-icon-button type="button"
-                                    i18n-aria-label="@@portfolio.delete-btn" aria-label="Sil"
-                                    (click)="remove(row.position.id)">
-                              <mat-icon>delete</mat-icon>
-                            </button>
-                          </div>
                         </td>
                       </tr>
                     </tbody>
