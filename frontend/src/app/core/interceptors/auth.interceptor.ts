@@ -5,10 +5,9 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../services/state/auth.service';
 import { AuthApiService } from '../services/api/auth.api';
-import { environment } from '../../../environments/environment';
 
 let isRefreshing = false;
-const refreshDone$ = new BehaviorSubject<string | null>(null);
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<any> {
   const auth = inject(AuthService);
@@ -24,10 +23,19 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
 
   return next(authedReq).pipe(
     catchError((err: HttpErrorResponse) => {
+      // 1. BYPASS ON AUTH ENDPOINTS
+      if (err.status === 401 && (req.url.includes('/auth/refresh') || req.url.includes('/auth/login'))) {
+        isRefreshing = false; // reset state to prevent getting stuck
+        auth.logout();
+        router.navigate(['/login']);
+        return throwError(() => err);
+      }
+
       if (err.status !== 401 || isAuthEndpoint) return throwError(() => err);
 
+      // 3. QUEUE CONCURRENT REQUESTS
       if (isRefreshing) {
-        return refreshDone$.pipe(
+        return refreshTokenSubject.pipe(
           filter(t => t !== null),
           take(1),
           switchMap(newToken =>
@@ -36,20 +44,23 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
         );
       }
 
+      // 2. REFRESH LOCKING FLAG
       isRefreshing = true;
-      refreshDone$.next(null);
+      refreshTokenSubject.next(null);
 
       return api.refresh().pipe(
         switchMap(({ accessToken }) => {
+          // 5. ON REFRESH SUCCESS
           isRefreshing = false;
           auth.setToken(accessToken);
-          refreshDone$.next(accessToken);
+          refreshTokenSubject.next(accessToken);
           return next(req.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } }));
         }),
         catchError(refreshErr => {
+          // 4. HANDLE REFRESH FAILURE WHILE LOCKED
           isRefreshing = false;
-          auth.accessToken.set(null);
-          auth.currentUser.set(null);
+          refreshTokenSubject.next(null);
+          auth.logout();
           router.navigate(['/login']);
           return throwError(() => refreshErr);
         }),

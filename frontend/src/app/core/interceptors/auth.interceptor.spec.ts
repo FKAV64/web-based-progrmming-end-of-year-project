@@ -27,7 +27,7 @@ describe('authInterceptor', () => {
       login: jest.fn(),
       register: jest.fn(),
       refresh: jest.fn(),
-      logout: jest.fn(),
+      logout: jest.fn().mockReturnValue(of({})),
       me: jest.fn(),
     } as any;
     routerMock = { navigate: jest.fn() };
