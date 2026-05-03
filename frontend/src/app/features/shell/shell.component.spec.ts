@@ -30,6 +30,7 @@ describe('ShellComponent — a11y', () => {
             locale: signal('TR'),
             setCurrency: jest.fn(),
             setTheme: jest.fn(),
+            isDarkThemeEffective: jest.fn().mockReturnValue(false),
           },
         },
         {
