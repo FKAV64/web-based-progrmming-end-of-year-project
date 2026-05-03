@@ -11,6 +11,7 @@ import { PushService } from '../../core/services/push.service';
 import { AuthService } from '../../core/services/state/auth.service';
 import { Locale } from '../../core/models/user.model';
 import { DeleteAccountDialogComponent } from './delete-account-dialog.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-settings-page',
@@ -66,6 +67,9 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog.component'
             <mat-button-toggle value="TR" i18n="@@settings.lang-tr">Türkçe</mat-button-toggle>
             <mat-button-toggle value="EN" i18n="@@settings.lang-en">English</mat-button-toggle>
           </mat-button-toggle-group>
+          <p *ngIf="!isProd" class="text-xs text-gray-400 mt-2">
+            Dil değişikliği production ortamında aktif olur.
+          </p>
         </mat-card-content>
       </mat-card>
 
@@ -130,14 +134,19 @@ export class SettingsPageComponent {
   private auth = inject(AuthService);
   private dialog = inject(MatDialog);
 
+  isProd = environment.production;
+
   onPushToggle(enable: boolean): void {
     void this.push.toggle(enable);
   }
 
   switchLocale(locale: Locale): void {
     this.settings.setLocale(locale);
-    const target = locale === 'EN' ? '/en/' : '/';
-    window.location.href = target;
+    if (environment.production) {
+      const currentPath = window.location.pathname;
+      const pathWithoutLocale = currentPath.replace(/^\/(en|tr)/, '') || '/';
+      window.location.href = `/${locale.toLowerCase()}${pathWithoutLocale}`;
+    }
   }
 
   openDeleteDialog(): void {

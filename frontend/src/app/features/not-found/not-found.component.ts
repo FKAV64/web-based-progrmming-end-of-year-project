@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-not-found',
@@ -15,4 +16,15 @@ import { MatButtonModule } from '@angular/material/button';
     </div>
   `,
 })
-export class NotFoundComponent {}
+export class NotFoundComponent implements OnInit {
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    if (!environment.production) {
+      const path = window.location.pathname;
+      if (path.startsWith('/en') || path.startsWith('/tr')) {
+        void this.router.navigate(['/dashboard']);
+      }
+    }
+  }
+}
