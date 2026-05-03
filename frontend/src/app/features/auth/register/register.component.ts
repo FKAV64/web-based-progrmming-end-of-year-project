@@ -38,7 +38,7 @@ export class RegisterComponent {
   private router = inject(Router);
 
   form = this.fb.nonNullable.group({
-    name: ['', [Validators.maxLength(100)]],
+    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8), hasDigitAndLetter]],
   });
@@ -53,7 +53,7 @@ export class RegisterComponent {
     this.errorMessage.set(null);
     try {
       const { name, email, password } = this.form.getRawValue();
-      await this.auth.register({ email, password, name: name || undefined });
+      await this.auth.register({ email, password, name });
       await this.settings.load();
       this.router.navigate(['/dashboard']);
     } catch (err: any) {

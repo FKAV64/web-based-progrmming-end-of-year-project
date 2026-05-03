@@ -54,3 +54,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background: #14532d !important;
   color: #fff !important;
 }
+
+/* Ensures dark background and light text after browser autofill */
+html.dark input:-webkit-autofill,
+html.dark input:-webkit-autofill:hover,
+html.dark input:-webkit-autofill:focus,
+html.dark input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #111318 inset !important;
+  box-shadow: 0 0 0 30px #111318 inset !important;
+  -webkit-text-fill-color: #e5e7eb !important;
+  caret-color: #e5e7eb !important;
+}
+
+/* Fallback for setups using media-based dark mode */
+@media (prefers-color-scheme: dark) {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #111318 inset !important;
+    box-shadow: 0 0 0 30px #111318 inset !important;
+    -webkit-text-fill-color: #e5e7eb !important;
+    caret-color: #e5e7eb !important;
+  }
+}
