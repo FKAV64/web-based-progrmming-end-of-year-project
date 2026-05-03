@@ -1,8 +1,15 @@
 <div class="flex flex-col space-y-4">
   <div class="flex justify-between items-end">
     <mat-form-field appearance="outline" class="w-full md:w-1/3">
-      <mat-label i18n="@@table.search">Ara...</mat-label>
-      <input matInput (keyup)="applyFilter($event)" i18n-placeholder="@@table.search-placeholder" placeholder="Örn. Bitcoin" #input>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        i18n-placeholder="@@table.search-placeholder"
+        placeholder="Örn. Bitcoin"
+        i18n-aria-label="@@table.search"
+        aria-label="Ara..."
+        #input
+      >
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>

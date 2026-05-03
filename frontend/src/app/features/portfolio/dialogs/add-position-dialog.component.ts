@@ -44,35 +44,45 @@ function minNumeric(min: number) {
 
     <form [formGroup]="form" (ngSubmit)="submit()">
       <mat-dialog-content class="grid gap-4 sm:grid-cols-2">
-        <mat-form-field appearance="outline" class="sm:col-span-2">
-          <mat-label>Coin ID</mat-label>
-          <input matInput formControlName="coinId" placeholder="bitcoin">
-          <mat-hint>CoinGecko kimligi kullanin</mat-hint>
-        </mat-form-field>
+        <div class="sm:col-span-2">
+          <label class="block text-sm font-medium mb-1">Coin ID</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="coinId" placeholder="bitcoin" aria-label="Coin ID" class="w-full">
+            <mat-hint>CoinGecko kimligi kullanin</mat-hint>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Adet</mat-label>
-          <input matInput formControlName="quantity" inputmode="decimal" placeholder="0.50">
-        </mat-form-field>
+        <div>
+          <label class="block text-sm font-medium mb-1">Adet</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="quantity" inputmode="decimal" placeholder="0.50" aria-label="Adet" class="w-full">
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Ortalama Alis</mat-label>
-          <input matInput formControlName="avgBuyPrice" inputmode="decimal" placeholder="30000">
-        </mat-form-field>
+        <div>
+          <label class="block text-sm font-medium mb-1">Ortalama Alis</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="avgBuyPrice" inputmode="decimal" placeholder="30000" aria-label="Ortalama Alis" class="w-full">
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Para Birimi</mat-label>
-          <mat-select formControlName="buyCurrency">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">
-              {{ currency }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div>
+          <label class="block text-sm font-medium mb-1">Para Birimi</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select formControlName="buyCurrency" aria-label="Para Birimi" class="w-full">
+              <mat-option *ngFor="let currency of currencies" [value]="currency">
+                {{ currency }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline" class="sm:col-span-2">
-          <mat-label>Notlar</mat-label>
-          <textarea matInput rows="3" formControlName="notes"></textarea>
-        </mat-form-field>
+        <div class="sm:col-span-2">
+          <label class="block text-sm font-medium mb-1">Notlar</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <textarea matInput rows="3" formControlName="notes" aria-label="Notlar" class="w-full"></textarea>
+          </mat-form-field>
+        </div>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">

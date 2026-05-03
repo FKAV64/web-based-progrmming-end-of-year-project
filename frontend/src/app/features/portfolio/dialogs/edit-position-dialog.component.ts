@@ -40,28 +40,36 @@ function minNumeric(min: number) {
     <h2 mat-dialog-title>Pozisyonu Duzenle</h2>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <mat-dialog-content class="grid gap-4">
-        <div class="rounded-2xl bg-gray-100 px-4 py-3 text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-300">
-          <div class="font-semibold">{{ data.position.coinId }}</div>
-          <div class="mt-1 text-xs uppercase tracking-[0.2em]">
-            {{ data.position.buyCurrency }}
+      <mat-dialog-content class="grid gap-4 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          <div class="rounded-2xl bg-gray-100 px-4 py-3 text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+            <div class="font-semibold">{{ data.position.coinId }}</div>
+            <div class="mt-1 text-xs uppercase tracking-[0.2em]">
+              {{ data.position.buyCurrency }}
+            </div>
           </div>
         </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Adet</mat-label>
-          <input matInput formControlName="quantity" inputmode="decimal">
-        </mat-form-field>
+        <div>
+          <label class="block text-sm font-medium mb-1">Adet</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="quantity" inputmode="decimal" aria-label="Adet" class="w-full">
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Ortalama Alis</mat-label>
-          <input matInput formControlName="avgBuyPrice" inputmode="decimal">
-        </mat-form-field>
+        <div>
+          <label class="block text-sm font-medium mb-1">Ortalama Alis</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <input matInput formControlName="avgBuyPrice" inputmode="decimal" aria-label="Ortalama Alis" class="w-full">
+          </mat-form-field>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Notlar</mat-label>
-          <textarea matInput rows="3" formControlName="notes"></textarea>
-        </mat-form-field>
+        <div class="sm:col-span-2">
+          <label class="block text-sm font-medium mb-1">Notlar</label>
+          <mat-form-field appearance="outline" class="w-full">
+            <textarea matInput rows="3" formControlName="notes" aria-label="Notlar" class="w-full"></textarea>
+          </mat-form-field>
+        </div>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
