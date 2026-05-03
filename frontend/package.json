@@ -21,7 +21,7 @@
     "@angular/material": "^17.3.10",
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
-    "@angular/router": "^17.3.0",
+    "@angular/router": "^21.2.11",
     "@angular/service-worker": "^17.3.0",
     "apexcharts": "^3.54.1",
     "ng-apexcharts": "^1.10.0",
