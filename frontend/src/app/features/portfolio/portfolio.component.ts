@@ -363,7 +363,6 @@ export class PortfolioComponent {
     const result = await firstValueFrom(
       this.dialog.open(AddPositionDialogComponent, {
         width: '520px',
-        data: { defaultCurrency: this.settings.currency() },
       }).afterClosed(),
     );
 

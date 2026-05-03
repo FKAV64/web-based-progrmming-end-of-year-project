@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,13 +7,13 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { CreatePortfolioPositionDto } from '../../../core/models/portfolio.model';
 import { Currency } from '../../../core/models/user.model';
+import { SettingsService } from '../../../core/services/state/settings.service';
 
 function numericString(control: AbstractControl): ValidationErrors | null {
   const value = String(control.value ?? '').trim();
@@ -37,7 +37,6 @@ function minNumeric(min: number) {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
   ],
   template: `
     <h2 mat-dialog-title>Yeni Pozisyon</h2>
@@ -66,17 +65,6 @@ function minNumeric(min: number) {
           </mat-form-field>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium mb-1">Para Birimi</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-select formControlName="buyCurrency" aria-label="Para Birimi" class="w-full">
-              <mat-option *ngFor="let currency of currencies" [value]="currency">
-                {{ currency }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
         <div class="sm:col-span-2">
           <label class="block text-sm font-medium mb-1">Notlar</label>
           <mat-form-field appearance="outline" class="w-full">
@@ -96,20 +84,15 @@ function minNumeric(min: number) {
 })
 export class AddPositionDialogComponent {
   private fb = inject(FormBuilder);
+  private settings = inject(SettingsService);
 
   readonly dialogRef = inject(MatDialogRef<AddPositionDialogComponent>);
-  readonly currencies: Currency[] = ['USD', 'EUR', 'TRY'];
   readonly form = this.fb.nonNullable.group({
     coinId: ['', [Validators.required, Validators.maxLength(100)]],
     quantity: ['', [Validators.required, numericString, minNumeric(0.00000001)]],
     avgBuyPrice: ['', [Validators.required, numericString, minNumeric(0.01)]],
-    buyCurrency: [this.data.defaultCurrency, [Validators.required]],
     notes: ['', [Validators.maxLength(500)]],
   });
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { defaultCurrency: Currency },
-  ) {}
 
   submit(): void {
     if (this.form.invalid) {
@@ -121,7 +104,7 @@ export class AddPositionDialogComponent {
       coinId: value.coinId.trim().toLowerCase(),
       quantity: value.quantity.trim(),
       avgBuyPrice: value.avgBuyPrice.trim(),
-      buyCurrency: value.buyCurrency,
+      buyCurrency: this.settings.currency() as Currency,
       notes: value.notes.trim() || undefined,
     };
 

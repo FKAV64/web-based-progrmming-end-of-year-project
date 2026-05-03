@@ -156,7 +156,6 @@ export class AlertsComponent {
     const result = await firstValueFrom(
       this.dialog.open(CreateAlertDialogComponent, {
         width: '480px',
-        data: { defaultCurrency: this.settings.currency() },
       }).afterClosed(),
     );
 

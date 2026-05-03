@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,13 +7,14 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { AlertCondition, CreateAlertDto } from '../../core/models/alerts.model';
 import { Currency } from '../../core/models/user.model';
+import { SettingsService } from '../../core/services/state/settings.service';
 
 function numericString(control: AbstractControl): ValidationErrors | null {
   const value = String(control.value ?? '').trim();
@@ -68,17 +69,6 @@ function minNumeric(min: number) {
             <input matInput formControlName="targetPrice" inputmode="decimal" placeholder="65000" aria-label="Hedef Fiyat" class="w-full">
           </mat-form-field>
         </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1">Para Birimi</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-select formControlName="currency" aria-label="Para Birimi" class="w-full">
-              <mat-option *ngFor="let currency of currencies" [value]="currency">
-                {{ currency }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
@@ -92,9 +82,9 @@ function minNumeric(min: number) {
 })
 export class CreateAlertDialogComponent {
   private fb = inject(FormBuilder);
+  private settings = inject(SettingsService);
 
   readonly dialogRef = inject(MatDialogRef<CreateAlertDialogComponent>);
-  readonly currencies: Currency[] = ['USD', 'EUR', 'TRY'];
   readonly conditions: { label: string; value: AlertCondition }[] = [
     { label: 'Ustunde', value: 'ABOVE' },
     { label: 'Altinda', value: 'BELOW' },
@@ -103,12 +93,7 @@ export class CreateAlertDialogComponent {
     coinId: ['', [Validators.required, Validators.maxLength(100)]],
     condition: ['ABOVE' as AlertCondition, [Validators.required]],
     targetPrice: ['', [Validators.required, numericString, minNumeric(0.01)]],
-    currency: [this.data.defaultCurrency, [Validators.required]],
   });
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { defaultCurrency: Currency },
-  ) {}
 
   submit(): void {
     if (this.form.invalid) {
@@ -120,7 +105,7 @@ export class CreateAlertDialogComponent {
       coinId: value.coinId.trim().toLowerCase(),
       condition: value.condition,
       targetPrice: value.targetPrice.trim(),
-      currency: value.currency,
+      currency: this.settings.currency() as Currency,
     };
 
     this.dialogRef.close(dto);
