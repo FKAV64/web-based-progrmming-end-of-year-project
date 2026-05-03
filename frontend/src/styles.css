@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body { @apply bg-gray-50 dark:bg-gray-900; }
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -77,4 +81,52 @@ html.dark input:-webkit-autofill:active {
     -webkit-text-fill-color: #e5e7eb !important;
     caret-color: #e5e7eb !important;
   }
+}
+
+/* Fix Angular Material Paginator nested select text in Dark Mode */
+.dark .mat-mdc-paginator .mat-mdc-select-value-text,
+.dark .mat-mdc-paginator .mat-mdc-select-arrow {
+  color: #e2e8f0 !important; /* Tailwind slate-200 */
+}
+
+/* Ensure the mat-select dropdown panel is also dark and its text is readable */
+.dark .mat-mdc-select-panel {
+  background-color: #1e293b !important; /* Tailwind slate-800 */
+}
+.dark .mat-mdc-select-panel .mat-mdc-option-text {
+  color: #e2e8f0 !important;
+}
+
+/* Also target html.dark in case dark mode is applied to the html element */
+html.dark .mat-mdc-paginator .mat-mdc-select-value-text,
+html.dark .mat-mdc-paginator .mat-mdc-select-arrow {
+  color: #e2e8f0 !important;
+}
+html.dark .mat-mdc-select-panel {
+  background-color: #1e293b !important;
+}
+html.dark .mat-mdc-select-panel .mat-mdc-option-text {
+  color: #e2e8f0 !important;
+}
+
+/* Fix Angular Material Paginator (and general select) dropdown options in Dark Mode */
+.dark .mat-mdc-select-panel .mat-mdc-option .mdc-list-item__primary-text,
+.dark .mat-mdc-select-panel .mat-mdc-option {
+  color: #e2e8f0 !important; /* Tailwind slate-200 */
+}
+
+/* Ensure hover and selected states in the dropdown look good in dark mode */
+.dark .mat-mdc-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: #334155 !important; /* Tailwind slate-700 */
+}
+
+/* Also target html.dark variant */
+html.dark .mat-mdc-select-panel .mat-mdc-option .mdc-list-item__primary-text,
+html.dark .mat-mdc-select-panel .mat-mdc-option {
+  color: #e2e8f0 !important;
+}
+html.dark .mat-mdc-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: #334155 !important;
 }

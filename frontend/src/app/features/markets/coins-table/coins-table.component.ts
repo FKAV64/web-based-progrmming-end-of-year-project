@@ -12,7 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -111,6 +111,19 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  constructor(private paginatorIntl: MatPaginatorIntl) {
+    this.paginatorIntl.itemsPerPageLabel = 'Sayfa başına kayıt:';
+    this.paginatorIntl.nextPageLabel = 'Sonraki sayfa';
+    this.paginatorIntl.previousPageLabel = 'Önceki sayfa';
+    this.paginatorIntl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      if (length === 0 || pageSize === 0) { return `0 / ${length}`; }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+      return `${startIndex + 1} - ${endIndex} / ${length}`;
+    };
+  }
 
   trackByCoinId = (_index: number, coin: CoinSnapshot): string => coin.id;
 

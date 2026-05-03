@@ -1,4 +1,4 @@
-<mat-sidenav-container class="h-screen">
+  <mat-sidenav-container class="h-screen bg-gray-50 dark:bg-gray-900">
   <!-- Side nav -->
   <mat-sidenav
     [mode]="isMobile() ? 'over' : 'side'"
@@ -64,7 +64,7 @@
 
       <!-- Theme toggle -->
       <button mat-icon-button (click)="toggleTheme()" class="text-gray-700 dark:text-gray-200" [attr.aria-label]="'Temayı değiştir: ' + settings.theme()">
-        <mat-icon>{{ settings.theme() === 'DARK' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <mat-icon>{{ settings.isDarkThemeEffective() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
       <!-- PWA install button — visible when beforeinstallprompt has fired -->

@@ -63,6 +63,13 @@ export class SettingsService {
     this.notificationsEnabled.set(s.notificationsEnabled);
   }
 
+  isDarkThemeEffective(): boolean {
+    const t = this.theme();
+    if (t === 'DARK') return true;
+    if (t === 'SYSTEM') return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return false;
+  }
+
   private applyTheme(theme: Theme): void {
     const html = this.doc.documentElement;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

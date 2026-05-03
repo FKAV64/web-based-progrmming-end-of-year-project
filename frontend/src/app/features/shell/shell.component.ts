@@ -76,8 +76,8 @@ export class ShellComponent {
   }
 
   toggleTheme(): void {
-    const current = this.settings.theme();
-    this.settings.setTheme(current === 'DARK' ? 'LIGHT' : 'DARK');
+    const effectiveDark = this.settings.isDarkThemeEffective();
+    this.settings.setTheme(effectiveDark ? 'LIGHT' : 'DARK');
   }
 
   setCurrency(currency: Currency): void {

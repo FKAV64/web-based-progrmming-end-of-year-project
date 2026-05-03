@@ -28,7 +28,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog.component'
     <div class="p-6 max-w-lg">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" i18n="@@settings.title">Ayarlar</h1>
 
-      <mat-card class="mb-4">
+      <mat-card class="mb-4 bg-white border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
         <mat-card-header>
           <mat-card-title i18n="@@settings.theme">Tema</mat-card-title>
         </mat-card-header>
@@ -42,7 +42,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog.component'
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="mb-4">
+      <mat-card class="mb-4 bg-white border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
         <mat-card-header>
           <mat-card-title i18n="@@settings.currency">Para Birimi</mat-card-title>
         </mat-card-header>
@@ -56,7 +56,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog.component'
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="mb-4">
+      <mat-card class="mb-4 bg-white border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
         <mat-card-header>
           <mat-card-title i18n="@@settings.language">Dil</mat-card-title>
         </mat-card-header>
@@ -69,7 +69,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog.component'
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="mb-4">
+      <mat-card class="mb-4 bg-white border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
         <mat-card-header>
           <mat-card-title i18n="@@settings.notifications">Bildirimler</mat-card-title>
         </mat-card-header>
@@ -104,7 +104,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog.component'
         </mat-card-content>
       </mat-card>
 
-      <mat-card class="border border-red-200 dark:border-red-900">
+      <mat-card class="border border-red-200 dark:border-red-900 bg-white dark:bg-slate-800 dark:text-gray-100">
         <mat-card-header>
           <mat-card-title class="text-red-600 dark:text-red-400" i18n="@@settings.danger-zone">Tehlikeli Bölge</mat-card-title>
         </mat-card-header>
