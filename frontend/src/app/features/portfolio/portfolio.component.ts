@@ -182,7 +182,7 @@ interface AllocationChartOptions {
                             </button>
                             <button mat-icon-button type="button"
                                     i18n-aria-label="@@portfolio.close-btn" aria-label="Kapat"
-                                    (click)="openCloseDialog(row.position)">
+                                    (click)="openCloseDialog(row)">
                               <mat-icon>task_alt</mat-icon>
                             </button>
                             <button mat-icon-button type="button"
@@ -384,16 +384,21 @@ export class PortfolioComponent {
     }
   }
 
-  async openCloseDialog(position: PortfolioPosition): Promise<void> {
+  async openCloseDialog(row: PortfolioPositionView): Promise<void> {
     const result = await firstValueFrom(
       this.dialog.open(ClosePositionDialogComponent, {
         width: '420px',
-        data: { coinId: position.coinId },
+        data: {
+          coinId: row.position.coinId,
+          coinName: row.label,
+          coinSymbol: row.symbol,
+          fallbackPrice: row.coin?.current_price ?? row.currentPriceConverted ?? 0,
+        },
       }).afterClosed(),
     );
 
     if (result) {
-      await this.portfolio.close(position.id, result);
+      await this.portfolio.close(row.position.id, result);
     }
   }
 

@@ -1,28 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { ClosePortfolioPositionDto } from '../../../core/models/portfolio.model';
+import { PriceStreamService } from '../../../core/services/state/price-stream.service';
 
-function numericString(control: AbstractControl): ValidationErrors | null {
-  const value = String(control.value ?? '').trim();
-  return /^\d+(\.\d+)?$/.test(value) ? null : { numericString: true };
-}
-
-function minNumeric(min: number) {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = Number(control.value);
-    return Number.isFinite(value) && value >= min ? null : { minNumeric: true };
-  };
+interface ClosePositionDialogData {
+  coinId: string;
+  coinName: string;
+  coinSymbol: string;
+  fallbackPrice: number;
 }
 
 @Component({
@@ -30,57 +17,59 @@ function minNumeric(min: number) {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     MatDialogModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
   ],
   template: `
     <h2 mat-dialog-title>Pozisyonu Kapat</h2>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <mat-dialog-content class="grid gap-4">
-        <div class="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:bg-amber-950/50 dark:text-amber-200">
-          {{ data.coinId }} pozisyonu kapatiliyor. Girilen fiyat kapatma fiyati olarak kaydedilecek.
-        </div>
+    <mat-dialog-content class="max-w-sm">
+      <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">
+        <strong>{{ data.coinName }}</strong> pozisyonunuzu kapatmak istediğinizden emin misiniz?
+        Güncel fiyat
+        <span class="font-mono font-semibold text-gray-900 dark:text-white">{{ formatPrice(currentPrice) }}</span>
+        olarak kullanılacaktır.
+      </p>
+    </mat-dialog-content>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Kapanis Fiyati</mat-label>
-          <input matInput formControlName="closePrice" inputmode="decimal" placeholder="42000">
-        </mat-form-field>
-      </mat-dialog-content>
-
-      <mat-dialog-actions align="end">
-        <button mat-button type="button" (click)="dialogRef.close()">Vazgec</button>
-        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
-          Kapat
-        </button>
-      </mat-dialog-actions>
-    </form>
+    <mat-dialog-actions align="end">
+      <button mat-button type="button"
+              class="text-gray-500 hover:text-gray-700 dark:text-gray-400"
+              (click)="dialogRef.close()">
+        Vazgeç
+      </button>
+      <button mat-flat-button type="button"
+              color="primary"
+              class="bg-blue-600 hover:bg-blue-500 text-white font-medium"
+              (click)="confirm()">
+        Pozisyonu Kapat
+      </button>
+    </mat-dialog-actions>
   `,
 })
 export class ClosePositionDialogComponent {
-  private fb = inject(FormBuilder);
-
+  readonly data = inject<ClosePositionDialogData>(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<ClosePositionDialogComponent>);
-  readonly form = this.fb.nonNullable.group({
-    closePrice: ['', [Validators.required, numericString, minNumeric(0.01)]],
-  });
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) readonly data: { coinId: string },
-  ) {}
+  private priceStream = inject(PriceStreamService);
+  private coinSignal = this.priceStream.priceFor(this.data.coinSymbol);
 
-  submit(): void {
-    if (this.form.invalid) {
-      return;
-    }
+  get currentPrice(): number {
+    return this.coinSignal()?.current_price ?? this.data.fallbackPrice;
+  }
 
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 2,
+    }).format(price);
+  }
+
+  confirm(): void {
     const dto: ClosePortfolioPositionDto = {
-      closePrice: this.form.getRawValue().closePrice.trim(),
+      closePrice: this.currentPrice.toString(),
     };
-
     this.dialogRef.close(dto);
   }
 }
