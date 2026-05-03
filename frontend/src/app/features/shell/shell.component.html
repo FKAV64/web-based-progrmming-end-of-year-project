@@ -23,8 +23,8 @@
           (click)="isMobile() && sidenavOpen.set(false)"
           [attr.aria-label]="item.label"
         >
-          <mat-icon matListItemIcon [class]="rla.isActive ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'">{{ item.icon }}</mat-icon>
-          <span matListItemTitle>{{ item.label }}</span>
+          <mat-icon matListItemIcon class="!text-current">{{ item.icon }}</mat-icon>
+          <span matListItemTitle class="!text-current">{{ item.label }}</span>
         </a>
       }
     </mat-nav-list>
