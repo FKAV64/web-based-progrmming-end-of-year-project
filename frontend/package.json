@@ -33,7 +33,7 @@
   "devDependencies": {
     "@angular-builders/jest": "^17.0.3",
     "@angular-devkit/build-angular": "^17.3.17",
-    "@angular/cli": "^17.3.17",
+    "@angular/cli": "^21.2.9",
     "@angular/compiler-cli": "^17.3.0",
     "@angular/localize": "^17.3.12",
     "@playwright/test": "^1.59.1",
