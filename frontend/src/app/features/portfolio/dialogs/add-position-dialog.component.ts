@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -13,7 +14,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CreatePortfolioPositionDto } from '../../../core/models/portfolio.model';
 import { Currency } from '../../../core/models/user.model';
+import { CoinSnapshot } from '../../../core/models/market.model';
 import { SettingsService } from '../../../core/services/state/settings.service';
+import { CoinPickerComponent } from '../../../shared/components/coin-picker/coin-picker.component';
 
 function numericString(control: AbstractControl): ValidationErrors | null {
   const value = String(control.value ?? '').trim();
@@ -37,6 +40,7 @@ function minNumeric(min: number) {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    CoinPickerComponent,
   ],
   template: `
     <h2 mat-dialog-title>Yeni Pozisyon</h2>
@@ -44,11 +48,11 @@ function minNumeric(min: number) {
     <form [formGroup]="form" (ngSubmit)="submit()">
       <mat-dialog-content class="grid gap-4 sm:grid-cols-2">
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium mb-1">Coin ID</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <input matInput formControlName="coinId" placeholder="bitcoin" aria-label="Coin ID" class="w-full">
-            <mat-hint>CoinGecko kimligi kullanin</mat-hint>
-          </mat-form-field>
+          <label class="block text-sm font-medium mb-1">Coin</label>
+          <app-coin-picker
+            [control]="coinIdControl"
+            (coinSelected)="onCoinSelected($event)">
+          </app-coin-picker>
         </div>
 
         <div>
@@ -93,6 +97,14 @@ export class AddPositionDialogComponent {
     avgBuyPrice: ['', [Validators.required, numericString, minNumeric(0.01)]],
     notes: ['', [Validators.maxLength(500)]],
   });
+
+  get coinIdControl(): FormControl<string> {
+    return this.form.controls.coinId;
+  }
+
+  onCoinSelected(coin: CoinSnapshot): void {
+    this.form.get('avgBuyPrice')?.setValue(coin.current_price.toString());
+  }
 
   submit(): void {
     if (this.form.invalid) {

@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -15,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AlertCondition, CreateAlertDto } from '../../core/models/alerts.model';
 import { Currency } from '../../core/models/user.model';
 import { SettingsService } from '../../core/services/state/settings.service';
+import { CoinPickerComponent } from '../../shared/components/coin-picker/coin-picker.component';
 
 function numericString(control: AbstractControl): ValidationErrors | null {
   const value = String(control.value ?? '').trim();
@@ -39,6 +41,7 @@ function minNumeric(min: number) {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    CoinPickerComponent,
   ],
   template: `
     <h2 mat-dialog-title>Yeni Alarm</h2>
@@ -46,10 +49,8 @@ function minNumeric(min: number) {
     <form [formGroup]="form" (ngSubmit)="submit()">
       <mat-dialog-content class="grid gap-4 sm:grid-cols-2">
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium mb-1">Coin ID</label>
-          <mat-form-field appearance="outline" class="w-full">
-            <input matInput formControlName="coinId" placeholder="bitcoin" aria-label="Coin ID" class="w-full">
-          </mat-form-field>
+          <label class="block text-sm font-medium mb-1">Coin</label>
+          <app-coin-picker [control]="coinIdControl"></app-coin-picker>
         </div>
 
         <div>
@@ -94,6 +95,10 @@ export class CreateAlertDialogComponent {
     condition: ['ABOVE' as AlertCondition, [Validators.required]],
     targetPrice: ['', [Validators.required, numericString, minNumeric(0.01)]],
   });
+
+  get coinIdControl(): FormControl<string> {
+    return this.form.controls.coinId;
+  }
 
   submit(): void {
     if (this.form.invalid) {

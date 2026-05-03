@@ -83,6 +83,18 @@ html.dark input:-webkit-autofill:active {
   }
 }
 
+/* ── Coin picker autocomplete panel dark/light mode ─────────────────────── */
+.coin-picker-panel {
+  background: white;
+  border: 1px solid #e5e7eb;
+}
+
+.dark .coin-picker-panel,
+html.dark .coin-picker-panel {
+  background: #1f2937;
+  border-color: #374151;
+}
+
 /* Fix Angular Material Paginator nested select text in Dark Mode */
 .dark .mat-mdc-paginator .mat-mdc-select-value-text,
 .dark .mat-mdc-paginator .mat-mdc-select-arrow {
