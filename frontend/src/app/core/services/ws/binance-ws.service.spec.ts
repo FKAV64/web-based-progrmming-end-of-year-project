@@ -58,16 +58,15 @@ describe('BinanceWsService', () => {
   }));
 
   // -------------------------------------------------------------------------
-  // 4. per-symbol timeout fires after 30 s of silence for that symbol
-  //    (timeout was moved from connection$ to tick$() per-symbol in Fix 3)
+  // 4. connection-level timeout fires after 60 s of total silence
+  //    (per-symbol timeout removed; health check is now at shared connection$)
   // -------------------------------------------------------------------------
-  it('tick$() errors after 30 s of silence for that symbol', fakeAsync(() => {
-    let timedOut = false;
-    service.tick$('BTCUSDT').subscribe({ error: () => { timedOut = true; } });
+  it('transitions to reconnecting after 60 s of connection silence', fakeAsync(() => {
+    service.tick$('BTCUSDT').subscribe({ error: () => {} });
 
-    tick(30_100); // past the 30 s per-symbol timeout
+    tick(60_100); // past the 60 s connection-level timeout
 
-    expect(timedOut).toBe(true);
+    expect(service.connectionState()).toBe('reconnecting');
 
     discardPeriodicTasks();
   }));

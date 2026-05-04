@@ -12,6 +12,7 @@ import {
   map,
   retry,
   share,
+  tap,
   timeout,
 } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -28,6 +29,8 @@ export class BinanceWsService implements OnDestroy {
 
   private subscribedSymbols = new Set<string>();
   private offlineTimer$: Subscription | null = null;
+  private keepaliveInterval: ReturnType<typeof setInterval> | null = null;
+  private isFirstConnection = true;
 
   constructor() {
     this.socket$ = webSocket({
@@ -36,6 +39,12 @@ export class BinanceWsService implements OnDestroy {
         next: () => {
           this.connectionState.set('live');
           this.cancelOfflineTimer();
+          if (!this.isFirstConnection) {
+            // On reconnection, clear server-side state then re-subscribe all symbols
+            this.resubscribeAll();
+          }
+          this.isFirstConnection = false;
+          this.startKeepalive();
         },
       },
       closeObserver: {
@@ -44,11 +53,24 @@ export class BinanceWsService implements OnDestroy {
             this.connectionState.set('reconnecting');
             this.startOfflineTimer();
           }
+          this.stopKeepalive();
         },
       },
     });
 
     this.connection$ = this.socket$.pipe(
+      // Respond to Binance application-level pings
+      tap((message: any) => {
+        if (message?.method === 'ping' || message?.ping) {
+          try {
+            this.socket$.next({ method: 'pong' } as any);
+          } catch {
+            // socket not ready
+          }
+        }
+      }),
+      // Connection-level health check: 60 s of total silence means the connection is dead
+      timeout({ each: 60_000 }),
       // Multicast to all subscribers sharing one socket
       share({
         connector: () => new ReplaySubject(1),
@@ -56,13 +78,13 @@ export class BinanceWsService implements OnDestroy {
         resetOnComplete: true,
         resetOnRefCountZero: true,
       }),
-
-      // Reconnect with exponential backoff capped at 30s
+      // Reconnect with exponential backoff capped at 30 s
       retry({
         count: Infinity,
         delay: (_, attempt) => {
           this.connectionState.set('reconnecting');
           this.startOfflineTimer();
+          this.stopKeepalive();
           return timer(Math.min(30_000, 2 ** attempt * 1000));
         },
       }),
@@ -75,8 +97,6 @@ export class BinanceWsService implements OnDestroy {
 
       const sub = this.connection$.pipe(
         filter((msg: any) => msg?.s === symbol),
-        // timeout per-symbol so cross-symbol traffic doesn't reset the clock
-        timeout({ each: 30_000 }),
         map((msg: any): PriceTick => ({
           symbol: msg.s,
           price: parseFloat(msg.c),
@@ -107,6 +127,28 @@ export class BinanceWsService implements OnDestroy {
     }
   }
 
+  private resubscribeAll(): void {
+    const symbols = Array.from(this.subscribedSymbols);
+    if (symbols.length === 0) return;
+
+    const streams = symbols.map(s => `${s.toLowerCase()}@miniTicker`);
+
+    // Unsubscribe first to clear any server-side state from the previous connection
+    try {
+      this.socket$.next({ method: 'UNSUBSCRIBE', params: streams, id: Date.now() } as any);
+    } catch {
+      // socket not yet ready
+    }
+
+    setTimeout(() => {
+      try {
+        this.socket$.next({ method: 'SUBSCRIBE', params: streams, id: Date.now() } as any);
+      } catch {
+        // socket not yet ready
+      }
+    }, 500);
+  }
+
   private sendSubscribe(symbols: string[]): void {
     try {
       this.socket$.next({
@@ -131,6 +173,26 @@ export class BinanceWsService implements OnDestroy {
     }
   }
 
+  private startKeepalive(): void {
+    this.stopKeepalive();
+    this.keepaliveInterval = setInterval(() => {
+      if (this.connectionState() === 'live') {
+        try {
+          this.socket$.next({ method: 'ping' } as any);
+        } catch {
+          // ignore if socket not ready
+        }
+      }
+    }, 180_000); // every 3 minutes
+  }
+
+  private stopKeepalive(): void {
+    if (this.keepaliveInterval) {
+      clearInterval(this.keepaliveInterval);
+      this.keepaliveInterval = null;
+    }
+  }
+
   private startOfflineTimer(): void {
     this.cancelOfflineTimer();
     this.offlineTimer$ = timer(60_000).subscribe(() => {
@@ -149,6 +211,7 @@ export class BinanceWsService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.cancelOfflineTimer();
+    this.stopKeepalive();
     this.socket$.complete();
   }
 }
