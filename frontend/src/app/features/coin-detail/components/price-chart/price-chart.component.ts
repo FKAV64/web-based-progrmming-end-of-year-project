@@ -165,18 +165,28 @@ export class PriceChartComponent implements OnChanges {
     if (tick.symbol !== this.symbol || this.klines.length === 0) return;
 
     const last = this.klines[this.klines.length - 1];
-    if (tick.timestamp >= this.nextBoundary(last.time)) {
-      this.klines.push({
-        time: this.bucketStart(tick.timestamp),
-        open: last.close,
-        high: tick.price,
-        low: tick.price,
-        close: tick.price,
-      });
-      if (this.klines.length > this.limit) {
-        this.klines.shift();
+    const ts = typeof tick.timestamp === 'number' ? tick.timestamp : Number(tick.timestamp);
+    const validTs = isFinite(ts) && ts > 0;
+
+    if (validTs) {
+      if (ts >= this.nextBoundary(last.time)) {
+        this.klines.push({
+          time: this.bucketStart(ts),
+          open: last.close,
+          high: tick.price,
+          low: tick.price,
+          close: tick.price,
+        });
+        if (this.klines.length > this.limit) {
+          this.klines.shift();
+        }
+      } else if (ts >= last.time) {
+        last.close = tick.price;
+        last.high = Math.max(last.high, tick.price);
+        last.low = Math.min(last.low, tick.price);
       }
-    } else if (tick.timestamp >= last.time) {
+    } else {
+      // Invalid timestamp on tick — update prices only, don't touch times
       last.close = tick.price;
       last.high = Math.max(last.high, tick.price);
       last.low = Math.min(last.low, tick.price);
@@ -222,7 +232,12 @@ export class PriceChartComponent implements OnChanges {
       type: 'datetime',
       labels: {
         style: { colors: foreground },
-        formatter: (_: string, timestamp?: number) => this.formatTime(timestamp),
+        formatter: (_: string, timestamp?: number | string) => {
+          if (timestamp == null || timestamp === 0 || timestamp === '0') return '';
+          const ms = typeof timestamp === 'string' ? Number(timestamp) : timestamp;
+          if (!isFinite(ms) || ms <= 0) return '';
+          return this.formatTime(ms, this.interval);
+        },
       },
       axisBorder: { color: muted },
       axisTicks: { color: muted },
@@ -253,7 +268,7 @@ export class PriceChartComponent implements OnChanges {
     this.colors = this.chartType === 'area' ? ['#2563eb'] : ['#26a69a'];
     this.tooltip = {
       theme: dark ? 'dark' : 'light',
-      x: { formatter: (value: number) => this.formatTime(value) },
+      x: { formatter: (value: number | string) => this.formatTime(value, this.interval) },
       y: { formatter: (value: number) => this.formatPrice(value) },
     };
     this.grid = { borderColor: muted, strokeDashArray: 3 };
@@ -317,14 +332,33 @@ export class PriceChartComponent implements OnChanges {
     return Math.floor(timestamp / intervalMs) * intervalMs;
   }
 
-  private formatTime(timestamp: number | undefined): string {
-    if (!timestamp) return '';
-    return new Intl.DateTimeFormat(this.localeCode(), {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    }).format(new Date(timestamp));
+  private formatTime(value: number | string | null | undefined, interval?: BinanceInterval): string {
+    if (value == null || value === 0 || value === '0') return '';
+
+    const ms = typeof value === 'string' ? Number(value) : value;
+    if (!isFinite(ms as number) || (ms as number) <= 0) return '';
+
+    try {
+      const date = new Date(ms as number);
+      if (isNaN(date.getTime())) return '';
+
+      const unit = interval ?? this.interval;
+      const locale = this.localeCode();
+
+      if (['1m', '5m', '15m', '30m'].includes(unit)) {
+        return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+      } else if (['1h', '4h'].includes(unit)) {
+        return date.toLocaleDateString(locale, {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+      } else {
+        return date.toLocaleDateString(locale, {
+          year: 'numeric', month: 'short', day: 'numeric'
+        });
+      }
+    } catch {
+      return '';
+    }
   }
 
   private formatPrice(value: number): string {
