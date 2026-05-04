@@ -17,25 +17,52 @@ export class PushService {
   }
 
   async requestPermission(): Promise<void> {
-    if (this.state() !== 'default') return;
+    if (this.state() !== 'default') {
+      console.log('[Push] Permission status:', this.state());
+      return;
+    }
+
     const result = await Notification.requestPermission();
+    console.log('[Push] Permission status:', result);
     this.state.set(result as PushPermissionState);
   }
 
   async subscribe(): Promise<void> {
-    if (!('serviceWorker' in navigator)) return;
+    if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+      this.state.set('unsupported');
+      return;
+    }
+
+    const permission =
+      this.state() === 'granted' ? Notification.permission : await Notification.requestPermission();
+    console.log('[Push] Permission status:', permission);
+
+    if (permission !== 'granted') {
+      this.state.set(permission as PushPermissionState);
+      return;
+    }
 
     const publicKey = await this.api.getVapidPublicKey();
     const registration = await navigator.serviceWorker.ready;
     const existing = await registration.pushManager.getSubscription();
-    if (existing) return;
+    const subscription =
+      existing ??
+      await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: this.urlBase64ToUint8Array(publicKey),
+      });
 
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: this.urlBase64ToUint8Array(publicKey),
+    console.log('[Push] Subscription object:', subscription);
+
+    const response = await this.api.subscribe({
+      endpoint: subscription.endpoint,
+      keys: {
+        p256dh: this.encodeSubscriptionKey(subscription, 'p256dh'),
+        auth: this.encodeSubscriptionKey(subscription, 'auth'),
+      },
     });
 
-    await this.api.subscribe(subscription.toJSON());
+    console.log('[Push] Sent to backend:', response);
     this.state.set('granted');
   }
 
@@ -66,7 +93,16 @@ export class PushService {
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = atob(base64);
-    return Uint8Array.from([...rawData].map((c) => c.charCodeAt(0)));
+    const rawData = window.atob(base64);
+    return new Uint8Array([...rawData].map((c) => c.charCodeAt(0)));
+  }
+
+  private encodeSubscriptionKey(subscription: PushSubscription, keyName: 'p256dh' | 'auth'): string {
+    const key = subscription.getKey(keyName);
+    if (!key) {
+      throw new Error(`Push subscription is missing the ${keyName} key.`);
+    }
+
+    return btoa(String.fromCharCode(...new Uint8Array(key)));
   }
 }

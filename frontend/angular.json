@@ -33,7 +33,11 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest",
-              "src/combined-sw.js"
+              {
+                "glob": "custom-sw.js",
+                "input": "src",
+                "output": "/"
+              }
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",

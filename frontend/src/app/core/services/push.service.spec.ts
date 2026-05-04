@@ -2,6 +2,29 @@ import { TestBed } from '@angular/core/testing';
 import { PushService } from './push.service';
 import { PushApi } from './api/push.api';
 
+function makeKeyBytes(value: string): ArrayBuffer {
+  return Uint8Array.from(value.split('').map(char => char.charCodeAt(0))).buffer;
+}
+
+function makeSubscription(endpoint: string) {
+  return {
+    endpoint,
+    getKey: jest.fn((keyName: string) => {
+      if (keyName === 'p256dh') {
+        return makeKeyBytes('p256dh-key');
+      }
+
+      if (keyName === 'auth') {
+        return makeKeyBytes('auth-key');
+      }
+
+      return null;
+    }),
+    toJSON: () => ({ endpoint, keys: {} }),
+    unsubscribe: jest.fn(),
+  } as unknown as PushSubscription;
+}
+
 function makeSwRegistration(subscription: PushSubscription | null = null) {
   return {
     pushManager: {
@@ -76,10 +99,7 @@ describe('PushService', () => {
 
   describe('subscribe', () => {
     it('calls API subscribe and sets state to granted', async () => {
-      const fakeSubscription = {
-        toJSON: () => ({ endpoint: 'https://push.example.com/123', keys: {} }),
-        unsubscribe: jest.fn(),
-      } as unknown as PushSubscription;
+      const fakeSubscription = makeSubscription('https://push.example.com/123');
 
       const registration = makeSwRegistration(null);
       (registration.pushManager.subscribe as jest.Mock).mockResolvedValue(fakeSubscription);
@@ -88,35 +108,55 @@ describe('PushService', () => {
         value: { ready: Promise.resolve(registration) },
         configurable: true,
       });
+      Object.defineProperty(window, 'Notification', {
+        value: { permission: 'granted', requestPermission: jest.fn().mockResolvedValue('granted') },
+        configurable: true,
+        writable: true,
+      });
 
       apiMock.getVapidPublicKey.mockResolvedValue('dGVzdC12YXBpZC1rZXk'); // base64
-      apiMock.subscribe.mockResolvedValue(undefined);
+      apiMock.subscribe.mockResolvedValue({ ok: true });
 
       await service.subscribe();
 
       expect(apiMock.getVapidPublicKey).toHaveBeenCalled();
-      expect(apiMock.subscribe).toHaveBeenCalled();
+      expect(apiMock.subscribe).toHaveBeenCalledWith({
+        endpoint: 'https://push.example.com/123',
+        keys: {
+          p256dh: btoa('p256dh-key'),
+          auth: btoa('auth-key'),
+        },
+      });
       expect(service.state()).toBe('granted');
     });
 
-    it('skips re-subscribing when a subscription already exists', async () => {
-      const existingSubscription = {
-        endpoint: 'https://push.example.com/existing',
-        toJSON: () => ({}),
-        unsubscribe: jest.fn(),
-      } as unknown as PushSubscription;
+    it('re-sends an existing subscription to the backend', async () => {
+      const existingSubscription = makeSubscription('https://push.example.com/existing');
 
       const registration = makeSwRegistration(existingSubscription);
       Object.defineProperty(navigator, 'serviceWorker', {
         value: { ready: Promise.resolve(registration) },
         configurable: true,
       });
+      Object.defineProperty(window, 'Notification', {
+        value: { permission: 'granted', requestPermission: jest.fn().mockResolvedValue('granted') },
+        configurable: true,
+        writable: true,
+      });
 
       apiMock.getVapidPublicKey.mockResolvedValue('dGVzdA');
+      apiMock.subscribe.mockResolvedValue({ ok: true });
 
       await service.subscribe();
 
-      expect(apiMock.subscribe).not.toHaveBeenCalled();
+      expect(registration.pushManager.subscribe).not.toHaveBeenCalled();
+      expect(apiMock.subscribe).toHaveBeenCalledWith({
+        endpoint: 'https://push.example.com/existing',
+        keys: {
+          p256dh: btoa('p256dh-key'),
+          auth: btoa('auth-key'),
+        },
+      });
     });
   });
 

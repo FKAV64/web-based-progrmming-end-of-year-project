@@ -70,7 +70,14 @@ export class PushService {
 
     for (const sub of subs) {
       try {
-        await webpush.sendNotification(
+        console.log(
+          '[PushSvc] Sending to userId:',
+          userId,
+          'endpoint:',
+          sub.endpoint.slice(-20),
+        );
+
+        const result = await webpush.sendNotification(
           {
             endpoint: sub.endpoint,
             keys: {
@@ -80,6 +87,8 @@ export class PushService {
           },
           payloadStr,
         );
+
+        console.log('[PushSvc] Result:', result);
       } catch (error: any) {
         const statusCode = error?.statusCode;
         if (statusCode === 410 || statusCode === 404) {

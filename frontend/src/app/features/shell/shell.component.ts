@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -13,10 +13,12 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/state/auth.service';
 import { SettingsService } from '../../core/services/state/settings.service';
+import { AlertsService } from '../../core/services/state/alerts.service';
 import { Currency } from '../../core/models/user.model';
 import { BINANCE_WS } from '../../core/services/ws/binance-ws.token';
 import { ConnectionStatusComponent } from '../../shared/components/connection-status/connection-status.component';
 import { PwaService } from '../../core/services/pwa.service';
+import { PushService } from '../../core/services/push.service';
 
 interface NavItem {
   label: string;
@@ -47,11 +49,14 @@ interface NavItem {
 export class ShellComponent {
   auth = inject(AuthService);
   settings = inject(SettingsService);
+  alerts = inject(AlertsService);
   ws = inject(BINANCE_WS);
   pwa = inject(PwaService);
+  push = inject(PushService);
 
   isMobile = signal(false);
   sidenavOpen = signal(true);
+  private initializedUserId: string | null = null;
 
   readonly navItems: NavItem[] = [
     { label: $localize`:@@nav.dashboard:Dashboard`, icon: 'dashboard', route: '/dashboard' },
@@ -73,6 +78,24 @@ export class ShellComponent {
         this.isMobile.set(result.matches);
         this.sidenavOpen.set(!result.matches);
       });
+
+    effect(() => {
+      const userId = this.auth.currentUser()?.id ?? null;
+
+      if (!userId) {
+        this.initializedUserId = null;
+        return;
+      }
+
+      if (this.initializedUserId === userId) return;
+
+      this.initializedUserId = userId;
+      this.alerts.startAlertPoller();
+
+      if (this.push.state() === 'granted') {
+        void this.push.subscribe();
+      }
+    });
   }
 
   toggleTheme(): void {

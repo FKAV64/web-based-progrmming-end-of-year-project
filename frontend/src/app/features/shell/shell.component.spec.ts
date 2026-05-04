@@ -7,8 +7,10 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ShellComponent } from './shell.component';
 import { AuthService } from '../../core/services/state/auth.service';
 import { SettingsService } from '../../core/services/state/settings.service';
+import { AlertsService } from '../../core/services/state/alerts.service';
 import { BINANCE_WS } from '../../core/services/ws/binance-ws.token';
 import { PwaService } from '../../core/services/pwa.service';
+import { PushService } from '../../core/services/push.service';
 
 describe('ShellComponent — a11y', () => {
   let fixture: ComponentFixture<ShellComponent>;
@@ -21,6 +23,10 @@ describe('ShellComponent — a11y', () => {
         {
           provide: AuthService,
           useValue: { currentUser: signal(null), logout: jest.fn() },
+        },
+        {
+          provide: AlertsService,
+          useValue: { startAlertPoller: jest.fn() },
         },
         {
           provide: SettingsService,
@@ -47,6 +53,13 @@ describe('ShellComponent — a11y', () => {
             canInstall: signal(false),
             isOnline: signal(true),
             install: jest.fn(),
+          },
+        },
+        {
+          provide: PushService,
+          useValue: {
+            state: signal<'default' | 'granted' | 'denied' | 'unsupported'>('default'),
+            subscribe: jest.fn(),
           },
         },
       ],

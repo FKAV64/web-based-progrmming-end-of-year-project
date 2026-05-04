@@ -10,6 +10,7 @@ import { PriceAlert } from '../../models/alerts.model';
 describe('AlertsService', () => {
   let service: AlertsService;
   let apiMock: jest.Mocked<AlertsApiService>;
+  let notificationsMock: { showError: jest.Mock; info: jest.Mock };
 
   const authMock = {
     currentUser: signal({
@@ -48,6 +49,8 @@ describe('AlertsService', () => {
   };
 
   beforeEach(async () => {
+    jest.useFakeTimers();
+
     apiMock = {
       list: jest.fn((includeTriggered?: boolean) =>
         of(includeTriggered ? [activeAlert, triggeredAlert] : [activeAlert]),
@@ -56,12 +59,17 @@ describe('AlertsService', () => {
       remove: jest.fn(),
     } as any;
 
+    notificationsMock = {
+      showError: jest.fn(),
+      info: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         AlertsService,
         { provide: AuthService, useValue: authMock },
         { provide: AlertsApiService, useValue: apiMock },
-        { provide: NotificationService, useValue: { showError: jest.fn() } },
+        { provide: NotificationService, useValue: notificationsMock },
       ],
     });
 
@@ -69,7 +77,13 @@ describe('AlertsService', () => {
     await Promise.resolve();
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('loads active alerts by default and triggered alerts on demand', async () => {
+    await service.loadActive(true);
+
     expect(service.active()).toEqual([activeAlert]);
     expect(service.triggered()).toEqual([]);
 
@@ -77,6 +91,19 @@ describe('AlertsService', () => {
 
     expect(apiMock.list).toHaveBeenCalledWith(false);
     expect(apiMock.list).toHaveBeenCalledWith(true);
+    expect(service.triggered()).toEqual([triggeredAlert]);
+  });
+
+  it('shows an in-app toast for newly triggered alerts after the baseline snapshot is seeded', () => {
+    const internal = service as any;
+
+    internal.applyAlertSnapshot([activeAlert], false);
+    internal.applyAlertSnapshot([activeAlert, triggeredAlert], true);
+
+    expect(notificationsMock.info).toHaveBeenCalledWith(
+      'Alarm tetiklendi: ETHEREUM hedef 2500 EUR',
+      6000,
+    );
     expect(service.triggered()).toEqual([triggeredAlert]);
   });
 });

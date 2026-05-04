@@ -5,22 +5,25 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class NotificationService {
   private snackBar = inject(MatSnackBar);
 
-  error(message: string): void {
+  show(message: string, variant: 'info' | 'success' | 'error' = 'info', duration = 4000): void {
     this.snackBar.open(message, 'Kapat', {
-      duration: 4000,
+      duration,
       horizontalPosition: 'right',
       verticalPosition: 'top',
-      panelClass: ['app-snackbar-error'],
+      panelClass: [`app-snackbar-${variant}`],
     });
   }
 
+  error(message: string): void {
+    this.show(message, 'error', 4000);
+  }
+
   success(message: string): void {
-    this.snackBar.open(message, 'Kapat', {
-      duration: 2500,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-      panelClass: ['app-snackbar-success'],
-    });
+    this.show(message, 'success', 2500);
+  }
+
+  info(message: string, duration = 6000): void {
+    this.show(message, 'info', duration);
   }
 
   showError(error: unknown, fallback: string): void {

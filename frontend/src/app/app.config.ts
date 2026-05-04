@@ -1,10 +1,9 @@
-import { APP_INITIALIZER, ApplicationConfig, isDevMode } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { importProvidersFrom } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { provideServiceWorker } from '@angular/service-worker';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -31,9 +30,5 @@ export const appConfig: ApplicationConfig = {
       deps: [AuthService],
       multi: true,
     },
-    provideServiceWorker('combined-sw.js', {
-      enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
   ],
 };

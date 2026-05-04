@@ -14,9 +14,9 @@ export class PushApi {
     return res.publicKey;
   }
 
-  subscribe(subscription: PushSubscriptionJSON): Promise<void> {
+  subscribe(subscription: { endpoint: string; keys: { p256dh: string; auth: string } }): Promise<unknown> {
     return firstValueFrom(
-      this.http.post<void>(`${this.base}/subscribe`, subscription),
+      this.http.post(`${this.base}/subscribe`, subscription),
     );
   }
 
