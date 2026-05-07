@@ -3,11 +3,11 @@ name: Frontend CI
 on:
   push:
     paths:
-      - 'frontend/**'
+      - 'repo/frontend/**'
       - '.github/workflows/frontend-ci.yml'
   pull_request:
     paths:
-      - 'frontend/**'
+      - 'repo/frontend/**'
       - '.github/workflows/frontend-ci.yml'
 
 jobs:
@@ -23,33 +23,33 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: repo/frontend/package-lock.json
 
       - name: Install dependencies
-        working-directory: frontend
+        working-directory: repo/frontend
         run: npm ci
 
       - name: Lint
-        working-directory: frontend
+        working-directory: repo/frontend
         run: npm run lint
 
       - name: Run tests with coverage
-        working-directory: frontend
+        working-directory: repo/frontend
         run: npm test -- --coverage --watchAll=false
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
-          path: frontend/coverage/
+          path: repo/frontend/coverage/
           retention-days: 7
 
       - name: Build
-        working-directory: frontend
+        working-directory: repo/frontend
         run: npm run build
 
       - name: Run Lighthouse CI
-        working-directory: frontend
+        working-directory: repo/frontend
         run: |
           npm install -g @lhci/cli
           lhci autorun
