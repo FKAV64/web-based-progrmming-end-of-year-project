@@ -54,6 +54,7 @@
       <mat-select
         [value]="settings.currency()"
         (selectionChange)="setCurrency($event.value)"
+        panelClass="dark-panel"
         class="text-gray-700 dark:text-gray-200 w-20 hidden sm:block"
         i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
       >
@@ -93,6 +94,7 @@
           <mat-select
             [value]="settings.currency()"
             (selectionChange)="setCurrency($event.value)"
+            panelClass="dark-panel"
             class="w-full"
             i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
           >

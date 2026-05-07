@@ -49,14 +49,14 @@ function minNumeric(min: number) {
     <form [formGroup]="form" (ngSubmit)="submit()">
       <mat-dialog-content class="grid gap-4 sm:grid-cols-2">
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium mb-1">Coin</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Coin</label>
           <app-coin-picker [control]="coinIdControl"></app-coin-picker>
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Kosul</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Kosul</label>
           <mat-form-field appearance="outline" class="w-full">
-            <mat-select formControlName="condition" aria-label="Kosul" class="w-full">
+            <mat-select formControlName="condition" aria-label="Kosul" panelClass="dark-panel" class="w-full">
               <mat-option *ngFor="let option of conditions" [value]="option.value">
                 {{ option.label }}
               </mat-option>
@@ -65,7 +65,7 @@ function minNumeric(min: number) {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Hedef Fiyat</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Hedef Fiyat</label>
           <mat-form-field appearance="outline" class="w-full">
             <input matInput formControlName="targetPrice" inputmode="decimal" placeholder="65000" aria-label="Hedef Fiyat" class="w-full">
           </mat-form-field>
@@ -73,7 +73,7 @@ function minNumeric(min: number) {
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button type="button" (click)="dialogRef.close()">Vazgec</button>
+        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()">Vazgec</button>
         <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
           Alarmi Olustur
         </button>

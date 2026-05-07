@@ -348,6 +348,7 @@ export class PortfolioComponent {
     const result = await firstValueFrom(
       this.dialog.open(AddPositionDialogComponent, {
         width: '520px',
+        panelClass: ['dark-panel', 'rounded-lg'],
       }).afterClosed(),
     );
 
@@ -361,6 +362,7 @@ export class PortfolioComponent {
       this.dialog.open(EditPositionDialogComponent, {
         width: '520px',
         data: { position },
+        panelClass: ['dark-panel', 'rounded-lg'],
       }).afterClosed(),
     );
 
@@ -373,6 +375,7 @@ export class PortfolioComponent {
     const result = await firstValueFrom(
       this.dialog.open(ClosePositionDialogComponent, {
         width: '420px',
+        panelClass: ['dark-panel', 'rounded-lg'],
         data: {
           coinId: row.position.coinId,
           coinName: row.label,

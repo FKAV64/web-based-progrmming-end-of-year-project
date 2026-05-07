@@ -142,3 +142,211 @@ html.dark .mat-mdc-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabl
 html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
   background-color: #334155 !important;
 }
+
+/* ============================================================
+   ANGULAR MATERIAL DARK MODE OVERRIDES
+   These target the CDK overlay container and all Material
+   components that render outside the Angular root element.
+   The .dark class is synced to the overlay container by
+   DarkModeOverlayContainer (see app.config.ts).
+   ============================================================ */
+
+/* --- mat-select panel --- */
+.dark .mat-mdc-select-panel {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151;
+}
+
+.dark .mat-mdc-option {
+  color: #f3f4f6 !important;
+}
+
+.dark .mat-mdc-option:hover,
+.dark .mat-mdc-option.mat-mdc-option-active {
+  background-color: #374151 !important;
+}
+
+.dark .mat-mdc-option.mdc-list-item--selected {
+  background-color: #1e3a5f !important;
+  color: #93c5fd !important;
+}
+
+/* --- mat-autocomplete panel --- */
+.dark .mat-mdc-autocomplete-panel {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151;
+}
+
+/* --- mat-dialog --- */
+.dark .mat-mdc-dialog-container {
+  background-color: #111827 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark .mat-mdc-dialog-surface {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151;
+}
+
+.dark .mdc-dialog__title,
+.dark .mat-mdc-dialog-title {
+  color: #f9fafb !important;
+}
+
+.dark .mdc-dialog__content,
+.dark .mat-mdc-dialog-content {
+  color: #d1d5db !important;
+}
+
+/* --- mat-menu panel --- */
+.dark .mat-mdc-menu-panel {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151;
+}
+
+.dark .mat-mdc-menu-item {
+  color: #f3f4f6 !important;
+}
+
+.dark .mat-mdc-menu-item:hover {
+  background-color: #374151 !important;
+}
+
+/* --- mat-tooltip --- */
+.dark .mdc-tooltip__surface {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+/* --- mat-snack-bar --- */
+.dark .mdc-snackbar__surface {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151;
+}
+
+.dark .mdc-snackbar__label {
+  color: #f3f4f6 !important;
+}
+
+/* --- mat-form-field in dark mode --- */
+.dark .mat-mdc-form-field-flex {
+  background-color: #1f2937 !important;
+}
+
+.dark .mat-mdc-text-field-wrapper {
+  background-color: #1f2937 !important;
+}
+
+.dark .mat-mdc-floating-label,
+.dark .mat-mdc-form-field label {
+  color: #9ca3af !important;
+}
+
+.dark .mat-mdc-input-element {
+  color: #f3f4f6 !important;
+  caret-color: #60a5fa !important;
+}
+
+.dark .mdc-line-ripple::before {
+  border-bottom-color: #4b5563 !important;
+}
+
+/* --- mat-select trigger text --- */
+.dark .mat-mdc-select-value-text {
+  color: #f3f4f6 !important;
+}
+
+.dark .mat-mdc-select-arrow {
+  color: #9ca3af !important;
+}
+
+/* --- mat-chip --- */
+.dark .mat-mdc-chip {
+  background-color: #374151 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark .mat-mdc-chip.mat-mdc-chip-selected {
+  background-color: #1e3a5f !important;
+  color: #93c5fd !important;
+}
+
+/* --- mat-tab --- */
+.dark .mat-mdc-tab-header {
+  border-bottom-color: #374151 !important;
+}
+
+.dark .mat-mdc-tab .mdc-tab__text-label {
+  color: #9ca3af !important;
+}
+
+.dark .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #60a5fa !important;
+}
+
+.dark .mdc-tab-indicator__content--underline {
+  border-color: #60a5fa !important;
+}
+
+/* --- mat-table --- */
+.dark .mat-mdc-table {
+  background-color: transparent !important;
+}
+
+.dark .mat-mdc-header-cell {
+  color: #9ca3af !important;
+  border-bottom-color: #374151 !important;
+}
+
+.dark .mat-mdc-cell {
+  color: #f3f4f6 !important;
+  border-bottom-color: #1f2937 !important;
+}
+
+.dark .mat-mdc-row:hover {
+  background-color: #1f2937 !important;
+}
+
+/* --- mat-paginator --- */
+.dark .mat-mdc-paginator {
+  background-color: transparent !important;
+  color: #9ca3af !important;
+}
+
+.dark .mat-mdc-paginator-range-label {
+  color: #9ca3af !important;
+}
+
+.dark .mat-mdc-icon-button {
+  color: #9ca3af !important;
+}
+
+/* --- mat-slide-toggle --- */
+.dark .mdc-switch:not(.mdc-switch--selected) .mdc-switch__track {
+  background-color: #4b5563 !important;
+}
+
+/* --- Scrollbar in dark mode --- */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* --- dark-panel utility (mat-select / mat-dialog panelClass) --- */
+.dark .dark-panel {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+}

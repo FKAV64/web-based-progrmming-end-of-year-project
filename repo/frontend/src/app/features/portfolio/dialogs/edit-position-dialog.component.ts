@@ -51,21 +51,21 @@ function minNumeric(min: number) {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Adet</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Adet</label>
           <mat-form-field appearance="outline" class="w-full">
             <input matInput formControlName="quantity" inputmode="decimal" aria-label="Adet" class="w-full">
           </mat-form-field>
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Ortalama Alis</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Ortalama Alis</label>
           <mat-form-field appearance="outline" class="w-full">
             <input matInput formControlName="avgBuyPrice" inputmode="decimal" aria-label="Ortalama Alis" class="w-full">
           </mat-form-field>
         </div>
 
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium mb-1">Notlar</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Notlar</label>
           <mat-form-field appearance="outline" class="w-full">
             <textarea matInput rows="3" formControlName="notes" aria-label="Notlar" class="w-full"></textarea>
           </mat-form-field>
@@ -73,7 +73,7 @@ function minNumeric(min: number) {
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button type="button" (click)="dialogRef.close()">Vazgec</button>
+        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()">Vazgec</button>
         <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
           Guncelle
         </button>

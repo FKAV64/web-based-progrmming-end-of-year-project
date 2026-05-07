@@ -150,7 +150,7 @@ export class SettingsPageComponent {
   }
 
   openDeleteDialog(): void {
-    const ref = this.dialog.open(DeleteAccountDialogComponent, { width: '400px' });
+    const ref = this.dialog.open(DeleteAccountDialogComponent, { width: '400px', panelClass: ['dark-panel', 'rounded-lg'] });
     ref.afterClosed().subscribe(confirmed => {
       if (confirmed) {
         void this.auth.deleteAccount();

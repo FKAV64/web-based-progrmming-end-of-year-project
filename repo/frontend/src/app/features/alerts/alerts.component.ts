@@ -156,6 +156,7 @@ export class AlertsComponent {
     const result = await firstValueFrom(
       this.dialog.open(CreateAlertDialogComponent, {
         width: '480px',
+        panelClass: ['dark-panel', 'rounded-lg'],
       }).afterClosed(),
     );
 

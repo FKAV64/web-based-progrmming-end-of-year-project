@@ -11,7 +11,7 @@ Thumbs.db
 *.xlsx
 *.pptx
 
-# AI tool artifacts (in case they reappear)
+# AI tool artifacts
 .claude/
 .cursor/
 graphify-out/
