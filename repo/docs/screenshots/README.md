@@ -1,14 +1,19 @@
 # Screenshots
 
-Place the 8 required project screenshots here.
+To be captured from the live deployment URL after Phase 22.
 
-| # | Description | File |
-|---|-------------|------|
-| 1 | Dashboard overview | `01-dashboard.png` |
-| 2 | Login page | `02-login.png` |
-| 3 | Registration page | `03-register.png` |
-| 4 | Crypto detail page | `04-crypto-detail.png` |
-| 5 | Portfolio view | `05-portfolio.png` |
-| 6 | Alerts / notifications | `06-alerts.png` |
-| 7 | API Swagger UI | `07-swagger.png` |
-| 8 | Mobile responsive view | `08-mobile.png` |
+## Required (8 screenshots)
+
+1. 01-login.png — Login page (light mode)
+2. 02-register.png — Registration page
+3. 03-dashboard-empty.png — Dashboard before adding any data
+4. 04-dashboard-populated.png — Dashboard with portfolio + watchlist seeded
+5. 05-markets.png — Markets page with coins table
+6. 06-coin-detail.png — Coin detail with candlestick chart (1H timeframe)
+7. 07-mobile.png — Responsive view at 375px (Chrome DevTools)
+8. 08-dark-mode.png — Dark mode dashboard
+
+## Capture instructions
+- Resolution: 1920x1080 for desktop, 375x812 for mobile
+- Format: PNG only (not JPG)
+- URL: https://<live-vercel-url> (after deployment)
