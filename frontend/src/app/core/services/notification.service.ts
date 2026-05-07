@@ -5,12 +5,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class NotificationService {
   private snackBar = inject(MatSnackBar);
 
-  show(message: string, variant: 'info' | 'success' | 'error' = 'info', duration = 4000): void {
+  show(message: string, variant: 'info' | 'success' | 'error' = 'info', duration?: number): void {
     this.snackBar.open(message, 'Kapat', {
-      duration,
       horizontalPosition: 'right',
       verticalPosition: 'top',
       panelClass: [`app-snackbar-${variant}`],
+      ...(duration === undefined ? {} : { duration }),
     });
   }
 
@@ -22,7 +22,7 @@ export class NotificationService {
     this.show(message, 'success', 2500);
   }
 
-  info(message: string, duration = 6000): void {
+  info(message: string, duration?: number): void {
     this.show(message, 'info', duration);
   }
 

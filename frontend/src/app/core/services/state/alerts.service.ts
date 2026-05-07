@@ -138,7 +138,6 @@ export class AlertsService {
       this.previousTriggeredIds.add(alert.id);
       this.notifications.info(
         `Alarm tetiklendi: ${alert.coinId.toUpperCase()} hedef ${alert.targetPrice} ${alert.currency}`,
-        6000,
       );
     }
   }

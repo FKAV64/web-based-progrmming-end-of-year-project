@@ -102,7 +102,6 @@ describe('AlertsService', () => {
 
     expect(notificationsMock.info).toHaveBeenCalledWith(
       'Alarm tetiklendi: ETHEREUM hedef 2500 EUR',
-      6000,
     );
     expect(service.triggered()).toEqual([triggeredAlert]);
   });
