@@ -3,6 +3,20 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { type Cache } from 'cache-manager';
 import Parser from 'rss-parser';
 
+/**
+ * Crypto news aggregation service.
+ *
+ * Fetches RSS feeds from CoinDesk and CoinTelegraph in parallel, merges the
+ * items, infers a bullish/bearish/neutral sentiment label from the headline
+ * text, sorts by publication date, and returns the 30 most recent articles.
+ * Results are cached for 15 minutes.
+ *
+ * Individual feed failures are swallowed with a warning log so that a
+ * single unavailable source does not prevent articles from the other source
+ * from being served.
+ *
+ * @module NewsService
+ */
 @Injectable()
 export class NewsService {
   private readonly logger = new Logger(NewsService.name);
@@ -10,6 +24,12 @@ export class NewsService {
 
   constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
 
+  /**
+   * Returns the 30 most recent crypto news articles from CoinDesk and CoinTelegraph.
+   * Results are cached for 15 minutes.
+   *
+   * @returns Array of news items (title, link, pubDate, source, sentiment)
+   */
   async get(): Promise<any[]> {
     const cacheKey = `market:news`;
     return this.cache.wrap(cacheKey, async () => {

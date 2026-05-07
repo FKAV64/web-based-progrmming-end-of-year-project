@@ -18,6 +18,24 @@ const FALLBACK_RATES: Record<string, number> = {
   try: 38.5,
 };
 
+/**
+ * Event-driven alert evaluation service.
+ *
+ * Listens for snapshot.updated events emitted by CoingeckoFetcherService every
+ * 15 seconds. On each event it:
+ *   1. Builds an O(1) price lookup map from the snapshot.
+ *   2. Fetches exchange rates (cached 1 h) to support non-USD alerts.
+ *   3. Loads all untriggered alerts in a single query.
+ *   4. Evaluates ABOVE/BELOW conditions and collects matches.
+ *   5. Uses an atomic compare-and-swap (updateMany with triggeredAt = null guard)
+ *      to prevent duplicate triggering under concurrent workers.
+ *   6. Sends a push notification and writes an audit entry for each triggered alert.
+ *
+ * @module AlertsEvaluatorService
+ * @see CoingeckoFetcherService
+ * @see PushService
+ * @see AuditService
+ */
 @Injectable()
 export class AlertsEvaluatorService {
   private readonly logger = new Logger('AlertsEvaluator');
@@ -29,6 +47,15 @@ export class AlertsEvaluatorService {
     private readonly coingeckoService: CoingeckoService,
   ) {}
 
+  /**
+   * Evaluates all untriggered price alerts against the freshest market snapshot.
+   *
+   * Called asynchronously on every snapshot.updated event. Exchange rate
+   * failures are recovered with built-in fallback rates so alert evaluation
+   * continues even when CoinGecko is unreachable.
+   *
+   * @param snapshot - Array of coin market data from the latest CoinGecko fetch
+   */
   @OnEvent('snapshot.updated', { async: true })
   async handleSnapshot(snapshot: CoinSnapshot[]) {
     // 1. Build a price map for O(1) lookup by coin id

@@ -24,6 +24,25 @@ function buildInitialMap(coins: CoinSnapshot[]): Map<string, CoinSnapshot> {
   return new Map(coins.map(c => [toWsSymbol(c.symbol), c]));
 }
 
+/**
+ * Real-time price stream service.
+ *
+ * Merges two data sources into a single `topCoins$` observable:
+ * 1. The 15-second CoinGecko REST snapshot (full market data for 100 coins)
+ * 2. Live Binance miniTicker WebSocket ticks (sub-second price updates)
+ *
+ * When a new REST snapshot arrives, `switchMap` subscribes to live ticks for
+ * all eligible coins (stablecoins excluded). A `scan` accumulates the latest
+ * tick price per symbol into a Map, and the downstream observable emits the
+ * full coins array with the live price substituted where available.
+ *
+ * Ticks are throttled to 250 ms to prevent excessive re-renders. The
+ * `shareReplay(1)` ensures only one WebSocket connection is opened regardless
+ * of how many components subscribe.
+ *
+ * @see MarketApiService
+ * @see BinanceWsService
+ */
 @Injectable({ providedIn: 'root' })
 export class PriceStreamService {
   private market = inject(MarketApiService);

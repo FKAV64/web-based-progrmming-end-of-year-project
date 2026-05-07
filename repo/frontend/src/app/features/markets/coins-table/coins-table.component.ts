@@ -53,6 +53,25 @@ interface SparklineOptions {
   };
 }
 
+/**
+ * Displays the real-time cryptocurrency market table.
+ *
+ * Accepts a `coins` input that flows from PriceStreamService.topCoins$,
+ * which merges the 15-second CoinGecko REST snapshot with live Binance
+ * WebSocket ticks. Uses OnPush change detection to minimise re-renders.
+ *
+ * Sparkline ApexCharts are built once per coin and cached in a Map so they
+ * are not rebuilt on every change detection cycle triggered by price ticks.
+ * Price-direction flash animations (green/red row highlight) are triggered by
+ * diffing the new price against the previously stored price.
+ *
+ * On mobile (Handset / TabletPortrait breakpoints) the table is condensed to
+ * only rank, name, 24 h change, price, and watchlist columns.
+ *
+ * @see PriceStreamService
+ * @see WatchlistService
+ * @see SettingsService
+ */
 @Component({
   selector: 'app-coins-table',
   standalone: true,

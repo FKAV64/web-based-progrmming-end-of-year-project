@@ -280,6 +280,22 @@ import { FearGreedCardComponent } from './components/fear-greed-card.component';
     </div>
   `,
 })
+/**
+ * Main dashboard overview component.
+ *
+ * Displays a summary of the user's portfolio (total value, active positions),
+ * the top gainer and loser over 24 h, the Fear & Greed Index gauge, the five
+ * most volatile coins, a watchlist preview, and the three latest news articles.
+ *
+ * KPI cards and top-movers are derived as computed signals from
+ * PriceStreamService.topCoins$ to stay in sync with live price updates.
+ * Fear & Greed and news data are fetched once on component construction.
+ *
+ * @see PriceStreamService
+ * @see PortfolioService
+ * @see WatchlistService
+ * @see MarketApiService
+ */
 export class DashboardComponent {
   portfolio = inject(PortfolioService);
   settings = inject(SettingsService);

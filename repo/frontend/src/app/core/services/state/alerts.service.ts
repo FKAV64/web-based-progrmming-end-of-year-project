@@ -7,6 +7,22 @@ import { AlertsApiService } from '../api/alerts.api';
 import { NotificationService } from '../notification.service';
 import { AuthService } from './auth.service';
 
+/**
+ * Price alert state service with background polling.
+ *
+ * Maintains active and triggered alerts as separate signals. The poller
+ * (started once by ShellComponent when a user logs in) polls the backend
+ * every 30 seconds starting 15 s after login; when a new triggered alert
+ * appears in the snapshot, an in-app notification is shown without
+ * requiring a page refresh.
+ *
+ * Alert mutations (add, remove) update the signals optimistically and
+ * roll back on API failure.
+ *
+ * @see AlertsApiService
+ * @see AuthService
+ * @see ShellComponent
+ */
 @Injectable({ providedIn: 'root' })
 export class AlertsService {
   private auth = inject(AuthService);

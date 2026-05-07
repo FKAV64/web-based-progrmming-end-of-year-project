@@ -3,6 +3,21 @@ import { PushApi } from './api/push.api';
 
 export type PushPermissionState = 'denied' | 'granted' | 'default' | 'unsupported';
 
+/**
+ * Browser Web Push notification service.
+ *
+ * Wraps the browser Push API to request notification permission, create a
+ * VAPID-signed push subscription, and register it with the backend. The
+ * current permission state is exposed as a signal so the settings UI can
+ * reflect it reactively.
+ *
+ * The `unsupported` state is set on environments where the Notification API
+ * or ServiceWorker API is unavailable (e.g. Firefox Private Browsing, Safari
+ * < 16).
+ *
+ * @see PushApi
+ * @see ShellComponent
+ */
 @Injectable({ providedIn: 'root' })
 export class PushService {
   private api = inject(PushApi);
@@ -18,12 +33,10 @@ export class PushService {
 
   async requestPermission(): Promise<void> {
     if (this.state() !== 'default') {
-      console.log('[Push] Permission status:', this.state());
       return;
     }
 
     const result = await Notification.requestPermission();
-    console.log('[Push] Permission status:', result);
     this.state.set(result as PushPermissionState);
   }
 
@@ -35,7 +48,6 @@ export class PushService {
 
     const permission =
       this.state() === 'granted' ? Notification.permission : await Notification.requestPermission();
-    console.log('[Push] Permission status:', permission);
 
     if (permission !== 'granted') {
       this.state.set(permission as PushPermissionState);
@@ -52,9 +64,7 @@ export class PushService {
         applicationServerKey: this.urlBase64ToUint8Array(publicKey),
       });
 
-    console.log('[Push] Subscription object:', subscription);
-
-    const response = await this.api.subscribe({
+    await this.api.subscribe({
       endpoint: subscription.endpoint,
       keys: {
         p256dh: this.encodeSubscriptionKey(subscription, 'p256dh'),
@@ -62,7 +72,6 @@ export class PushService {
       },
     });
 
-    console.log('[Push] Sent to backend:', response);
     this.state.set('granted');
   }
 

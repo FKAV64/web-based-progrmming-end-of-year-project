@@ -5,6 +5,23 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { type Cache } from 'cache-manager';
 import { ConfigService } from '@nestjs/config';
 
+/**
+ * Scheduled background service that polls the CoinGecko /coins/markets endpoint
+ * every 15 seconds.
+ *
+ * On each successful fetch the top-100 coins (by market cap) are stored in the
+ * in-process cache under the key `market:top` and a snapshot.updated event is
+ * emitted so AlertsEvaluatorService can evaluate pending price alerts.
+ *
+ * Resilience features:
+ * - Exponential-backoff retry (up to 3 attempts) for transient network errors
+ * - 429 rate-limit responses are silently skipped — the previous snapshot stays valid
+ * - The cache is pre-warmed once on application bootstrap to avoid cold-start gaps
+ *
+ * @module CoingeckoFetcherService
+ * @see MarketSnapshotService
+ * @see AlertsEvaluatorService
+ */
 @Injectable()
 export class CoingeckoFetcherService implements OnApplicationBootstrap {
   private readonly logger = new Logger('CoinGeckoFetcher');

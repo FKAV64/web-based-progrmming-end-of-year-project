@@ -6,6 +6,20 @@ import { environment } from '../../../../environments/environment';
 import { ExchangeRatesResponse } from '../../models/exchange-rate.model';
 import { BinanceInterval, CoinDetail, CoinSnapshot, NewsItem, OHLC, SentimentResponse } from '../../models/market.model';
 
+/**
+ * HTTP client service for the /market backend endpoints.
+ *
+ * All methods map the `{ data: T }` response wrapper to the inner type.
+ * `topCoins$` is a shared, auto-polling observable that fetches the top-100
+ * coins every 15 seconds and keeps the last value alive even with zero
+ * subscribers (refCount: false) so the cache survives navigation events.
+ *
+ * `getKlines` maintains a 60-second in-memory cache to avoid re-fetching
+ * identical data when the user switches chart intervals back and forth.
+ *
+ * @see PriceStreamService
+ * @see PortfolioService
+ */
 @Injectable({
   providedIn: 'root'
 })

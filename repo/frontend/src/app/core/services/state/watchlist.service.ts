@@ -5,6 +5,21 @@ import { NotificationService } from '../notification.service';
 import { WatchlistApiService } from '../api/watchlist.api';
 import { WatchlistItem } from '../../models/watchlist.model';
 
+/**
+ * Watchlist state service with optimistic UI updates.
+ *
+ * Keeps the user's watched coins in a reactive signal. When a coin is added
+ * or removed, the signal is updated immediately (optimistic) and the API call
+ * is made in the background. If the API call fails, the signal is rolled back
+ * to its previous state and an error notification is shown.
+ *
+ * Per-coin membership is exposed as lazily-created computed signals via
+ * `has(coinId)` to allow O(1) reactive lookups in the coins table without
+ * re-computing for every row on every change.
+ *
+ * @see WatchlistApiService
+ * @see AuthService
+ */
 @Injectable({ providedIn: 'root' })
 export class WatchlistService {
   private auth = inject(AuthService);

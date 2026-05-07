@@ -32,6 +32,23 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
   '1w': 7 * 24 * 60 * 60_000,
 };
 
+/**
+ * ApexCharts-based OHLCV price chart with live WebSocket tick updates.
+ *
+ * Loads historical kline data from BinanceRestService and subscribes to live
+ * miniTicker ticks for the same symbol. Each incoming tick either appends a
+ * new candle (when the tick timestamp crosses the next interval boundary) or
+ * updates the current candle's close/high/low in place. Chart options are
+ * re-synced when the user switches theme or locale to keep axis colours and
+ * tooltip formatting consistent.
+ *
+ * An in-component cache (keyed by symbol:interval:limit) prevents redundant
+ * API calls when the user navigates away and back.
+ *
+ * @see MarketApiService
+ * @see BinanceWsService
+ * @see SettingsService
+ */
 @Component({
   selector: 'app-price-chart',
   standalone: true,

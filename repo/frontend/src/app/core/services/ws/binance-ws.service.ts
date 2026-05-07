@@ -20,6 +20,23 @@ import { PriceTick } from '../../models/price-tick.model';
 
 export type ConnectionState = 'connecting' | 'live' | 'reconnecting' | 'offline';
 
+/**
+ * Binance WebSocket service managing a single multiplexed connection.
+ *
+ * Maintains one WebSocket to wss://stream.binance.com and dynamically
+ * subscribes/unsubscribes to individual miniTicker streams as components
+ * call `tick$()`. The connection state is exposed as a signal so the UI
+ * can display a connectivity badge.
+ *
+ * Resilience features:
+ * - Exponential-backoff reconnection (up to 30 s cap, infinite retries)
+ * - 60-second silence timeout to detect dead connections
+ * - Keepalive ping every 3 minutes to prevent server-side timeouts
+ * - On reconnect: UNSUBSCRIBE then re-SUBSCRIBE to recover server-side state
+ * - Offline signal fires after 60 s of continuous reconnection attempts
+ *
+ * @see PriceStreamService
+ */
 @Injectable({ providedIn: 'root' })
 export class BinanceWsService implements OnDestroy {
   readonly connectionState = signal<ConnectionState>('connecting');

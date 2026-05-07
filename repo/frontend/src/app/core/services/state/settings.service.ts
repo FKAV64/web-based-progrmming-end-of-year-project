@@ -7,6 +7,21 @@ import { SettingsApiService, UpdateSettingsDto } from '../api/settings.api';
 import { Currency, Locale, Theme, UserSettings } from '../../models/user.model';
 import { AuthService } from './auth.service';
 
+/**
+ * User preference service managing theme, currency, and locale.
+ *
+ * Each preference is stored as a writable Angular signal so templates react
+ * to changes instantly without zone.js. Changes are debounced 300 ms before
+ * being persisted to the backend API so rapid UI interactions don't spam the
+ * network.
+ *
+ * Theme changes are applied immediately to the document root `<html>` element
+ * by toggling the `dark` CSS class, which activates Tailwind dark-mode styles.
+ * System preference changes are respected when the theme is set to SYSTEM.
+ *
+ * @see SettingsApiService
+ * @see AuthService
+ */
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   private api = inject(SettingsApiService);

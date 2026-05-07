@@ -131,6 +131,23 @@ import { TIMEFRAME_OPTIONS, TimeframeSelectorComponent } from './components/time
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+/**
+ * Coin detail page component.
+ *
+ * Resolves the coin ID from the route, fetches detailed metadata from
+ * MarketApiService, and overlays live prices from PriceStreamService.
+ * Hosts the PriceChartComponent (Binance OHLCV + live ticks), the
+ * TimeframeSelectorComponent (1 m → Monthly), and the CoinStatsComponent
+ * (market cap, supply, ATH, etc.).
+ *
+ * Uses OnPush change detection. When the route param changes (user navigates
+ * from one coin to another), a distinctUntilChanged guard prevents redundant
+ * API calls.
+ *
+ * @see PriceChartComponent
+ * @see MarketApiService
+ * @see PriceStreamService
+ */
 export class CoinDetailComponent {
   private route = inject(ActivatedRoute);
   private marketApi = inject(MarketApiService);

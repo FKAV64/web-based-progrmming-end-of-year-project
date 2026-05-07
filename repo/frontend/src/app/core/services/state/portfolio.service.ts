@@ -51,6 +51,22 @@ export interface PortfolioPositionView {
   closeValue: number | null;
 }
 
+/**
+ * Portfolio state service with live P&L computation.
+ *
+ * Maintains open and closed positions as signals and enriches them in a
+ * computed `activeRows` / `closedRows` signal that joins each position with
+ * the live price from PriceStreamService and converts all amounts to the
+ * user's preferred currency using CoinGecko exchange rates.
+ *
+ * All mutations (add, edit, close, remove) are optimistic: the signal is
+ * updated before the API call so the UI feels instant, then rolled back on
+ * failure.
+ *
+ * @see PortfolioApiService
+ * @see PriceStreamService
+ * @see SettingsService
+ */
 @Injectable({ providedIn: 'root' })
 export class PortfolioService {
   private auth = inject(AuthService);

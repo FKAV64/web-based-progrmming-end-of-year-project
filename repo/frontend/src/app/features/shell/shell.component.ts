@@ -46,6 +46,23 @@ interface NavItem {
   ],
   templateUrl: './shell.component.html',
 })
+/**
+ * Application shell component providing the main navigation layout.
+ *
+ * Renders the responsive sidebar navigation, top toolbar, and the
+ * `<router-outlet>` where feature pages are projected. On mobile breakpoints
+ * the sidenav collapses and switches to an overlay drawer.
+ *
+ * On user login (detected via AuthService.currentUser signal), the shell
+ * starts the alert poller (AlertsService.startAlertPoller) and silently
+ * re-subscribes to push notifications if permission was previously granted.
+ * This ensures alerts and push work after a page refresh.
+ *
+ * @see AuthService
+ * @see SettingsService
+ * @see AlertsService
+ * @see PushService
+ */
 export class ShellComponent {
   auth = inject(AuthService);
   settings = inject(SettingsService);
