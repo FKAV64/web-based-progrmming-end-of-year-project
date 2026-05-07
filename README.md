@@ -119,8 +119,15 @@ GitHub Actions workflows run automatically on every push and pull request:
 
 | Workflow | Triggers on | Steps |
 |----------|-------------|-------|
-| **Backend CI** | `backend/**` | lint → unit tests + coverage → e2e tests → build |
+| **Backend CI** | `backend/**` | lint → unit tests + coverage → e2e tests → build → OpenAPI generation + drift check |
 | **Frontend CI** | `frontend/**` | lint → unit tests + coverage → build → Lighthouse CI |
+
+### OpenAPI Spec
+
+The generated API spec lives at `docs/openapi.yaml` (and `docs/openapi.json`).  
+**Run `npm run openapi:generate` inside `backend/` after modifying any controller or DTO**, then commit the updated files. CI will fail with `git diff --exit-code` if the committed spec drifts from what the app generates.
+
+Interactive Swagger UI is available at `http://localhost:3000/api/docs` when running in development mode.
 
 ### Branch Protection
 

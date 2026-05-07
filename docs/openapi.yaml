@@ -1,0 +1,555 @@
+openapi: 3.0.0
+paths:
+  /api/health:
+    get:
+      operationId: HealthController_check
+      parameters: []
+      responses:
+        '200':
+          description: Service is healthy
+      summary: Health check
+      tags:
+        - Health
+  /api/auth/register:
+    post:
+      operationId: AuthController_register
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '201':
+          description: User registered successfully
+        '409':
+          description: Email already in use
+        '429':
+          description: Too many attempts
+      summary: Register a new user account
+      tags: &ref_0
+        - Auth
+  /api/auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+        '429':
+          description: Too many attempts
+      summary: Log in with email and password
+      tags: *ref_0
+  /api/auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      parameters: []
+      responses:
+        '200':
+          description: New access token issued
+        '401':
+          description: Invalid or expired refresh token
+      summary: Refresh access token using refresh_token cookie
+      tags: *ref_0
+  /api/auth/me:
+    get:
+      operationId: AuthController_me
+      parameters: []
+      responses:
+        '200':
+          description: Current user profile
+      security:
+        - bearer: []
+      summary: Get current authenticated user
+      tags: *ref_0
+  /api/auth/logout:
+    post:
+      operationId: AuthController_logout
+      parameters: []
+      responses:
+        '200':
+          description: Logged out
+      security:
+        - bearer: []
+      summary: Revoke current session
+      tags: *ref_0
+  /api/auth/logout-all:
+    post:
+      operationId: AuthController_logoutAll
+      parameters: []
+      responses:
+        '200':
+          description: All sessions revoked
+      security:
+        - bearer: []
+      summary: Revoke all sessions for this user
+      tags: *ref_0
+  /api/me:
+    get:
+      operationId: UsersController_getMe
+      parameters: []
+      responses:
+        '200':
+          description: User profile
+      security: &ref_1
+        - bearer: []
+      summary: Get current user profile
+      tags: &ref_2
+        - Users
+    delete:
+      operationId: UsersController_deleteMe
+      parameters: []
+      responses:
+        '204':
+          description: Account deleted
+      security: *ref_1
+      summary: Delete own account and all data (GDPR)
+      tags: *ref_2
+  /api/me/export:
+    get:
+      operationId: UsersController_exportMe
+      parameters: []
+      responses:
+        '200':
+          description: JSON export of user data
+      security: *ref_1
+      summary: Export all personal data as JSON
+      tags: *ref_2
+  /api/settings:
+    get:
+      operationId: SettingsController_getSettings
+      parameters: []
+      responses:
+        '200':
+          description: User settings object
+      security: &ref_3
+        - bearer: []
+      summary: Get user settings
+      tags: &ref_4
+        - Settings
+    patch:
+      operationId: SettingsController_updateSettings
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSettingsDto'
+      responses:
+        '200':
+          description: Updated settings object
+      security: *ref_3
+      summary: Update user settings
+      tags: *ref_4
+  /api/market/top:
+    get:
+      operationId: MarketController_getTop
+      parameters: []
+      responses:
+        '200':
+          description: Array of top coin snapshots
+      security: &ref_5
+        - bearer: []
+      summary: Get top cryptocurrencies by market cap
+      tags: &ref_6
+        - Market
+  /api/market/coin/{id}:
+    get:
+      operationId: MarketController_getCoin
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: CoinGecko coin ID (e.g. bitcoin)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Coin detail object
+      security: *ref_5
+      summary: Get detailed info for a single coin
+      tags: *ref_6
+  /api/market/ohlc/{symbol}:
+    get:
+      operationId: MarketController_getOhlc
+      parameters:
+        - name: symbol
+          required: true
+          in: path
+          description: Binance symbol (e.g. BTCUSDT)
+          schema:
+            type: string
+        - name: interval
+          required: true
+          in: query
+          description: Kline interval (1m, 1h, 1d…)
+          schema:
+            type: string
+        - name: limit
+          required: false
+          in: query
+          description: Number of candles (max 1000)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of OHLC candles
+      security: *ref_5
+      summary: Get OHLC candlestick data from Binance
+      tags: *ref_6
+  /api/market/chart/{id}:
+    get:
+      operationId: MarketController_getChart
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: CoinGecko coin ID
+          schema:
+            type: string
+        - name: days
+          required: false
+          in: query
+          description: 'Number of days (default: 1)'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Market chart data
+      security: *ref_5
+      summary: Get market chart data for a coin
+      tags: *ref_6
+  /api/market/exchange-rates:
+    get:
+      operationId: MarketController_getExchangeRates
+      parameters: []
+      responses:
+        '200':
+          description: Exchange rate map
+      security: *ref_5
+      summary: Get fiat/crypto exchange rates
+      tags: *ref_6
+  /api/market/sentiment:
+    get:
+      operationId: MarketController_getSentiment
+      parameters: []
+      responses:
+        '200':
+          description: Sentiment data
+      security: *ref_5
+      summary: Get Fear & Greed index
+      tags: *ref_6
+  /api/market/news:
+    get:
+      operationId: MarketController_getNews
+      parameters: []
+      responses:
+        '200':
+          description: Array of news items
+      security: *ref_5
+      summary: Get latest crypto news headlines
+      tags: *ref_6
+  /api/watchlist:
+    get:
+      operationId: WatchlistController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: Array of watchlist items
+      security: &ref_7
+        - bearer: []
+      summary: List all watchlist items
+      tags: &ref_8
+        - Watchlist
+    post:
+      operationId: WatchlistController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWatchlistItemDto'
+      responses:
+        '201':
+          description: Watchlist item created
+      security: *ref_7
+      summary: Add a coin to the watchlist
+      tags: *ref_8
+  /api/watchlist/{coinId}:
+    delete:
+      operationId: WatchlistController_remove
+      parameters:
+        - name: coinId
+          required: true
+          in: path
+          description: CoinGecko coin ID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Removed
+      security: *ref_7
+      summary: Remove a coin from the watchlist
+      tags: *ref_8
+  /api/portfolio:
+    get:
+      operationId: PortfolioController_findAll
+      parameters:
+        - name: includeClosed
+          required: false
+          in: query
+          description: Include closed positions
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of positions
+      security: &ref_9
+        - bearer: []
+      summary: List portfolio positions
+      tags: &ref_10
+        - Portfolio
+    post:
+      operationId: PortfolioController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePortfolioPositionDto'
+      responses:
+        '201':
+          description: Position created
+      security: *ref_9
+      summary: Open a new portfolio position
+      tags: *ref_10
+  /api/portfolio/{id}:
+    patch:
+      operationId: PortfolioController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Position UUID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePortfolioPositionDto'
+      responses:
+        '200':
+          description: Updated position
+      security: *ref_9
+      summary: Update a portfolio position
+      tags: *ref_10
+    delete:
+      operationId: PortfolioController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Position UUID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+      security: *ref_9
+      summary: Delete a portfolio position
+      tags: *ref_10
+  /api/portfolio/{id}/close:
+    post:
+      operationId: PortfolioController_close
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Position UUID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClosePortfolioPositionDto'
+      responses:
+        '200':
+          description: Closed position record
+      security: *ref_9
+      summary: Close a portfolio position
+      tags: *ref_10
+  /api/alerts:
+    get:
+      operationId: AlertsController_findAll
+      parameters:
+        - name: includeTriggered
+          required: false
+          in: query
+          description: Include already-triggered alerts
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of alerts
+      security: &ref_11
+        - bearer: []
+      summary: List price alerts
+      tags: &ref_12
+        - Alerts
+    post:
+      operationId: AlertsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlertDto'
+      responses:
+        '201':
+          description: Alert created
+      security: *ref_11
+      summary: Create a new price alert
+      tags: *ref_12
+  /api/alerts/{id}:
+    delete:
+      operationId: AlertsController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Alert UUID
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+      security: *ref_11
+      summary: Delete a price alert
+      tags: *ref_12
+  /api/push/vapid-public-key:
+    get:
+      operationId: PushController_getVapidPublicKey
+      parameters: []
+      responses:
+        '200':
+          description: VAPID public key
+      security: &ref_13
+        - bearer: []
+      summary: Get VAPID public key for push subscription
+      tags: &ref_14
+        - Push
+  /api/push/subscribe:
+    post:
+      operationId: PushController_subscribe
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscribePushDto'
+      responses:
+        '201':
+          description: Subscription saved
+      security: *ref_13
+      summary: Register a push subscription
+      tags: *ref_14
+    delete:
+      operationId: PushController_unsubscribe
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnsubscribePushDto'
+      responses:
+        '200':
+          description: Subscription removed
+      security: *ref_13
+      summary: Remove a push subscription
+      tags: *ref_14
+  /api/dev/trigger-snapshot:
+    post:
+      operationId: DevController_triggerSnapshot
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: &ref_15
+        - Dev
+  /api/dev/seed-market-data:
+    post:
+      operationId: DevController_seedMarketData
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags: *ref_15
+info:
+  title: Crypto Dashboard API
+  description: Final project for BMU1208 Web-Based Programming
+  version: 1.0.0
+  contact: {}
+tags: []
+servers:
+  - url: http://localhost:3000
+    description: Local
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+    cookie:
+      type: apiKey
+      in: cookie
+      name: refresh_token
+  schemas:
+    RegisterDto:
+      type: object
+      properties: {}
+    LoginDto:
+      type: object
+      properties: {}
+    UpdateSettingsDto:
+      type: object
+      properties: {}
+    CreateWatchlistItemDto:
+      type: object
+      properties: {}
+    CreatePortfolioPositionDto:
+      type: object
+      properties: {}
+    UpdatePortfolioPositionDto:
+      type: object
+      properties: {}
+    ClosePortfolioPositionDto:
+      type: object
+      properties: {}
+    CreateAlertDto:
+      type: object
+      properties: {}
+    SubscribePushDto:
+      type: object
+      properties: {}
+    UnsubscribePushDto:
+      type: object
+      properties: {}

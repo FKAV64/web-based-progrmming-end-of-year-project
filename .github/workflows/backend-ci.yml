@@ -95,3 +95,10 @@ jobs:
       - name: Build
         working-directory: backend
         run: npm run build
+
+      - name: Generate OpenAPI spec
+        working-directory: backend
+        run: npm run openapi:generate
+
+      - name: Verify spec is committed and up to date
+        run: git diff --exit-code docs/openapi.yaml docs/openapi.json

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
@@ -51,6 +52,19 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('Crypto Dashboard API')
+      .setDescription('Final project for BMU1208 Web-Based Programming')
+      .setVersion('1.0.0')
+      .addBearerAuth()
+      .addCookieAuth('refresh_token')
+      .addServer('http://localhost:3000', 'Local')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+  }
 
   // CSRF protection: skip the auth entry points (no session yet) and apply to
   // every other route. The token is exposed to JS via the XSRF-TOKEN cookie

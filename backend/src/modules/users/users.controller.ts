@@ -8,24 +8,31 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { type Request, type Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UsersService } from './users.service';
 
 const REFRESH_COOKIE = 'refresh_token';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({ status: 200, description: 'User profile' })
   async getMe(@Req() req: Request) {
     const userId = (req.user as { userId: string }).userId;
     return this.usersService.findMe(userId);
   }
 
   @Get('me/export')
+  @ApiOperation({ summary: 'Export all personal data as JSON' })
+  @ApiResponse({ status: 200, description: 'JSON export of user data' })
   async exportMe(@Req() req: Request, @Res() res: Response) {
     const userId = (req.user as { userId: string }).userId;
     const ip = req.ip ?? '';
@@ -43,6 +50,8 @@ export class UsersController {
 
   @Delete('me')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete own account and all data (GDPR)' })
+  @ApiResponse({ status: 204, description: 'Account deleted' })
   async deleteMe(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
