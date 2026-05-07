@@ -12,8 +12,8 @@ bootstrapApplication(AppComponent, appConfig)
 
     navigator.serviceWorker
       .register('/custom-sw.js', { scope: '/' })
-      .then((registration) => {
-        console.log('[App] Custom SW registered:', registration.scope);
+      .then(() => {
+        // SW registered successfully
       })
       .catch((error) => {
         console.error('[App] Custom SW registration failed:', error);

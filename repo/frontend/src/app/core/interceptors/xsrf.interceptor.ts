@@ -25,7 +25,7 @@ export const xsrfInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // Angular's built-in XSRF support only attaches headers for same-origin requests.
-  // Our API base URL is absolute (`http://localhost:3000/api`), so we attach the token manually.
+  // Our API base URL is an absolute URL, so we attach the token manually.
   const token = readCookie('XSRF-TOKEN');
   if (!token) {
     return next(req);

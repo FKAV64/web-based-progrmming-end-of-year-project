@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:3000/api',
+  apiBaseUrl: '',          // Set via BACKEND_URL env var at build time or Railway URL
   binanceWsUrl: 'wss://stream.binance.com:9443/stream',
   useMockWs: false,
 };

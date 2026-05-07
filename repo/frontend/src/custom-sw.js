@@ -1,7 +1,9 @@
 try {
   importScripts('./ngsw-worker.js');
+  // SW debug log — remove before final submission if desired
   console.log('[SW] Angular worker loaded');
 } catch (error) {
+  // SW debug log — remove before final submission if desired
   console.log('[SW] Angular worker unavailable, running push-only worker:', error);
 }
 
@@ -12,13 +14,16 @@ self.addEventListener('push', (event) => {
     try {
       data = event.data.json();
     } catch (error) {
+      // SW debug log — remove before final submission if desired
       console.log('[SW] Push payload parse failed:', error);
     }
   }
 
+  // SW debug log — remove before final submission if desired
   console.log('[SW] Push received:', data);
 
   if (!data) {
+    // SW debug log — remove before final submission if desired
     console.log('[SW] Push event has no data');
     return;
   }
@@ -37,6 +42,7 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
+  // SW debug log — remove before final submission if desired
   console.log('[SW] Notification clicked');
   event.notification.close();
 
