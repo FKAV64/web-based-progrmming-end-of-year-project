@@ -5,13 +5,10 @@
 ![Zorluk](https://img.shields.io/badge/Zorluk-Orta-yellow)
 ![Puan](https://img.shields.io/badge/Puan-45-blue)
 ![Hafta](https://img.shields.io/badge/Hafta-1-gray)
-![Lisans](https://img.shields.io/badge/License-MIT-green)
-![Durum](https://img.shields.io/badge/Durum-Development-yellow)
-
-<!-- Kodunuzu yazdıktan sonra aşağıdaki bölümleri doldurun ve ekleyin:
-![CI](https://github.com/KULLANICI_ADI/final-p06-angular-rxjs-kr/actions/workflows/ci.yml/badge.svg)
-![Deploy](https://img.shields.io/website?url=https://angular-rxjs-kripto-dashboard.vercel.app)
--->
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+![Backend CI](https://github.com/FKAV64/web-based-progrmming-end-of-year-project/actions/workflows/backend-ci.yml/badge.svg)
+![Frontend CI](https://github.com/FKAV64/web-based-progrmming-end-of-year-project/actions/workflows/frontend-ci.yml/badge.svg)
+[![Demo](https://img.shields.io/website?label=demo&url=https%3A%2F%2Fangular-rxjs-kripto-dashboard.vercel.app)](https://angular-rxjs-kripto-dashboard.vercel.app)
 
 ## 🎯 Özet
 
@@ -109,8 +106,38 @@ Proje: http://localhost:4200
 ## 🧪 Test
 
 ```bash
-npm test
+# Backend unit + e2e
+cd backend && npm test && npm run test:e2e
+
+# Frontend unit
+cd frontend && npm test
 ```
+
+## 🔄 CI/CD
+
+GitHub Actions workflows run automatically on every push and pull request:
+
+| Workflow | Triggers on | Steps |
+|----------|-------------|-------|
+| **Backend CI** | `backend/**` | lint → unit tests + coverage → e2e tests → build |
+| **Frontend CI** | `frontend/**` | lint → unit tests + coverage → build → Lighthouse CI |
+
+### Branch Protection
+
+The `main` branch is protected in GitHub settings (**Settings → Branches → Branch protection rules**):
+
+- Require status checks to pass before merging
+- Required checks: **Backend CI / test** and **Frontend CI / test**
+- PRs cannot be merged while either workflow is red
+
+### Lighthouse Budgets
+
+The frontend CI enforces Lighthouse score budgets on the production build:
+
+| Category | Minimum Score |
+|----------|--------------|
+| Performance | 85 |
+| Accessibility | 95 |
 
 ## 📁 Klasör Yapısı
 
