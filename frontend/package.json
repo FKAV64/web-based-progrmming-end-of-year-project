@@ -38,7 +38,7 @@
     "@angular/compiler-cli": "^17.3.0",
     "@angular/localize": "^17.3.12",
     "@playwright/test": "^1.59.1",
-    "@testing-library/angular": "^17.4.0",
+    "@testing-library/angular": "^19.2.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/jasmine": "~5.1.0",
     "@types/jest": "^29.5.14",
