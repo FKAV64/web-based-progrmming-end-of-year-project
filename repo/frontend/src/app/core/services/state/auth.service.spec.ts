@@ -93,4 +93,14 @@ describe('AuthService', () => {
     expect(service.currentUser()).toBeNull();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
   });
+
+  it('logout is idempotent when called concurrently', async () => {
+    service.accessToken.set('tok');
+    service.currentUser.set(mockUser);
+    apiMock.logout.mockReturnValue(of(undefined as any));
+
+    await Promise.all([service.logout(), service.logout()]);
+
+    expect(apiMock.logout).toHaveBeenCalledTimes(1);
+  });
 });

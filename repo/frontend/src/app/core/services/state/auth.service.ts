@@ -28,6 +28,8 @@ export class AuthService {
   readonly accessToken = signal<string | null>(null);
   readonly isAuthenticated = computed(() => !!this.currentUser());
 
+  private _isLoggingOut = false;
+
   async init(): Promise<void> {
     try {
       const { accessToken } = await firstValueFrom(this.api.refresh());
@@ -52,9 +54,12 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
+    if (this._isLoggingOut) return;
+    this._isLoggingOut = true;
     try {
       await firstValueFrom(this.api.logout());
     } finally {
+      this._isLoggingOut = false;
       this.accessToken.set(null);
       this.currentUser.set(null);
       this.router.navigate(['/login']);
