@@ -15,15 +15,18 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
   const router = inject(Router);
 
   const token = auth.accessToken();
-  const isAuthEndpoint = [
-    '/auth/refresh',
-    '/auth/login',
-    '/auth/register',
-    '/auth/logout',
-    '/auth/logout-all',
+
+  // Unauthenticated endpoints — do NOT attach the Bearer token.
+  const skipAuthHeader = ['/auth/refresh', '/auth/login', '/auth/register']
+    .some(p => req.url.includes(p));
+
+  // All auth paths — do NOT retry on 401 to avoid refresh/logout loops.
+  const skipRetry = [
+    '/auth/refresh', '/auth/login', '/auth/register',
+    '/auth/logout',  '/auth/logout-all',
   ].some(p => req.url.includes(p));
 
-  const authedReq = token && !isAuthEndpoint
+  const authedReq = token && !skipAuthHeader
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;
 
@@ -31,14 +34,14 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
     catchError((err: HttpErrorResponse) => {
       // 1. BYPASS ON AUTH ENDPOINTS — clear local state only, never call logout()
       // which would issue another HTTP request and re-enter this handler.
-      if (err.status === 401 && isAuthEndpoint) {
+      if (err.status === 401 && skipRetry) {
         isRefreshing = false;
         auth.clearLocalSession();
         router.navigate(['/login']);
         return throwError(() => err);
       }
 
-      if (err.status !== 401 || isAuthEndpoint) return throwError(() => err);
+      if (err.status !== 401 || skipRetry) return throwError(() => err);
 
       // 3. QUEUE CONCURRENT REQUESTS
       if (isRefreshing) {

@@ -65,6 +65,14 @@ describe('authInterceptor', () => {
     req.flush({ data: { accessToken: 'new' } });
   });
 
+  it('adds Authorization header for logout endpoint', () => {
+    authService.accessToken.set('mytoken');
+    http.post('/api/auth/logout', {}).subscribe({ error: () => {} });
+    const req = httpTesting.expectOne('/api/auth/logout');
+    expect(req.request.headers.get('Authorization')).toBe('Bearer mytoken');
+    req.flush({}, { status: 401, statusText: 'Unauthorized' });
+  });
+
   it('on 401 refreshes token and retries original request', fakeAsync(() => {
     authService.accessToken.set('expired');
     apiMock.refresh.mockReturnValue(of({ accessToken: 'new-token' }));

@@ -48,7 +48,7 @@ export class SettingsService {
       if (settings) {
         this.applySettings(settings);
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   async load(): Promise<void> {
