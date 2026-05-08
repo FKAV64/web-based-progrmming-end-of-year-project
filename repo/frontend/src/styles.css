@@ -212,6 +212,11 @@ html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc
   background-color: #374151 !important;
 }
 
+.dark .mat-mdc-menu-item mat-icon,
+.dark .mat-mdc-menu-item .mat-icon {
+  color: #9ca3af !important;
+}
+
 /* --- mat-tooltip --- */
 .dark .mdc-tooltip__surface {
   background-color: #374151 !important;
@@ -237,6 +242,22 @@ html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc
   background-color: #1f2937 !important;
 }
 
+.dark .mdc-notched-outline__leading,
+.dark .mdc-notched-outline__notch,
+.dark .mdc-notched-outline__trailing {
+  border-color: #4b5563 !important;
+}
+.dark .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+.dark .mat-mdc-form-field:hover .mdc-notched-outline__notch,
+.dark .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: #6b7280 !important;
+}
+.dark .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.dark .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.dark .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #60a5fa !important;
+}
+
 .dark .mat-mdc-floating-label,
 .dark .mat-mdc-form-field label {
   color: #9ca3af !important;
@@ -249,6 +270,11 @@ html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc
 
 .dark .mdc-line-ripple::before {
   border-bottom-color: #4b5563 !important;
+}
+
+.dark .mat-mdc-button:not([color]) {
+  --mdc-text-button-label-text-color: #9ca3af;
+  color: #9ca3af !important;
 }
 
 /* --- mat-select trigger text --- */
@@ -318,7 +344,16 @@ html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc
 }
 
 .dark .mat-mdc-icon-button {
+  --mdc-icon-button-icon-color: #9ca3af;
   color: #9ca3af !important;
+}
+.dark .mat-mdc-paginator .mat-mdc-icon-button {
+  --mdc-icon-button-icon-color: #e2e8f0 !important;
+  color: #e2e8f0 !important;
+}
+.dark .mat-mdc-paginator .mat-mdc-icon-button[disabled] {
+  --mdc-icon-button-icon-color: #4b5563 !important;
+  color: #4b5563 !important;
 }
 
 /* --- mat-slide-toggle --- */
