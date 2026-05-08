@@ -43,4 +43,12 @@ export class AuthApiService {
   deleteMe(): Observable<void> {
     return this.http.delete<void>(`${this.base}/me`);
   }
+
+  logoutAll(): Observable<void> {
+    return this.http.post<void>(`${this.base}/auth/logout-all`, {}, { withCredentials: true });
+  }
+
+  exportMe(): Observable<Blob> {
+    return this.http.get(`${this.base}/me/export`, { responseType: 'blob' });
+  }
 }

@@ -73,6 +73,31 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  async logoutAll(): Promise<void> {
+    if (this._isLoggingOut) return;
+    this._isLoggingOut = true;
+    try {
+      await firstValueFrom(this.api.logoutAll());
+    } finally {
+      this._isLoggingOut = false;
+      this.accessToken.set(null);
+      this.currentUser.set(null);
+      this.router.navigate(['/login']);
+    }
+  }
+
+  async exportMe(): Promise<void> {
+    const blob = await firstValueFrom(this.api.exportMe());
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'my-data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   clearLocalSession(): void {
     this.accessToken.set(null);
     this.currentUser.set(null);

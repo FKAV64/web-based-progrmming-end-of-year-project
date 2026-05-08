@@ -277,6 +277,15 @@ html.dark .mat-mdc-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc
   color: #9ca3af !important;
 }
 
+/* --- mat-stroked-button in dark mode --- */
+.dark .mat-mdc-outlined-button:not([color]) {
+  --mdc-outlined-button-label-text-color: #e5e7eb;
+  --mdc-outlined-button-outline-color: #4b5563;
+}
+.dark .mat-mdc-outlined-button:not([color]):hover {
+  --mdc-outlined-button-outline-color: #6b7280;
+}
+
 /* --- mat-select trigger text --- */
 .dark .mat-mdc-select-value-text {
   color: #f3f4f6 !important;

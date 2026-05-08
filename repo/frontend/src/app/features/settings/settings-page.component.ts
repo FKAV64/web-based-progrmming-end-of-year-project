@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -108,6 +108,24 @@ import { environment } from '../../../environments/environment';
         </mat-card-content>
       </mat-card>
 
+      <mat-card class="mb-4 bg-white border border-gray-200 dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
+        <mat-card-header>
+          <mat-card-title i18n="@@settings.data">Verilerim</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-4">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-medium text-gray-900 dark:text-white" i18n="@@settings.export-title">Verileri dışa aktar</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" i18n="@@settings.export-desc">
+                Tüm kişisel verilerinizi JSON olarak indirin.
+              </p>
+            </div>
+            <button mat-stroked-button type="button" [disabled]="exportLoading()" (click)="exportData()"
+                    i18n="@@settings.export-btn">İndir</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <mat-card class="border border-red-200 dark:border-red-900 bg-white dark:bg-slate-800 dark:text-gray-100">
         <mat-card-header>
           <mat-card-title class="text-red-600 dark:text-red-400" i18n="@@settings.danger-zone">Tehlikeli Bölge</mat-card-title>
@@ -123,6 +141,16 @@ import { environment } from '../../../environments/environment';
             <button mat-flat-button color="warn" type="button" (click)="openDeleteDialog()"
                     i18n="@@settings.delete-btn">Hesabı Sil</button>
           </div>
+          <div class="flex items-center justify-between gap-4 mt-4 pt-4 border-t border-red-100 dark:border-red-900">
+            <div>
+              <p class="text-sm font-medium text-gray-900 dark:text-white" i18n="@@settings.logout-all-title">Tüm oturumları kapat</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5" i18n="@@settings.logout-all-desc">
+                Bu cihaz dahil tüm aktif oturumlarınızı sonlandırın.
+              </p>
+            </div>
+            <button mat-flat-button color="warn" type="button" [disabled]="logoutAllLoading()" (click)="logoutAllDevices()"
+                    i18n="@@settings.logout-all-btn">Tümünü Kapat</button>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
@@ -135,6 +163,8 @@ export class SettingsPageComponent {
   private dialog = inject(MatDialog);
 
   isProd = environment.production;
+  exportLoading = signal(false);
+  logoutAllLoading = signal(false);
 
   onPushToggle(enable: boolean): void {
     void this.push.toggle(enable);
@@ -156,5 +186,23 @@ export class SettingsPageComponent {
         void this.auth.deleteAccount();
       }
     });
+  }
+
+  async exportData(): Promise<void> {
+    this.exportLoading.set(true);
+    try {
+      await this.auth.exportMe();
+    } finally {
+      this.exportLoading.set(false);
+    }
+  }
+
+  async logoutAllDevices(): Promise<void> {
+    this.logoutAllLoading.set(true);
+    try {
+      await this.auth.logoutAll();
+    } finally {
+      this.logoutAllLoading.set(false);
+    }
   }
 }
