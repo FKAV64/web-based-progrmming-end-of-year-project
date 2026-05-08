@@ -64,7 +64,7 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
       </div>
 
       <apx-chart
-        *ngIf="!errorMessage"
+        *ngIf="!errorMessage && klines.length > 0"
         #chart
         [series]="series"
         [chart]="chartOptions"

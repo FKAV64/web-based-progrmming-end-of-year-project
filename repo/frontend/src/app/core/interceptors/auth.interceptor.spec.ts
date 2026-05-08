@@ -1,7 +1,6 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import {
   HttpClient,
-  HttpErrorResponse,
   provideHttpClient,
   withInterceptors,
 } from '@angular/common/http';
@@ -94,6 +93,16 @@ describe('authInterceptor', () => {
     tick();
     expect(result).toEqual({ data: 'ok' });
     expect(authService.accessToken()).toBe('new-token');
+  }));
+
+  it('does not attempt refresh when no token is set and backend returns 401', fakeAsync(() => {
+    // accessToken is null by default — no Bearer header attached
+    http.get('/api/market/top').subscribe({ error: () => {} });
+    const req = httpTesting.expectOne('/api/market/top');
+    req.flush({}, { status: 401, statusText: 'Unauthorized' });
+    tick();
+    httpTesting.expectNone('/api/auth/refresh');
+    expect(routerMock.navigate).not.toHaveBeenCalled();
   }));
 
   it('on 401 + failed refresh navigates to /login', fakeAsync(() => {

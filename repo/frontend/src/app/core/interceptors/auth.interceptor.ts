@@ -7,7 +7,7 @@ import { AuthService } from '../services/state/auth.service';
 import { AuthApiService } from '../services/api/auth.api';
 
 let isRefreshing = false;
-const refreshTokenSubject = new BehaviorSubject<string | null>(null);
+let refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<any> {
   const auth = inject(AuthService);
@@ -41,7 +41,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
         return throwError(() => err);
       }
 
-      if (err.status !== 401 || skipRetry) return throwError(() => err);
+      if (err.status !== 401 || skipRetry || !token) return throwError(() => err);
 
       // 3. QUEUE CONCURRENT REQUESTS
       if (isRefreshing) {
@@ -69,9 +69,11 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
         catchError(refreshErr => {
           // 4. HANDLE REFRESH FAILURE WHILE LOCKED
           isRefreshing = false;
-          refreshTokenSubject.next(null);
           auth.clearLocalSession();
           router.navigate(['/login']);
+          const stale = refreshTokenSubject;
+          refreshTokenSubject = new BehaviorSubject<string | null>(null);
+          stale.error(refreshErr);
           return throwError(() => refreshErr);
         }),
       );

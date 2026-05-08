@@ -73,7 +73,7 @@ export class PriceStreamService {
         startWith(coins),
       );
     }),
-    shareReplay(1),
+    shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   priceFor(sym: string, injector: Injector = this.injector) {
