@@ -68,6 +68,11 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  clearLocalSession(): void {
+    this.accessToken.set(null);
+    this.currentUser.set(null);
+  }
+
   setToken(token: string): void {
     this.accessToken.set(token);
   }

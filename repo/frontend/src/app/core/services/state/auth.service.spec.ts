@@ -70,6 +70,18 @@ describe('AuthService', () => {
     expect(service.isAuthenticated()).toBe(false);
   });
 
+  it('clearLocalSession clears signals without HTTP calls or navigation', () => {
+    service.accessToken.set('tok');
+    service.currentUser.set(mockUser);
+
+    service.clearLocalSession();
+
+    expect(service.accessToken()).toBeNull();
+    expect(service.currentUser()).toBeNull();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+    expect(apiMock.logout).not.toHaveBeenCalled();
+  });
+
   it('logout clears state and redirects to /login', async () => {
     service.accessToken.set('tok');
     service.currentUser.set(mockUser);

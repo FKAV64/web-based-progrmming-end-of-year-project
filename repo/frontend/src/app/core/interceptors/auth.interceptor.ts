@@ -15,7 +15,13 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
   const router = inject(Router);
 
   const token = auth.accessToken();
-  const isAuthEndpoint = req.url.includes('/auth/refresh') || req.url.includes('/auth/login') || req.url.includes('/auth/register');
+  const isAuthEndpoint = [
+    '/auth/refresh',
+    '/auth/login',
+    '/auth/register',
+    '/auth/logout',
+    '/auth/logout-all',
+  ].some(p => req.url.includes(p));
 
   const authedReq = token && !isAuthEndpoint
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
@@ -23,10 +29,11 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
 
   return next(authedReq).pipe(
     catchError((err: HttpErrorResponse) => {
-      // 1. BYPASS ON AUTH ENDPOINTS
-      if (err.status === 401 && (req.url.includes('/auth/refresh') || req.url.includes('/auth/login'))) {
-        isRefreshing = false; // reset state to prevent getting stuck
-        auth.logout();
+      // 1. BYPASS ON AUTH ENDPOINTS — clear local state only, never call logout()
+      // which would issue another HTTP request and re-enter this handler.
+      if (err.status === 401 && isAuthEndpoint) {
+        isRefreshing = false;
+        auth.clearLocalSession();
         router.navigate(['/login']);
         return throwError(() => err);
       }
@@ -60,7 +67,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
           // 4. HANDLE REFRESH FAILURE WHILE LOCKED
           isRefreshing = false;
           refreshTokenSubject.next(null);
-          auth.logout();
+          auth.clearLocalSession();
           router.navigate(['/login']);
           return throwError(() => refreshErr);
         }),
