@@ -57,7 +57,7 @@ export class AlertsService {
         this.seededTriggeredSnapshot = false;
         void this.loadActive(true);
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   startAlertPoller(): void {

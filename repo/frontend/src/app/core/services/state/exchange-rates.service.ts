@@ -30,7 +30,7 @@ export class ExchangeRatesService {
       } else {
         this.rates.set(null);
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   private load(): void {

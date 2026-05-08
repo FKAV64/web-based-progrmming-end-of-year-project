@@ -44,7 +44,7 @@ export class WatchlistService {
         this.loadedUserId = userId;
         void this.loadFromApi(true);
       }
-    });
+    }, { allowSignalWrites: true });
   }
 
   async loadFromApi(silent = false): Promise<void> {
