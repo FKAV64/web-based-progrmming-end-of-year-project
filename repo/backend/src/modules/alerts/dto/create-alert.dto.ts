@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsNumberString, IsString, MaxLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumberString,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { AlertCondition, Currency } from '@prisma/client';
 
 export class CreateAlertDto {

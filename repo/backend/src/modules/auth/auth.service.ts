@@ -328,7 +328,6 @@ export class AuthService {
     lastFailedLoginAt?: Date | null;
     lockedUntil?: Date | null;
   }) {
-    /* eslint-disable @typescript-eslint/no-unused-vars */
     const {
       passwordHash,
       failedLoginAttempts,
@@ -336,7 +335,7 @@ export class AuthService {
       lockedUntil,
       ...rest
     } = user;
-    /* eslint-enable @typescript-eslint/no-unused-vars */
+
     return rest;
   }
 }

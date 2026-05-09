@@ -11,7 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { type Request, type Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -80,7 +85,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token: string | undefined = req.cookies?.[REFRESH_COOKIE];
+    const token = req.cookies?.[REFRESH_COOKIE] as string | undefined;
     if (!token) throw new UnauthorizedException('No refresh token');
     const ip = req.ip ?? '';
     const ua = (req.headers['user-agent'] as string) ?? '';
@@ -109,11 +114,8 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Revoke current session' })
   @ApiResponse({ status: 200, description: 'Logged out' })
-  async logout(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const token: string | undefined = req.cookies?.[REFRESH_COOKIE];
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const token = req.cookies?.[REFRESH_COOKIE] as string | undefined;
     const userId = (req.user as { userId: string }).userId;
     const ip = req.ip ?? '';
     const ua = (req.headers['user-agent'] as string) ?? '';

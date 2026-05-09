@@ -126,19 +126,17 @@ describe('Users + Settings + KVKK (e2e)', () => {
       .expect(204);
 
     // User row gone
-    expect(
-      await prisma.user.findUnique({ where: { id: userId } }),
-    ).toBeNull();
+    expect(await prisma.user.findUnique({ where: { id: userId } })).toBeNull();
     // Cascaded relations gone
     expect(
       await prisma.userSettings.findUnique({ where: { userId } }),
     ).toBeNull();
-    expect(
-      await prisma.watchlistItem.findMany({ where: { userId } }),
-    ).toEqual([]);
-    expect(
-      await prisma.refreshToken.findMany({ where: { userId } }),
-    ).toEqual([]);
+    expect(await prisma.watchlistItem.findMany({ where: { userId } })).toEqual(
+      [],
+    );
+    expect(await prisma.refreshToken.findMany({ where: { userId } })).toEqual(
+      [],
+    );
     // Audit log row survived (onDelete: SetNull) and was written before the delete
     const audits = await prisma.auditLog.findMany({
       where: { action: 'user.deleted' },

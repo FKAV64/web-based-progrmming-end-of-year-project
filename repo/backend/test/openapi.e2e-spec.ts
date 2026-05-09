@@ -6,7 +6,10 @@ describe('OpenAPI spec', () => {
   it('generates a valid openapi spec with all expected paths', async () => {
     const app = await NestFactory.create(AppModule, { logger: false });
     app.setGlobalPrefix('api');
-    const document = SwaggerModule.createDocument(app, new DocumentBuilder().build());
+    const document = SwaggerModule.createDocument(
+      app,
+      new DocumentBuilder().build(),
+    );
     expect(Object.keys(document.paths)).toEqual(
       expect.arrayContaining([
         '/api/auth/login',

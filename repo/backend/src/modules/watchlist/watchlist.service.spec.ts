@@ -28,7 +28,9 @@ describe('WatchlistService', () => {
   });
 
   it('findAll returns user items', async () => {
-    prismaMock.watchlistItem.findMany.mockResolvedValue([{ coinId: 'bitcoin' }]);
+    prismaMock.watchlistItem.findMany.mockResolvedValue([
+      { coinId: 'bitcoin' },
+    ]);
     const result = await service.findAll('user-1');
     expect(result).toEqual([{ coinId: 'bitcoin' }]);
     expect(prismaMock.watchlistItem.findMany).toHaveBeenCalledWith({
@@ -44,13 +46,18 @@ describe('WatchlistService', () => {
   });
 
   it('create throws ConflictException on duplicate', async () => {
-    const p2002Error = new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
-      code: 'P2002',
-      clientVersion: '5',
-    });
+    const p2002Error = new Prisma.PrismaClientKnownRequestError(
+      'Unique constraint failed',
+      {
+        code: 'P2002',
+        clientVersion: '5',
+      },
+    );
     prismaMock.watchlistItem.create.mockRejectedValue(p2002Error);
 
-    await expect(service.create('user-1', { coinId: 'bitcoin' })).rejects.toThrow(ConflictException);
+    await expect(
+      service.create('user-1', { coinId: 'bitcoin' }),
+    ).rejects.toThrow(ConflictException);
   });
 
   it('remove deletes an item if it exists', async () => {

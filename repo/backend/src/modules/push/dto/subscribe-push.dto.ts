@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUrl, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class PushKeys {

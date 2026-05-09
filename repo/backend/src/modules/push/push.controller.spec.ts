@@ -34,15 +34,26 @@ describe('PushController', () => {
   });
 
   it('subscribe delegates to service', async () => {
-    const req = { user: { userId: 'user-1' }, headers: { 'user-agent': 'jest' } } as unknown as Request;
-    const dto = { endpoint: 'https://push.example.com/1', keys: { p256dh: 'k1', auth: 'a1' } };
+    const req = {
+      user: { userId: 'user-1' },
+      headers: { 'user-agent': 'jest' },
+    } as unknown as Request;
+    const dto = {
+      endpoint: 'https://push.example.com/1',
+      keys: { p256dh: 'k1', auth: 'a1' },
+    };
     await controller.subscribe(req, dto);
     expect(serviceMock.subscribe).toHaveBeenCalledWith('user-1', dto, 'jest');
   });
 
   it('unsubscribe delegates to service', async () => {
     const req = { user: { userId: 'user-1' } } as unknown as Request;
-    await controller.unsubscribe(req, { endpoint: 'https://push.example.com/1' });
-    expect(serviceMock.unsubscribe).toHaveBeenCalledWith('user-1', 'https://push.example.com/1');
+    await controller.unsubscribe(req, {
+      endpoint: 'https://push.example.com/1',
+    });
+    expect(serviceMock.unsubscribe).toHaveBeenCalledWith(
+      'user-1',
+      'https://push.example.com/1',
+    );
   });
 });

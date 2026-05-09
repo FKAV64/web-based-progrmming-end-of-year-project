@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateAlertDto } from './dto/create-alert.dto';
 
@@ -25,7 +26,7 @@ export class AlertsService {
    * @returns Array of PriceAlert ordered by createdAt descending
    */
   async findAll(userId: string, includeTriggered: boolean) {
-    const whereClause: any = { userId };
+    const whereClause: Prisma.PriceAlertWhereInput = { userId };
     if (!includeTriggered) {
       whereClause.triggeredAt = null;
     }

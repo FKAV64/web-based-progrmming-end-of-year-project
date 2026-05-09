@@ -1,5 +1,23 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { type Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AlertsService } from './alerts.service';
@@ -14,9 +32,16 @@ export class AlertsController {
 
   @Get()
   @ApiOperation({ summary: 'List price alerts' })
-  @ApiQuery({ name: 'includeTriggered', required: false, description: 'Include already-triggered alerts' })
+  @ApiQuery({
+    name: 'includeTriggered',
+    required: false,
+    description: 'Include already-triggered alerts',
+  })
   @ApiResponse({ status: 200, description: 'Array of alerts' })
-  async findAll(@Req() req: Request, @Query('includeTriggered') includeTriggered?: string) {
+  async findAll(
+    @Req() req: Request,
+    @Query('includeTriggered') includeTriggered?: string,
+  ) {
     const userId = (req.user as { userId: string }).userId;
     const isIncludeTriggered = includeTriggered === 'true';
     return this.alertsService.findAll(userId, isIncludeTriggered);

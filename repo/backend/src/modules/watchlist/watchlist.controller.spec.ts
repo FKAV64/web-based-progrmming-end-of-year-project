@@ -35,7 +35,9 @@ describe('WatchlistController', () => {
     const req = { user: { userId: 'user-1' } } as unknown as Request;
     const result = await controller.create(req, { coinId: 'bitcoin' });
     expect(result).toEqual({ coinId: 'bitcoin' });
-    expect(serviceMock.create).toHaveBeenCalledWith('user-1', { coinId: 'bitcoin' });
+    expect(serviceMock.create).toHaveBeenCalledWith('user-1', {
+      coinId: 'bitcoin',
+    });
   });
 
   it('remove delegates to service', async () => {

@@ -24,7 +24,10 @@ describe('CoingeckoFetcherService', () => {
         CoingeckoFetcherService,
         { provide: CACHE_MANAGER, useValue: { set: cacheSetMock } },
         { provide: EventEmitter2, useValue: { emit: emitMock } },
-        { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue('dummy_key') } },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn().mockReturnValue('dummy_key') },
+        },
       ],
     }).compile();
 
@@ -43,7 +46,7 @@ describe('CoingeckoFetcherService', () => {
     const mockData = [{ id: 'bitcoin', current_price: 50000 }];
     mockFetch.mockResolvedValue({
       ok: true,
-      json: async () => mockData,
+      json: () => Promise.resolve(mockData),
     });
 
     await service['fetchAndStore']();

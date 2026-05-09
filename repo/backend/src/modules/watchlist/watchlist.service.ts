@@ -67,11 +67,11 @@ export class WatchlistService {
    * @param coinId - CoinGecko coin identifier to remove
    */
   async remove(userId: string, coinId: string) {
-    // Delete many so it doesn't throw a generic Prisma error if not found, 
+    // Delete many so it doesn't throw a generic Prisma error if not found,
     // we want to ensure it only deletes if it exists for this user.
     // Wait, the spec says "DELETE /api/watchlist/:coinId", and "ownership enforcement".
     // For watchlist, since the unique constraint is [userId, coinId], we can just delete it.
-    const result = await this.prisma.watchlistItem.deleteMany({
+    await this.prisma.watchlistItem.deleteMany({
       where: {
         userId,
         coinId,

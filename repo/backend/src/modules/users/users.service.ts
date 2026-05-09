@@ -67,10 +67,7 @@ export class UsersService {
 
     await this.audit.log('user.exported_data', userId, ip, ua);
 
-    const {
-      passwordHash: _passwordHash,
-      ...rest
-    } = data;
+    const { passwordHash: _, ...rest } = data;
     return rest;
   }
 

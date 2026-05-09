@@ -1,4 +1,11 @@
-import { IsEnum, IsNotEmpty, IsNumberString, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { Currency } from '@prisma/client';
 
 export class CreatePortfolioPositionDto {

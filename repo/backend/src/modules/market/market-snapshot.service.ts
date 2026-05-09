@@ -1,4 +1,8 @@
-import { Injectable, Inject, ServiceUnavailableException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { type Cache } from 'cache-manager';
 
@@ -26,7 +30,9 @@ export class MarketSnapshotService {
   async getTop(): Promise<any> {
     const data = await this.cache.get('market:top');
     if (!data) {
-      throw new ServiceUnavailableException('Market data warming up, retry shortly.');
+      throw new ServiceUnavailableException(
+        'Market data warming up, retry shortly.',
+      );
     }
     return data;
   }

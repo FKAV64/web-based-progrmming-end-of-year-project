@@ -111,11 +111,13 @@ describe('UsersService', () => {
   describe('deleteMe', () => {
     it('writes user.deleted audit BEFORE the delete call', async () => {
       const callOrder: string[] = [];
-      auditMock.log.mockImplementation(async () => {
+      auditMock.log.mockImplementation(() => {
         callOrder.push('audit');
+        return Promise.resolve();
       });
-      prismaMock.user.delete.mockImplementation(async () => {
+      prismaMock.user.delete.mockImplementation(() => {
         callOrder.push('delete');
+        return Promise.resolve();
       });
 
       await service.deleteMe('user-1', '1.2.3.4', 'agent');

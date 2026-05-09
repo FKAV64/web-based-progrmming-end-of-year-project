@@ -1,5 +1,24 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { type Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PortfolioService } from './portfolio.service';
@@ -16,9 +35,16 @@ export class PortfolioController {
 
   @Get()
   @ApiOperation({ summary: 'List portfolio positions' })
-  @ApiQuery({ name: 'includeClosed', required: false, description: 'Include closed positions' })
+  @ApiQuery({
+    name: 'includeClosed',
+    required: false,
+    description: 'Include closed positions',
+  })
   @ApiResponse({ status: 200, description: 'Array of positions' })
-  async findAll(@Req() req: Request, @Query('includeClosed') includeClosed?: string) {
+  async findAll(
+    @Req() req: Request,
+    @Query('includeClosed') includeClosed?: string,
+  ) {
     const userId = (req.user as { userId: string }).userId;
     const isIncludeClosed = includeClosed === 'true';
     return this.portfolioService.findAll(userId, isIncludeClosed);

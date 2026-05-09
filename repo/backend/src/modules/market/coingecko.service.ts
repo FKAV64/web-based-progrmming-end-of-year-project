@@ -28,21 +28,28 @@ export class CoingeckoService {
     private readonly configService: ConfigService,
   ) {}
 
-  private async fetchWithRetry(url: string, options: any, maxRetries = 3): Promise<any> {
-    let lastError: any;
+  private async fetchWithRetry(
+    url: string,
+    options: RequestInit,
+    maxRetries = 3,
+  ): Promise<Response> {
+    let lastError: unknown = new Error('Max retries exhausted');
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         const response = await fetch(url, options);
         if (response.ok) return response;
         lastError = new Error(`HTTP ${response.status}`);
-      } catch (err: any) {
+      } catch (err: unknown) {
         lastError = err;
-        this.logger.warn(`Fetch attempt ${attempt + 1}/${maxRetries} failed: ${err.message}`);
+        const msg = err instanceof Error ? err.message : String(err);
+        this.logger.warn(
+          `Fetch attempt ${attempt + 1}/${maxRetries} failed: ${msg}`,
+        );
       }
       if (attempt < maxRetries - 1) {
         const delay = Math.pow(2, attempt) * 1000;
         this.logger.log(`Retrying in ${delay}ms...`);
-        await new Promise(r => setTimeout(r, delay));
+        await new Promise((r) => setTimeout(r, delay));
       }
     }
     throw lastError;
@@ -50,12 +57,13 @@ export class CoingeckoService {
 
   private getHeaders(): Record<string, string> {
     return {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Accept': 'application/json, text/plain, */*',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      Accept: 'application/json, text/plain, */*',
       'Accept-Language': 'en-US,en;q=0.9',
       'Accept-Encoding': 'gzip, deflate, br',
-      'Referer': 'https://www.coingecko.com/',
-      'Origin': 'https://www.coingecko.com',
+      Referer: 'https://www.coingecko.com/',
+      Origin: 'https://www.coingecko.com',
     };
   }
 
@@ -68,13 +76,22 @@ export class CoingeckoService {
    */
   async getCoin(id: string): Promise<any> {
     const cacheKey = `coingecko:coin:${id}`;
-    return this.cache.wrap(cacheKey, async () => {
-      const apiKey = this.configService.get<string>('COINGECKO_API_KEY') || '';
-      const url = `${this.baseUrl}/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
-      const response = await this.fetchWithRetry(url, { headers: this.getHeaders(), signal: AbortSignal.timeout(10000) });
-      if (!response.ok) throw new Error(`CoinGecko HTTP error: ${response.status}`);
-      return response.json();
-    }, 5 * 60_000); // 5 min
+    return this.cache.wrap(
+      cacheKey,
+      async () => {
+        const apiKey =
+          this.configService.get<string>('COINGECKO_API_KEY') || '';
+        const url = `${this.baseUrl}/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
+        const response = await this.fetchWithRetry(url, {
+          headers: this.getHeaders(),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok)
+          throw new Error(`CoinGecko HTTP error: ${response.status}`);
+        return response.json() as unknown;
+      },
+      5 * 60_000,
+    ); // 5 min
   }
 
   /**
@@ -87,13 +104,22 @@ export class CoingeckoService {
    */
   async getMarketChart(id: string, days: string): Promise<any> {
     const cacheKey = `coingecko:chart:${id}:${days}`;
-    return this.cache.wrap(cacheKey, async () => {
-      const apiKey = this.configService.get<string>('COINGECKO_API_KEY') || '';
-      const url = `${this.baseUrl}/coins/${id}/market_chart?vs_currency=usd&days=${days}${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
-      const response = await this.fetchWithRetry(url, { headers: this.getHeaders(), signal: AbortSignal.timeout(10000) });
-      if (!response.ok) throw new Error(`CoinGecko HTTP error: ${response.status}`);
-      return response.json();
-    }, 60_000); // 60s
+    return this.cache.wrap(
+      cacheKey,
+      async () => {
+        const apiKey =
+          this.configService.get<string>('COINGECKO_API_KEY') || '';
+        const url = `${this.baseUrl}/coins/${id}/market_chart?vs_currency=usd&days=${days}${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
+        const response = await this.fetchWithRetry(url, {
+          headers: this.getHeaders(),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok)
+          throw new Error(`CoinGecko HTTP error: ${response.status}`);
+        return response.json() as unknown;
+      },
+      60_000,
+    ); // 60s
   }
 
   /**
@@ -104,12 +130,21 @@ export class CoingeckoService {
    */
   async getExchangeRates(): Promise<any> {
     const cacheKey = `coingecko:exchange_rates`;
-    return this.cache.wrap(cacheKey, async () => {
-      const apiKey = this.configService.get<string>('COINGECKO_API_KEY') || '';
-      const url = `${this.baseUrl}/exchange_rates${apiKey ? `?x_cg_demo_api_key=${apiKey}` : ''}`;
-      const response = await this.fetchWithRetry(url, { headers: this.getHeaders(), signal: AbortSignal.timeout(10000) });
-      if (!response.ok) throw new Error(`CoinGecko HTTP error: ${response.status}`);
-      return response.json();
-    }, 60 * 60_000); // 1 hour
+    return this.cache.wrap(
+      cacheKey,
+      async () => {
+        const apiKey =
+          this.configService.get<string>('COINGECKO_API_KEY') || '';
+        const url = `${this.baseUrl}/exchange_rates${apiKey ? `?x_cg_demo_api_key=${apiKey}` : ''}`;
+        const response = await this.fetchWithRetry(url, {
+          headers: this.getHeaders(),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok)
+          throw new Error(`CoinGecko HTTP error: ${response.status}`);
+        return response.json() as unknown;
+      },
+      60 * 60_000,
+    ); // 1 hour
   }
 }

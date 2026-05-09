@@ -48,7 +48,9 @@ describe('AlertsService', () => {
   it('User A cannot delete User Bs alert', async () => {
     prismaMock.priceAlert.findFirst.mockResolvedValue(null);
 
-    await expect(service.remove('user-A', 'alert-1')).rejects.toThrow(NotFoundException);
+    await expect(service.remove('user-A', 'alert-1')).rejects.toThrow(
+      NotFoundException,
+    );
     expect(prismaMock.priceAlert.delete).not.toHaveBeenCalled();
   });
 });

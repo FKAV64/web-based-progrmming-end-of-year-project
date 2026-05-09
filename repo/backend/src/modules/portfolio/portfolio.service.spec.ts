@@ -3,7 +3,6 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { PortfolioService } from './portfolio.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Currency } from '@prisma/client';
 
 describe('PortfolioService', () => {
   let service: PortfolioService;
@@ -58,13 +57,23 @@ describe('PortfolioService', () => {
     // If findFirst with { id: posId, userId: User A } returns null (because it belongs to User B)
     prismaMock.portfolioPosition.findFirst.mockResolvedValue(null);
 
-    await expect(service.remove('user-A', 'pos-1')).rejects.toThrow(NotFoundException);
+    await expect(service.remove('user-A', 'pos-1')).rejects.toThrow(
+      NotFoundException,
+    );
     expect(prismaMock.portfolioPosition.delete).not.toHaveBeenCalled();
   });
 
   it('closing a position sets closedAt and closePrice', async () => {
-    prismaMock.portfolioPosition.findFirst.mockResolvedValue({ id: 'pos-1', userId: 'user-1', closedAt: null });
-    prismaMock.portfolioPosition.update.mockResolvedValue({ id: 'pos-1', closedAt: new Date(), closePrice: '50000' });
+    prismaMock.portfolioPosition.findFirst.mockResolvedValue({
+      id: 'pos-1',
+      userId: 'user-1',
+      closedAt: null,
+    });
+    prismaMock.portfolioPosition.update.mockResolvedValue({
+      id: 'pos-1',
+      closedAt: new Date(),
+      closePrice: '50000',
+    });
 
     await service.close('user-1', 'pos-1', { closePrice: '50000' });
 
@@ -80,14 +89,20 @@ describe('PortfolioService', () => {
       'user-1',
       undefined,
       undefined,
-      expect.objectContaining({ positionId: 'pos-1', closePrice: '50000' })
+      expect.objectContaining({ positionId: 'pos-1', closePrice: '50000' }),
     );
   });
 
   it('prevents further PATCH updates if already closed', async () => {
-    prismaMock.portfolioPosition.findFirst.mockResolvedValue({ id: 'pos-1', userId: 'user-1', closedAt: new Date() });
+    prismaMock.portfolioPosition.findFirst.mockResolvedValue({
+      id: 'pos-1',
+      userId: 'user-1',
+      closedAt: new Date(),
+    });
 
-    await expect(service.update('user-1', 'pos-1', { quantity: '2' })).rejects.toThrow(BadRequestException);
+    await expect(
+      service.update('user-1', 'pos-1', { quantity: '2' }),
+    ).rejects.toThrow(BadRequestException);
     expect(prismaMock.portfolioPosition.update).not.toHaveBeenCalled();
   });
 });

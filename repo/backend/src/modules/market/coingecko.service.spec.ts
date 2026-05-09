@@ -3,7 +3,6 @@ import { CoingeckoService } from './coingecko.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 
-
 describe('CoingeckoService', () => {
   let service: CoingeckoService;
 
@@ -12,7 +11,10 @@ describe('CoingeckoService', () => {
       providers: [
         CoingeckoService,
         { provide: CACHE_MANAGER, useValue: { wrap: jest.fn() } },
-        { provide: ConfigService, useValue: { get: jest.fn().mockReturnValue('dummy_key') } },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn().mockReturnValue('dummy_key') },
+        },
       ],
     }).compile();
 

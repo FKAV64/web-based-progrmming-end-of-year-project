@@ -55,10 +55,15 @@ describe('SettingsService', () => {
       notificationsEnabled: false,
     });
 
-    const result = await service.update('user-1', {
-      theme: 'DARK',
-      currency: 'TRY',
-    }, '127.0.0.1', 'jest');
+    const result = await service.update(
+      'user-1',
+      {
+        theme: 'DARK',
+        currency: 'TRY',
+      },
+      '127.0.0.1',
+      'jest',
+    );
 
     expect(prismaMock.userSettings.update).toHaveBeenCalledWith({
       where: { userId: 'user-1' },
@@ -69,7 +74,7 @@ describe('SettingsService', () => {
       'user-1',
       '127.0.0.1',
       'jest',
-      { theme: 'DARK', currency: 'TRY' }
+      { theme: 'DARK', currency: 'TRY' },
     );
     expect(result.theme).toBe('DARK');
     expect(result.currency).toBe('TRY');

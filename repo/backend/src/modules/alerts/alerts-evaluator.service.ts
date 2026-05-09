@@ -1,9 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { type PriceAlert } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PushService } from '../push/push.service';
 import { AuditService } from '../audit/audit.service';
 import { CoingeckoService } from '../market/coingecko.service';
+
+interface CoinGeckoRateEntry {
+  value: number;
+}
+
+interface CoinGeckoRatesResponse {
+  rates?: Record<string, CoinGeckoRateEntry>;
+}
 
 interface CoinSnapshot {
   id: string;
@@ -66,12 +75,13 @@ export class AlertsEvaluatorService {
     // 2. Load exchange rates (cached 1h) — with fallback for dev
     let rates: Record<string, number>;
     try {
-      const ratesResponse = await this.coingeckoService.getExchangeRates();
       // CoinGecko returns { rates: { usd: { value: 1 }, eur: { value: 0.92 }, ... } }
+      const ratesResponse =
+        (await this.coingeckoService.getExchangeRates()) as CoinGeckoRatesResponse;
       rates = {};
       if (ratesResponse?.rates) {
-        for (const [currency, data] of Object.entries(ratesResponse.rates)) {
-          rates[currency] = (data as any).value;
+        for (const [currency, entry] of Object.entries(ratesResponse.rates)) {
+          rates[currency] = entry.value;
         }
       } else {
         rates = FALLBACK_RATES;
@@ -89,7 +99,11 @@ export class AlertsEvaluatorService {
     if (alerts.length === 0) return;
 
     // 4. Evaluate each alert
-    const triggered: { alert: any; priceUsd: number; priceInAlertCurrency: number }[] = [];
+    const triggered: {
+      alert: PriceAlert;
+      priceUsd: number;
+      priceInAlertCurrency: number;
+    }[] = [];
     for (const alert of alerts) {
       const priceUsd = priceByCoinId.get(alert.coinId);
       if (priceUsd === undefined) continue; // coin not in snapshot — silently skip
@@ -100,7 +114,8 @@ export class AlertsEvaluatorService {
         (alert.condition === 'ABOVE' && price >= Number(alert.targetPrice)) ||
         (alert.condition === 'BELOW' && price <= Number(alert.targetPrice));
 
-      if (fired) triggered.push({ alert, priceUsd, priceInAlertCurrency: price });
+      if (fired)
+        triggered.push({ alert, priceUsd, priceInAlertCurrency: price });
     }
 
     // 5. For each triggered alert: atomic CAS update
@@ -111,21 +126,29 @@ export class AlertsEvaluatorService {
       });
       if (result.count === 0) continue; // someone else triggered it first
 
-      this.logger.log(`Alert ${t.alert.id} triggered: ${t.alert.coinId} ${t.alert.condition} ${t.alert.targetPrice} ${t.alert.currency}`);
+      this.logger.log(
+        `Alert ${t.alert.id} triggered: ${t.alert.coinId} ${t.alert.condition} ${t.alert.targetPrice.toString()} ${t.alert.currency}`,
+      );
 
       await this.pushService.send(t.alert.userId, {
-        title: `${t.alert.coinId.toUpperCase()} ${t.alert.condition.toLowerCase()} ${t.alert.targetPrice} ${t.alert.currency}`,
+        title: `${t.alert.coinId.toUpperCase()} ${t.alert.condition.toLowerCase()} ${t.alert.targetPrice.toString()} ${t.alert.currency}`,
         body: `Now at ${t.priceInAlertCurrency.toFixed(2)} ${t.alert.currency}`,
       });
 
-      await this.auditService.log('alert.triggered', t.alert.userId, undefined, undefined, {
-        alertId: t.alert.id,
-        coinId: t.alert.coinId,
-        condition: t.alert.condition,
-        targetPrice: t.alert.targetPrice.toString(),
-        currentPrice: t.priceInAlertCurrency.toFixed(2),
-        currency: t.alert.currency,
-      });
+      await this.auditService.log(
+        'alert.triggered',
+        t.alert.userId,
+        undefined,
+        undefined,
+        {
+          alertId: t.alert.id,
+          coinId: t.alert.coinId,
+          condition: t.alert.condition,
+          targetPrice: t.alert.targetPrice.toString(),
+          currentPrice: t.priceInAlertCurrency.toFixed(2),
+          currency: t.alert.currency,
+        },
+      );
     }
   }
 

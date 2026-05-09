@@ -8,9 +8,10 @@ import type { Response } from 'express';
 import { map, Observable } from 'rxjs';
 
 @Injectable()
-export class TransformInterceptor<T>
-  implements NestInterceptor<T, { data: T } | T>
-{
+export class TransformInterceptor<T> implements NestInterceptor<
+  T,
+  { data: T } | T
+> {
   intercept(
     context: ExecutionContext,
     next: CallHandler<T>,

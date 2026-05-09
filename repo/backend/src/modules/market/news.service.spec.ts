@@ -8,11 +8,25 @@ jest.mock('rss-parser', () => {
       parseURL: jest.fn().mockImplementation((url: string) => {
         if (url.includes('coindesk')) {
           return Promise.resolve({
-            items: [{ title: 'Bitcoin surges!', link: 'https://coindesk', pubDate: '2026-04-26T10:00:00Z', contentSnippet: 'Bitcoin gains' }]
+            items: [
+              {
+                title: 'Bitcoin surges!',
+                link: 'https://coindesk',
+                pubDate: '2026-04-26T10:00:00Z',
+                contentSnippet: 'Bitcoin gains',
+              },
+            ],
           });
         }
         return Promise.resolve({
-          items: [{ title: 'Crypto crash', link: 'https://cointelegraph', pubDate: '2026-04-26T09:00:00Z', contentSnippet: 'Market plunges' }]
+          items: [
+            {
+              title: 'Crypto crash',
+              link: 'https://cointelegraph',
+              pubDate: '2026-04-26T09:00:00Z',
+              contentSnippet: 'Market plunges',
+            },
+          ],
         });
       }),
     };
@@ -29,7 +43,7 @@ describe('NewsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NewsService,
-        { provide: CACHE_MANAGER, useValue: { wrap: cacheWrapMock } }
+        { provide: CACHE_MANAGER, useValue: { wrap: cacheWrapMock } },
       ],
     }).compile();
 

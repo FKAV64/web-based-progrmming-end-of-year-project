@@ -40,13 +40,24 @@ export class SettingsService {
    * @param ua - User-Agent header for the audit log
    * @returns The updated UserSettings row
    */
-  async update(userId: string, dto: UpdateSettingsDto, ip?: string, ua?: string) {
+  async update(
+    userId: string,
+    dto: UpdateSettingsDto,
+    ip?: string,
+    ua?: string,
+  ) {
     const result = await this.prisma.userSettings.update({
       where: { userId },
       data: dto,
     });
 
-    await this.auditService.log('user.settings_changed', userId, ip, ua, dto as unknown as Record<string, unknown>);
+    await this.auditService.log(
+      'user.settings_changed',
+      userId,
+      ip,
+      ua,
+      dto as unknown as Record<string, unknown>,
+    );
     return result;
   }
 }

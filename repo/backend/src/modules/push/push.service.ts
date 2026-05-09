@@ -33,7 +33,9 @@ export class PushService {
     if (publicKey && privateKey && subject) {
       webpush.setVapidDetails(subject, publicKey, privateKey);
     } else {
-      this.logger.warn('VAPID keys not configured — push notifications disabled');
+      this.logger.warn(
+        'VAPID keys not configured — push notifications disabled',
+      );
     }
   }
 
@@ -101,7 +103,10 @@ export class PushService {
    * @param userId - The user whose subscriptions will receive the notification
    * @param payload - Notification content (title, body, optional deep-link url)
    */
-  async send(userId: string, payload: { title: string; body: string; url?: string }) {
+  async send(
+    userId: string,
+    payload: { title: string; body: string; url?: string },
+  ) {
     const subs = await this.prisma.pushSubscription.findMany({
       where: { userId },
     });
@@ -125,13 +130,19 @@ export class PushService {
           },
           payloadStr,
         );
-      } catch (error: any) {
-        const statusCode = error?.statusCode;
+      } catch (error: unknown) {
+        const statusCode =
+          error !== null && typeof error === 'object' && 'statusCode' in error
+            ? (error as { statusCode: number }).statusCode
+            : undefined;
         if (statusCode === 410 || statusCode === 404) {
-          this.logger.warn(`Subscription ${sub.endpoint} is stale (${statusCode}). Deleting.`);
+          this.logger.warn(
+            `Subscription ${sub.endpoint} is stale (${statusCode}). Deleting.`,
+          );
           await this.prisma.pushSubscription.delete({ where: { id: sub.id } });
         } else {
-          this.logger.error(`Push failed for ${sub.endpoint}: ${error.message}`);
+          const msg = error instanceof Error ? error.message : String(error);
+          this.logger.error(`Push failed for ${sub.endpoint}: ${msg}`);
         }
       }
     }

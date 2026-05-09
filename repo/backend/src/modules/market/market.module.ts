@@ -17,9 +17,7 @@ import { NewsService } from './news.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        stores: [
-          createKeyv(configService.get<string>('REDIS_URL')),
-        ],
+        stores: [createKeyv(configService.get<string>('REDIS_URL'))],
       }),
     }),
   ],

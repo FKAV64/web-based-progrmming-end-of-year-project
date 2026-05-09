@@ -10,9 +10,7 @@ import { DevController } from './dev.controller';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        stores: [
-          createKeyv(configService.get<string>('REDIS_URL')),
-        ],
+        stores: [createKeyv(configService.get<string>('REDIS_URL'))],
       }),
     }),
   ],

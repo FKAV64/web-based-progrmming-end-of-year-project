@@ -23,10 +23,17 @@ export class SentimentService {
    */
   async get(): Promise<any> {
     const cacheKey = `market:sentiment`;
-    return this.cache.wrap(cacheKey, async () => {
-      const response = await fetch(`https://api.alternative.me/fng/?limit=30`);
-      if (!response.ok) throw new Error(`Alternative.me HTTP error: ${response.status}`);
-      return response.json();
-    }, 60 * 60_000); // 1 hour
+    return this.cache.wrap(
+      cacheKey,
+      async () => {
+        const response = await fetch(
+          `https://api.alternative.me/fng/?limit=30`,
+        );
+        if (!response.ok)
+          throw new Error(`Alternative.me HTTP error: ${response.status}`);
+        return response.json() as unknown;
+      },
+      60 * 60_000,
+    ); // 1 hour
   }
 }

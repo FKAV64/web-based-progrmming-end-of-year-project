@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
+import { Prisma } from '@prisma/client';
 import { CreatePortfolioPositionDto } from './dto/create-portfolio-position.dto';
 import { UpdatePortfolioPositionDto } from './dto/update-portfolio-position.dto';
 import { ClosePortfolioPositionDto } from './dto/close-portfolio-position.dto';
@@ -33,7 +38,7 @@ export class PortfolioService {
    * @returns Array of PortfolioPosition ordered by createdAt descending
    */
   async findAll(userId: string, includeClosed: boolean) {
-    const whereClause: any = { userId };
+    const whereClause: Prisma.PortfolioPositionWhereInput = { userId };
     if (!includeClosed) {
       whereClause.closedAt = null;
     }
@@ -91,7 +96,8 @@ export class PortfolioService {
       where: { id },
       data: {
         quantity: dto.quantity !== undefined ? dto.quantity : undefined,
-        avgBuyPrice: dto.avgBuyPrice !== undefined ? dto.avgBuyPrice : undefined,
+        avgBuyPrice:
+          dto.avgBuyPrice !== undefined ? dto.avgBuyPrice : undefined,
         notes: dto.notes !== undefined ? dto.notes : undefined,
       },
     });
@@ -139,13 +145,11 @@ export class PortfolioService {
       },
     });
 
-    await this.auditService.log(
-      'portfolio.position_closed',
-      userId,
-      ip,
-      ua,
-      { positionId: id, coinId: position.coinId, closePrice: dto.closePrice }
-    );
+    await this.auditService.log('portfolio.position_closed', userId, ip, ua, {
+      positionId: id,
+      coinId: position.coinId,
+      closePrice: dto.closePrice,
+    });
 
     return closedPosition;
   }

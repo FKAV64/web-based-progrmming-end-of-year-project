@@ -62,7 +62,12 @@ describe('PushService', () => {
 
   it('send calls webpush for each subscription', async () => {
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { id: 'sub-1', endpoint: 'https://push.example.com/1', p256dhKey: 'key1', authKey: 'auth1' },
+      {
+        id: 'sub-1',
+        endpoint: 'https://push.example.com/1',
+        p256dhKey: 'key1',
+        authKey: 'auth1',
+      },
     ]);
     mockSendNotification.mockResolvedValue({});
 
@@ -80,31 +85,59 @@ describe('PushService', () => {
 
   it('410 response deletes the subscription row', async () => {
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { id: 'sub-1', endpoint: 'https://push.example.com/1', p256dhKey: 'key1', authKey: 'auth1' },
+      {
+        id: 'sub-1',
+        endpoint: 'https://push.example.com/1',
+        p256dhKey: 'key1',
+        authKey: 'auth1',
+      },
     ]);
-    mockSendNotification.mockRejectedValue({ statusCode: 410, message: 'Gone' });
+    mockSendNotification.mockRejectedValue({
+      statusCode: 410,
+      message: 'Gone',
+    });
 
     await service.send('user-1', { title: 'Test', body: 'Hello' });
 
-    expect(prismaMock.pushSubscription.delete).toHaveBeenCalledWith({ where: { id: 'sub-1' } });
+    expect(prismaMock.pushSubscription.delete).toHaveBeenCalledWith({
+      where: { id: 'sub-1' },
+    });
   });
 
   it('404 response deletes the subscription row', async () => {
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { id: 'sub-1', endpoint: 'https://push.example.com/1', p256dhKey: 'key1', authKey: 'auth1' },
+      {
+        id: 'sub-1',
+        endpoint: 'https://push.example.com/1',
+        p256dhKey: 'key1',
+        authKey: 'auth1',
+      },
     ]);
-    mockSendNotification.mockRejectedValue({ statusCode: 404, message: 'Not Found' });
+    mockSendNotification.mockRejectedValue({
+      statusCode: 404,
+      message: 'Not Found',
+    });
 
     await service.send('user-1', { title: 'Test', body: 'Hello' });
 
-    expect(prismaMock.pushSubscription.delete).toHaveBeenCalledWith({ where: { id: 'sub-1' } });
+    expect(prismaMock.pushSubscription.delete).toHaveBeenCalledWith({
+      where: { id: 'sub-1' },
+    });
   });
 
   it('other errors are logged but do not delete subscription', async () => {
     prismaMock.pushSubscription.findMany.mockResolvedValue([
-      { id: 'sub-1', endpoint: 'https://push.example.com/1', p256dhKey: 'key1', authKey: 'auth1' },
+      {
+        id: 'sub-1',
+        endpoint: 'https://push.example.com/1',
+        p256dhKey: 'key1',
+        authKey: 'auth1',
+      },
     ]);
-    mockSendNotification.mockRejectedValue({ statusCode: 500, message: 'Server Error' });
+    mockSendNotification.mockRejectedValue({
+      statusCode: 500,
+      message: 'Server Error',
+    });
 
     await service.send('user-1', { title: 'Test', body: 'Hello' });
 
