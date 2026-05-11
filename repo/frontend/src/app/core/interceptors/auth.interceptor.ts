@@ -34,10 +34,15 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
     catchError((err: HttpErrorResponse) => {
       // 1. BYPASS ON AUTH ENDPOINTS — clear local state only, never call logout()
       // which would issue another HTTP request and re-enter this handler.
+      // Only navigate to /login when the user had an active session (token present);
+      // a 401 from the silent init refresh on a public route (e.g. /register) must
+      // not yank the user away from where they intentionally navigated.
       if (err.status === 401 && skipRetry) {
         isRefreshing = false;
         auth.clearLocalSession();
-        router.navigate(['/login']);
+        if (token) {
+          router.navigate(['/login']);
+        }
         return throwError(() => err);
       }
 
