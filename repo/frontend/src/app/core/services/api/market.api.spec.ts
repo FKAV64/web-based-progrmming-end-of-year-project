@@ -1,12 +1,14 @@
 import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { MarketApiService } from './market.api';
+import { AuthService } from '../state/auth.service';
 import { environment } from '../../../../environments/environment';
 import { CoinSnapshot } from '../../models/market.model';
 
 describe('MarketApiService', () => {
   let service: MarketApiService;
   let httpMock: HttpTestingController;
+  let auth: AuthService;
 
   const mockCoin: CoinSnapshot = {
     id: 'bitcoin',
@@ -40,6 +42,17 @@ describe('MarketApiService', () => {
     });
     service = TestBed.inject(MarketApiService);
     httpMock = TestBed.inject(HttpTestingController);
+    auth = TestBed.inject(AuthService);
+    // topCoins$ now gates polling on auth state; simulate signed-in user.
+    auth.currentUser.set({
+      id: 'test',
+      email: 'test@example.com',
+      name: 'Test',
+      role: 'USER',
+      emailVerifiedAt: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    } as any);
   });
 
   afterEach(() => {

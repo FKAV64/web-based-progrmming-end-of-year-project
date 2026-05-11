@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, timer } from 'rxjs';
-import { switchMap, shareReplay, map, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of, timer } from 'rxjs';
+import { catchError, switchMap, shareReplay, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ExchangeRatesResponse } from '../../models/exchange-rate.model';
 import { BinanceInterval, CoinDetail, CoinSnapshot, NewsItem, OHLC, SentimentResponse } from '../../models/market.model';
+import { AuthService } from '../state/auth.service';
 
 /**
  * HTTP client service for the /market backend endpoints.
@@ -25,13 +26,22 @@ import { BinanceInterval, CoinDetail, CoinSnapshot, NewsItem, OHLC, SentimentRes
 })
 export class MarketApiService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
   private readonly baseUrl = `${environment.apiBaseUrl}/market`;
 
   private klineCache = new Map<string, { data: OHLC[]; fetchedAt: number }>();
 
+  // Polling intentionally swallows per-tick errors so a transient 401 (e.g.,
+  // between logout and next login) does not poison the shareReplay buffer and
+  // cascade into errored signals across every consumer. The poll is also gated
+  // on auth state to avoid burning network cycles while signed out.
   // refCount:false keeps the observable alive with zero subscribers (between navigations)
   topCoins$ = timer(0, 15_000).pipe(
-    switchMap(() => this.getTop()),
+    switchMap(() =>
+      this.auth.isAuthenticated()
+        ? this.getTop().pipe(catchError(() => EMPTY))
+        : EMPTY,
+    ),
     shareReplay({ bufferSize: 1, refCount: false })
   );
 
