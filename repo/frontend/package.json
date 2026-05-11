@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "lint": "tsc --noEmit --project tsconfig.app.json",
     "test": "ng test",
+    "test:ci": "ng test --coverage --ci",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
