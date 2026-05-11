@@ -35,6 +35,7 @@ describe('Auth flow (e2e)', () => {
   // Use a timestamp-based email so every test run creates a fresh user.
   const testEmail = `e2e-${Date.now()}@example.com`;
   const testPassword = 'Test1234';
+  const testName = 'E2E Test User';
 
   let accessToken: string;
   let refreshCookie: string;
@@ -50,7 +51,7 @@ describe('Auth flow (e2e)', () => {
   it('POST /api/auth/register → 201 with accessToken and refresh cookie', async () => {
     const res = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: testEmail, password: testPassword })
+      .send({ email: testEmail, password: testPassword, name: testName })
       .expect(201);
 
     expect(res.body.data.accessToken).toBeDefined();

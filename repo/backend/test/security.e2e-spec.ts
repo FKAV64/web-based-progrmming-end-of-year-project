@@ -67,7 +67,7 @@ describe('Security — account lockout', () => {
     app = await createApp();
     await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email, password })
+      .send({ email, password, name: 'Lockout User' })
       .expect(201);
   });
 
@@ -109,7 +109,11 @@ describe('Security — CSRF protection on /portfolio', () => {
 
     const reg = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: `csrf-${Date.now()}@example.com`, password: 'Test1234' })
+      .send({
+        email: `csrf-${Date.now()}@example.com`,
+        password: 'Test1234',
+        name: 'CSRF Test User',
+      })
       .expect(201);
     accessToken = reg.body.data.accessToken as string;
   });
@@ -153,7 +157,7 @@ describe('Security — expired token then refresh flow', () => {
     userEmail = `expired-${Date.now()}@example.com`;
     const reg = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: userEmail, password: 'Test1234' })
+      .send({ email: userEmail, password: 'Test1234', name: 'Expired Token User' })
       .expect(201);
 
     userId = reg.body.data.user.id as string;
@@ -211,14 +215,14 @@ describe('Security — cross-user isolation (IDOR)', () => {
     const ts = Date.now();
     const a = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: `idor-a-${ts}@example.com`, password: 'Test1234' })
+      .send({ email: `idor-a-${ts}@example.com`, password: 'Test1234', name: 'IDOR User A' })
       .expect(201);
     tokenA = a.body.data.accessToken as string;
     const userAId = a.body.data.user.id as string;
 
     const b = await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: `idor-b-${ts}@example.com`, password: 'Test1234' })
+      .send({ email: `idor-b-${ts}@example.com`, password: 'Test1234', name: 'IDOR User B' })
       .expect(201);
     tokenB = b.body.data.accessToken as string;
 

@@ -18,9 +18,15 @@ export async function seedMarketData(request: APIRequestContext): Promise<void> 
   }
 }
 
-export async function registerViaUi(page: Page, email: string, password: string): Promise<void> {
+export async function registerViaUi(
+  page: Page,
+  email: string,
+  password: string,
+  name = 'E2E Test User',
+): Promise<void> {
   await page.goto('/register');
   // Use role + exact name so we don't collide with the "Şifreyi göster" toggle button.
+  await page.getByRole('textbox', { name: 'Ad Soyad' }).fill(name);
   await page.getByRole('textbox', { name: 'E-posta' }).fill(email);
   await page.getByRole('textbox', { name: 'Şifre', exact: true }).fill(password);
   await page.getByRole('button', { name: 'Kayıt Ol' }).click();

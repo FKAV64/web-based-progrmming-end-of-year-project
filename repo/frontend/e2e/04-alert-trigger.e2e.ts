@@ -19,8 +19,10 @@ test('4. Create alert at price below current → backend triggers it within ~35 
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible({ timeout: 10_000 });
 
-  // Coin ID is a free-text input; condition is mat-select; target is a numeric input.
-  await dialog.getByRole('textbox', { name: 'Coin ID' }).fill('bitcoin');
+  // Coin picker is an autocomplete combobox — type and pick from the list.
+  const coinPicker = dialog.getByRole('combobox', { name: 'Coin seç' });
+  await coinPicker.fill('bitcoin');
+  await page.getByRole('option', { name: /bitcoin/i }).first().click();
 
   // Set condition = "Ustunde" (ABOVE). Seeded BTC = $78,000 → alert with target=1 will
   // fire on the very next snapshot evaluation because 78,000 > 1 (price already above).

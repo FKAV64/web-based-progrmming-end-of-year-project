@@ -14,8 +14,11 @@ test('3. Create position 0.5 BTC @ $30k → P&L renders', async ({ page, request
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible({ timeout: 10_000 });
 
-  // Coin ID is a free-text input — type the CoinGecko id directly.
-  await dialog.getByRole('textbox', { name: 'Coin ID' }).fill('bitcoin');
+  // Coin picker is an autocomplete combobox — type and pick from the list.
+  const coinPicker = dialog.getByRole('combobox', { name: 'Coin seç' });
+  await coinPicker.fill('bitcoin');
+  await page.getByRole('option', { name: /bitcoin/i }).first().click();
+
   await dialog.getByRole('textbox', { name: 'Adet' }).fill('0.5');
   await dialog.getByRole('textbox', { name: 'Ortalama Alis' }).fill('30000');
 
