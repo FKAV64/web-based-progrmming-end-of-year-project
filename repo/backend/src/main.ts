@@ -85,7 +85,7 @@ async function bootstrap() {
   ]);
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (csrfSkip.has(req.path)) return next();
-    csrfProtection(req, res, (err) => {
+    void csrfProtection(req, res, (err) => {
       if (err) {
         return next(err);
       }

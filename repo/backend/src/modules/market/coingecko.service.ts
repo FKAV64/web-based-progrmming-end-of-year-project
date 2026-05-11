@@ -74,7 +74,7 @@ export class CoingeckoService {
    * @param id - CoinGecko coin identifier (e.g. "bitcoin", "ethereum")
    * @returns CoinGecko /coins/{id} response object
    */
-  async getCoin(id: string): Promise<any> {
+  async getCoin(id: string): Promise<unknown> {
     const cacheKey = `coingecko:coin:${id}`;
     return this.cache.wrap(
       cacheKey,
@@ -102,7 +102,7 @@ export class CoingeckoService {
    * @param days - Number of days of history (e.g. "1", "7", "30", "max")
    * @returns CoinGecko /coins/{id}/market_chart response object
    */
-  async getMarketChart(id: string, days: string): Promise<any> {
+  async getMarketChart(id: string, days: string): Promise<unknown> {
     const cacheKey = `coingecko:chart:${id}:${days}`;
     return this.cache.wrap(
       cacheKey,
@@ -128,7 +128,7 @@ export class CoingeckoService {
    *
    * @returns CoinGecko /exchange_rates response object with a `rates` map
    */
-  async getExchangeRates(): Promise<any> {
+  async getExchangeRates(): Promise<unknown> {
     const cacheKey = `coingecko:exchange_rates`;
     return this.cache.wrap(
       cacheKey,

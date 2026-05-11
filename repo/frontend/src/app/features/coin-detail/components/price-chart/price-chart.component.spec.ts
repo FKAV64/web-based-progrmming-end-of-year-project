@@ -77,7 +77,7 @@ describe('PriceChartComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it.each<ChartType>(['candle', 'line', 'area'])('renders %s chart with fixture klines', chartType => {
+  it.each<ChartType>(['candle', 'line', 'area'])('renders %s chart with fixture klines', (chartType: ChartType) => {
     loadChart(chartType);
 
     expect(api.getKlines).toHaveBeenCalledWith('BTCUSDT', '1h', 168);
