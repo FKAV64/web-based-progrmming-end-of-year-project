@@ -1,0 +1,136 @@
+  <mat-sidenav-container class="h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Side nav -->
+  <mat-sidenav
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="sidenavOpen()"
+    (closedStart)="sidenavOpen.set(false)"
+    class="w-56 bg-white dark:bg-gray-900"
+  >
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500/15 text-yellow-500 font-bold text-lg flex-shrink-0">₿</div>
+      <span class="font-bold text-lg tracking-tight text-gray-900 dark:text-white">Kripto</span>
+    </div>
+    <mat-nav-list class="pt-2">
+      @for (item of navItems; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [class]="rla.isActive
+            ? 'border-l-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded mx-2 mb-1'
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 rounded mx-2 mb-1'"
+          (click)="isMobile() && sidenavOpen.set(false)"
+          [attr.aria-label]="item.label"
+        >
+          <mat-icon matListItemIcon class="!text-current">{{ item.icon }}</mat-icon>
+          <span matListItemTitle class="!text-current">{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+    <!-- Bottom version tag -->
+    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+      <span class="text-xs text-gray-400">BMU1208</span>
+    </div>
+  </mat-sidenav>
+
+  <!-- Main content -->
+  <mat-sidenav-content class="flex flex-col">
+    <!-- Top bar -->
+    <mat-toolbar class="flex items-center gap-2 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-900 text-gray-900 dark:text-white !h-14">
+      <button mat-icon-button (click)="sidenavOpen.set(!sidenavOpen())"
+              class="text-gray-700 dark:text-gray-200"
+              i18n-aria-label="@@shell.toggle-menu" aria-label="Menüyü aç/kapat">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+
+      <!-- WebSocket connection status -->
+      <app-connection-status [state]="ws.connectionState()"></app-connection-status>
+
+      <span class="flex-1"></span>
+
+      <!-- Currency selector — hidden on xs, shown from sm -->
+      <mat-select
+        [value]="settings.currency()"
+        (selectionChange)="setCurrency($event.value)"
+        panelClass="dark-panel"
+        class="text-gray-700 dark:text-gray-200 w-20 hidden sm:block"
+        i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
+      >
+        @for (c of currencies; track c) {
+          <mat-option [value]="c">{{ c }}</mat-option>
+        }
+      </mat-select>
+
+      <!-- Theme toggle -->
+      <button mat-icon-button (click)="toggleTheme()" class="text-gray-700 dark:text-gray-200" [attr.aria-label]="'Temayı değiştir: ' + settings.theme()">
+        <mat-icon>{{ settings.isDarkThemeEffective() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <!-- PWA install button — visible when beforeinstallprompt has fired -->
+      @if (pwa.canInstall()) {
+        <button mat-button (click)="pwa.install()" class="text-gray-700 dark:text-gray-200 hidden sm:flex items-center gap-1"
+                aria-label="Uygulamayı yükle">
+          <mat-icon>install_desktop</mat-icon>
+          <span class="text-sm" i18n="@@shell.install-app">Yükle</span>
+        </button>
+      }
+
+      <!-- User menu with avatar -->
+      <button mat-icon-button [matMenuTriggerFor]="userMenu"
+              i18n-aria-label="@@shell.user-menu" aria-label="Kullanıcı menüsü">
+        <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+          {{ (auth.currentUser()?.name || auth.currentUser()?.email || '?').charAt(0).toUpperCase() }}
+        </div>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200">
+          {{ auth.currentUser()?.email }}
+        </div>
+        <mat-divider></mat-divider>
+        <!-- Currency in menu on mobile -->
+        <div class="px-4 py-2 sm:hidden">
+          <mat-select
+            [value]="settings.currency()"
+            (selectionChange)="setCurrency($event.value)"
+            panelClass="dark-panel"
+            class="w-full"
+            i18n-aria-label="@@shell.currency-select" aria-label="Para birimi seç"
+          >
+            @for (c of currencies; track c) {
+              <mat-option [value]="c">{{ c }}</mat-option>
+            }
+          </mat-select>
+        </div>
+        <mat-divider class="sm:hidden"></mat-divider>
+        <button mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon>
+          <span i18n="@@shell.menu-settings">Ayarlar</span>
+        </button>
+        <button mat-menu-item (click)="auth.logout()">
+          <mat-icon>logout</mat-icon>
+          <span i18n="@@shell.menu-logout">Çıkış Yap</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <!-- Accessible live region for toast announcements -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="toast-announcer"></div>
+
+    <!-- Offline banner -->
+    @if (!pwa.isOnline()) {
+      <div role="status" aria-live="assertive"
+           class="flex items-center gap-2 bg-yellow-500 text-yellow-950 px-4 py-2 text-sm font-medium"
+           id="offline-banner">
+        <mat-icon class="text-base">wifi_off</mat-icon>
+        <span i18n="@@shell.offline-banner">Çevrimdışı — veriler güncel olmayabilir</span>
+      </div>
+    }
+
+    <!-- Page content -->
+    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: /backend
+    directory: /repo/backend
     schedule:
       interval: weekly
       day: monday
@@ -17,7 +17,7 @@ updates:
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
-    directory: /frontend
+    directory: /repo/frontend
     schedule:
       interval: weekly
       day: monday

@@ -1,0 +1,970 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Service is healthy"
+          }
+        },
+        "summary": "Health check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "409": {
+            "description": "Email already in use"
+          },
+          "429": {
+            "description": "Too many attempts"
+          }
+        },
+        "summary": "Register a new user account",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "429": {
+            "description": "Too many attempts"
+          }
+        },
+        "summary": "Log in with email and password",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "New access token issued"
+          },
+          "401": {
+            "description": "Invalid or expired refresh token"
+          }
+        },
+        "summary": "Refresh access token using refresh_token cookie",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Current user profile"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current authenticated user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Logged out"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Revoke current session",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/logout-all": {
+      "post": {
+        "operationId": "AuthController_logoutAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All sessions revoked"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Revoke all sessions for this user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/me": {
+      "get": {
+        "operationId": "UsersController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User profile"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current user profile",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_deleteMe",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Account deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete own account and all data (GDPR)",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/me/export": {
+      "get": {
+        "operationId": "UsersController_exportMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "JSON export of user data"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Export all personal data as JSON",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "operationId": "SettingsController_getSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User settings object"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get user settings",
+        "tags": [
+          "Settings"
+        ]
+      },
+      "patch": {
+        "operationId": "SettingsController_updateSettings",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated settings object"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update user settings",
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/market/top": {
+      "get": {
+        "operationId": "MarketController_getTop",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Array of top coin snapshots"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get top cryptocurrencies by market cap",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/market/coin/{id}": {
+      "get": {
+        "operationId": "MarketController_getCoin",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "CoinGecko coin ID (e.g. bitcoin)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Coin detail object"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get detailed info for a single coin",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/market/ohlc/{symbol}": {
+      "get": {
+        "operationId": "MarketController_getOhlc",
+        "parameters": [
+          {
+            "name": "symbol",
+            "required": true,
+            "in": "path",
+            "description": "Binance symbol (e.g. BTCUSDT)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "required": true,
+            "in": "query",
+            "description": "Kline interval (1m, 1h, 1d…)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of candles (max 1000)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of OHLC candles"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get OHLC candlestick data from Binance",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/market/chart/{id}": {
+      "get": {
+        "operationId": "MarketController_getChart",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "CoinGecko coin ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "description": "Number of days (default: 1)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Market chart data"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get market chart data for a coin",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/market/exchange-rates": {
+      "get": {
+        "operationId": "MarketController_getExchangeRates",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Exchange rate map"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get fiat/crypto exchange rates",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/market/sentiment": {
+      "get": {
+        "operationId": "MarketController_getSentiment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sentiment data"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get Fear & Greed index",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/market/news": {
+      "get": {
+        "operationId": "MarketController_getNews",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Array of news items"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get latest crypto news headlines",
+        "tags": [
+          "Market"
+        ]
+      }
+    },
+    "/api/watchlist": {
+      "get": {
+        "operationId": "WatchlistController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Array of watchlist items"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all watchlist items",
+        "tags": [
+          "Watchlist"
+        ]
+      },
+      "post": {
+        "operationId": "WatchlistController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWatchlistItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Watchlist item created"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add a coin to the watchlist",
+        "tags": [
+          "Watchlist"
+        ]
+      }
+    },
+    "/api/watchlist/{coinId}": {
+      "delete": {
+        "operationId": "WatchlistController_remove",
+        "parameters": [
+          {
+            "name": "coinId",
+            "required": true,
+            "in": "path",
+            "description": "CoinGecko coin ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a coin from the watchlist",
+        "tags": [
+          "Watchlist"
+        ]
+      }
+    },
+    "/api/portfolio": {
+      "get": {
+        "operationId": "PortfolioController_findAll",
+        "parameters": [
+          {
+            "name": "includeClosed",
+            "required": false,
+            "in": "query",
+            "description": "Include closed positions",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of positions"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List portfolio positions",
+        "tags": [
+          "Portfolio"
+        ]
+      },
+      "post": {
+        "operationId": "PortfolioController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePortfolioPositionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Position created"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Open a new portfolio position",
+        "tags": [
+          "Portfolio"
+        ]
+      }
+    },
+    "/api/portfolio/{id}": {
+      "patch": {
+        "operationId": "PortfolioController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Position UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePortfolioPositionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated position"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a portfolio position",
+        "tags": [
+          "Portfolio"
+        ]
+      },
+      "delete": {
+        "operationId": "PortfolioController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Position UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a portfolio position",
+        "tags": [
+          "Portfolio"
+        ]
+      }
+    },
+    "/api/portfolio/{id}/close": {
+      "post": {
+        "operationId": "PortfolioController_close",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Position UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClosePortfolioPositionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Closed position record"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Close a portfolio position",
+        "tags": [
+          "Portfolio"
+        ]
+      }
+    },
+    "/api/alerts": {
+      "get": {
+        "operationId": "AlertsController_findAll",
+        "parameters": [
+          {
+            "name": "includeTriggered",
+            "required": false,
+            "in": "query",
+            "description": "Include already-triggered alerts",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of alerts"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List price alerts",
+        "tags": [
+          "Alerts"
+        ]
+      },
+      "post": {
+        "operationId": "AlertsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlertDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Alert created"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new price alert",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/alerts/{id}": {
+      "delete": {
+        "operationId": "AlertsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Alert UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a price alert",
+        "tags": [
+          "Alerts"
+        ]
+      }
+    },
+    "/api/push/vapid-public-key": {
+      "get": {
+        "operationId": "PushController_getVapidPublicKey",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "VAPID public key"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get VAPID public key for push subscription",
+        "tags": [
+          "Push"
+        ]
+      }
+    },
+    "/api/push/subscribe": {
+      "post": {
+        "operationId": "PushController_subscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscribePushDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription saved"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Register a push subscription",
+        "tags": [
+          "Push"
+        ]
+      },
+      "delete": {
+        "operationId": "PushController_unsubscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnsubscribePushDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription removed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a push subscription",
+        "tags": [
+          "Push"
+        ]
+      }
+    },
+    "/api/dev/trigger-snapshot": {
+      "post": {
+        "operationId": "DevController_triggerSnapshot",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Dev"
+        ]
+      }
+    },
+    "/api/dev/seed-market-data": {
+      "post": {
+        "operationId": "DevController_seedMarketData",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Dev"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Crypto Dashboard API",
+    "description": "Final project for BMU1208 Web-Based Programming",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "refresh_token"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateSettingsDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateWatchlistItemDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreatePortfolioPositionDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdatePortfolioPositionDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ClosePortfolioPositionDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateAlertDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SubscribePushDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UnsubscribePushDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}
