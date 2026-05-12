@@ -24,7 +24,16 @@ describe('LoginComponent', () => {
         provideHttpClientTesting(),
         provideRouter([]),
         provideAnimations(),
-        { provide: AuthService, useValue: { ...authMock, currentUser: { set: jest.fn() }, accessToken: { set: jest.fn() }, isAuthenticated: () => false } },
+        {
+          provide: AuthService,
+          useValue: {
+            ...authMock,
+            currentUser: { set: jest.fn() },
+            accessToken: { set: jest.fn() },
+            isAuthenticated: () => false,
+            isInitialized: () => true,
+          },
+        },
         { provide: SettingsService, useValue: settingsMock },
       ],
     }).compileComponents();

@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist/crypto-dashboard-frontend/browser",
-      "numberOfRuns": 1
+      "numberOfRuns": 3
     },
     "assert": {
       "assertions": {

@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +30,8 @@ export class LoginComponent {
   private auth = inject(AuthService);
   private settings = inject(SettingsService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private redirectHandled = false;
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -40,6 +42,27 @@ export class LoginComponent {
   errorMessage = signal<string | null>(null);
   hidePassword = signal(true);
 
+  constructor() {
+    effect(() => {
+      if (!this.auth.isInitialized() || !this.auth.isAuthenticated() || this.loading()) {
+        return;
+      }
+
+      queueMicrotask(() => this.navigateAfterAuth());
+    });
+  }
+
+  private navigateAfterAuth(): void {
+    if (this.redirectHandled) {
+      return;
+    }
+
+    this.redirectHandled = true;
+    const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo');
+    const destination = redirectTo?.startsWith('/') ? redirectTo : '/dashboard';
+    void this.router.navigateByUrl(destination);
+  }
+
   async submit(): Promise<void> {
     if (this.form.invalid) return;
     this.loading.set(true);
@@ -47,7 +70,7 @@ export class LoginComponent {
     try {
       await this.auth.login(this.form.getRawValue());
       await this.settings.load();
-      this.router.navigate(['/dashboard']);
+      this.navigateAfterAuth();
     } catch (err: any) {
       const msg = err?.error?.message ?? 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
       this.errorMessage.set(msg);

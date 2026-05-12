@@ -23,34 +23,61 @@ import { User } from '../../models/user.model';
 export class AuthService {
   private api = inject(AuthApiService);
   private router = inject(Router);
+  private initPromise: Promise<void> | null = null;
 
   readonly currentUser = signal<User | null>(null);
   readonly accessToken = signal<string | null>(null);
-  readonly isAuthenticated = computed(() => !!this.currentUser());
+  readonly isInitializing = signal(false);
+  readonly isInitialized = signal(false);
+  readonly isAuthenticated = computed(() => !!this.accessToken() || !!this.currentUser());
 
   private _isLoggingOut = false;
 
   async init(): Promise<void> {
-    try {
-      const { accessToken } = await firstValueFrom(this.api.refresh());
-      this.accessToken.set(accessToken);
-      const user = await firstValueFrom(this.api.me());
-      this.currentUser.set(user);
-    } catch {
-      // not logged in — leave signals null
+    if (this.initPromise) {
+      return this.initPromise;
     }
+
+    this.isInitializing.set(true);
+    this.initPromise = (async () => {
+      try {
+        const { accessToken } = await firstValueFrom(this.api.refresh());
+        this.accessToken.set(accessToken);
+
+        const user = await firstValueFrom(this.api.me());
+        this.currentUser.set(user);
+      } catch {
+        // not logged in - leave signals cleared
+        this.clearLocalSession();
+      } finally {
+        this.isInitializing.set(false);
+        this.isInitialized.set(true);
+      }
+    })();
+
+    return this.initPromise;
+  }
+
+  startInit(): void {
+    void this.init();
+  }
+
+  waitForInit(): Promise<void> {
+    return this.initPromise ?? Promise.resolve();
   }
 
   async login(dto: LoginDto): Promise<void> {
     const { user, accessToken } = await firstValueFrom(this.api.login(dto));
     this.accessToken.set(accessToken);
     this.currentUser.set(user);
+    this.isInitialized.set(true);
   }
 
   async register(dto: RegisterDto): Promise<void> {
     const { user, accessToken } = await firstValueFrom(this.api.register(dto));
     this.accessToken.set(accessToken);
     this.currentUser.set(user);
+    this.isInitialized.set(true);
   }
 
   async logout(): Promise<void> {

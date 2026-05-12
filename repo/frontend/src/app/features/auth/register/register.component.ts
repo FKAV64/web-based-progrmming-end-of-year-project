@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +36,8 @@ export class RegisterComponent {
   private auth = inject(AuthService);
   private settings = inject(SettingsService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private redirectHandled = false;
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -47,6 +49,27 @@ export class RegisterComponent {
   errorMessage = signal<string | null>(null);
   hidePassword = signal(true);
 
+  constructor() {
+    effect(() => {
+      if (!this.auth.isInitialized() || !this.auth.isAuthenticated() || this.loading()) {
+        return;
+      }
+
+      queueMicrotask(() => this.navigateAfterAuth());
+    });
+  }
+
+  private navigateAfterAuth(): void {
+    if (this.redirectHandled) {
+      return;
+    }
+
+    this.redirectHandled = true;
+    const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo');
+    const destination = redirectTo?.startsWith('/') ? redirectTo : '/dashboard';
+    void this.router.navigateByUrl(destination);
+  }
+
   async submit(): Promise<void> {
     if (this.form.invalid) return;
     this.loading.set(true);
@@ -55,7 +78,7 @@ export class RegisterComponent {
       const { name, email, password } = this.form.getRawValue();
       await this.auth.register({ email, password, name });
       await this.settings.load();
-      this.router.navigate(['/dashboard']);
+      this.navigateAfterAuth();
     } catch (err: any) {
       const msg = err?.error?.message ?? 'Kayıt başarısız. Lütfen tekrar deneyin.';
       this.errorMessage.set(msg);
