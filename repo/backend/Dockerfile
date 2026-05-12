@@ -7,13 +7,13 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --include=dev
 
 COPY prisma ./prisma
 RUN npx prisma generate
 
 COPY . .
-RUN npm run build
+RUN npm run build && ls -la dist/
 
 EXPOSE 3000
 
