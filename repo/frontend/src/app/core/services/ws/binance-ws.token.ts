@@ -5,7 +5,7 @@ import { MockBinanceTickService } from './mock-binance-tick.service';
 import { Observable } from 'rxjs';
 import { PriceTick } from '../../models/price-tick.model';
 
-export interface BinanceWsLike {
+interface BinanceWsLike {
   connectionState: Signal<ConnectionState>;
   tick$(symbol: string): Observable<PriceTick>;
 }

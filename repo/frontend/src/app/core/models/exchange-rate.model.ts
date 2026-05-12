@@ -1,4 +1,4 @@
-export interface ExchangeRate {
+interface ExchangeRate {
   name: string;
   unit: string;
   value: number;

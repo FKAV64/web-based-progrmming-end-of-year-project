@@ -38,7 +38,7 @@ describe('NewsService', () => {
   let cacheWrapMock: jest.Mock;
 
   beforeEach(async () => {
-    cacheWrapMock = jest.fn().mockImplementation((key, fn) => fn());
+    cacheWrapMock = jest.fn().mockImplementation((_key, fn) => fn());
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
