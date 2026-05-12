@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { PushApi } from './api/push.api';
 
-export type PushPermissionState = 'denied' | 'granted' | 'default' | 'unsupported';
+type PushPermissionState = 'denied' | 'granted' | 'default' | 'unsupported';
 
 /**
  * Browser Web Push notification service.

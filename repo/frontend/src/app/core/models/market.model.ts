@@ -49,7 +49,7 @@ export interface TimeframeOption {
   limit: number;
 }
 
-export interface CoinDetailMarketData {
+interface CoinDetailMarketData {
   current_price?: Record<string, number>;
   market_cap?: Record<string, number>;
   market_cap_rank?: number;
@@ -80,7 +80,7 @@ export interface CoinDetail {
   market_data?: CoinDetailMarketData;
 }
 
-export type NewsSentiment = 'bullish' | 'bearish' | 'neutral';
+type NewsSentiment = 'bullish' | 'bearish' | 'neutral';
 
 export interface NewsItem {
   title: string;
@@ -90,7 +90,7 @@ export interface NewsItem {
   sentiment: NewsSentiment;
 }
 
-export interface SentimentDataPoint {
+interface SentimentDataPoint {
   value: string;
   classification: string;
   timestamp: string;
