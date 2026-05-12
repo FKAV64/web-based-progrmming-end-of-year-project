@@ -189,4 +189,4 @@ MIT © 2026 **ABDOU VALERIO FOMA KENFACK** — Tam metin için [LICENSE](LICENSE
 
 ---
 
-<sub>🤖 Bu projede [Claude Code](https://claude.com/claude-code) ve [Cursor](https://cursor.sh) gibi AI asistanları kullanılmıştır. Tüm mimari kararlar ve kullanım tercihleri öğrenci tarafından yapılmıştır.</sub>
+<sub>🤖 Bu projede [Claude Code](https://claude.com/claude-code) ve [codex](https://chatgpt.com/codex/) gibi AI asistanları kullanılmıştır. Tüm mimari kararlar ve kullanım tercihleri öğrenci tarafından yapılmıştır.</sub>
