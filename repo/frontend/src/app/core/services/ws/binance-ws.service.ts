@@ -1,20 +1,7 @@
 import { Injectable, OnDestroy, signal } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import {
-  Observable,
-  ReplaySubject,
-  Subscription,
-  timer,
-} from 'rxjs';
-import {
-  filter,
-  finalize,
-  map,
-  retry,
-  share,
-  tap,
-  timeout,
-} from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject, Subscription, timer } from 'rxjs';
+import { debounceTime, filter, finalize, map, retry, share, timeout } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { PriceTick } from '../../models/price-tick.model';
 
@@ -23,19 +10,10 @@ export type ConnectionState = 'connecting' | 'live' | 'reconnecting' | 'offline'
 /**
  * Binance WebSocket service managing a single multiplexed connection.
  *
- * Maintains one WebSocket to wss://stream.binance.com and dynamically
- * subscribes/unsubscribes to individual miniTicker streams as components
- * call `tick$()`. The connection state is exposed as a signal so the UI
- * can display a connectivity badge.
- *
  * Resilience features:
- * - Exponential-backoff reconnection (up to 30 s cap, infinite retries)
- * - 60-second silence timeout to detect dead connections
- * - Keepalive ping every 3 minutes to prevent server-side timeouts
- * - On reconnect: UNSUBSCRIBE then re-SUBSCRIBE to recover server-side state
- * - Offline signal fires after 60 s of continuous reconnection attempts
- *
- * @see PriceStreamService
+ * - Debounced subscription batches to respect Binance's 5 msg/sec rate limit.
+ * - 60-second silence timeout to detect dead/half-open connections.
+ * - Exponential-backoff reconnection handled globally before multicast.
  */
 @Injectable({ providedIn: 'root' })
 export class BinanceWsService implements OnDestroy {
@@ -45,9 +23,9 @@ export class BinanceWsService implements OnDestroy {
   readonly connection$: Observable<any>;
 
   private subscribedSymbols = new Set<string>();
+  private subscriptionQueue$ = new Subject<void>();
   private offlineTimer$: Subscription | null = null;
-  private keepaliveInterval: ReturnType<typeof setInterval> | null = null;
-  private isFirstConnection = true;
+  private queueSub: Subscription;
 
   constructor() {
     this.socket$ = webSocket({
@@ -56,12 +34,8 @@ export class BinanceWsService implements OnDestroy {
         next: () => {
           this.connectionState.set('live');
           this.cancelOfflineTimer();
-          if (!this.isFirstConnection) {
-            // On reconnection, clear server-side state then re-subscribe all symbols
-            this.resubscribeAll();
-          }
-          this.isFirstConnection = false;
-          this.startKeepalive();
+          // Flush the subscription queue as soon as the connection opens
+          this.subscriptionQueue$.next();
         },
       },
       closeObserver: {
@@ -70,41 +44,40 @@ export class BinanceWsService implements OnDestroy {
             this.connectionState.set('reconnecting');
             this.startOfflineTimer();
           }
-          this.stopKeepalive();
         },
       },
     });
 
+    // 1. THE DEBOUNCER: Groups rapidly requested symbols into a single bulk payload
+    this.queueSub = this.subscriptionQueue$.pipe(
+      debounceTime(200)
+    ).subscribe(() => {
+       if (this.connectionState() === 'live') {
+         this.resubscribeAll();
+       }
+    });
+
     this.connection$ = this.socket$.pipe(
-      // Respond to Binance application-level pings
-      tap((message: any) => {
-        if (message?.method === 'ping' || message?.ping) {
-          try {
-            this.socket$.next({ method: 'pong' } as any);
-          } catch {
-            // socket not ready
-          }
-        }
-      }),
       // Connection-level health check: 60 s of total silence means the connection is dead
       timeout({ each: 60_000 }),
+      
+      // 2. THE RETRY FIX: Global retry before share() prevents retry storms
+      retry({
+        count: Infinity,
+        delay: (_, attempt) => {
+          this.connectionState.set('reconnecting');
+          this.startOfflineTimer();
+          return timer(Math.min(30_000, 2 ** attempt * 1000));
+        },
+      }),
+      
       // Multicast to all subscribers sharing one socket
       share({
         connector: () => new ReplaySubject(1),
         resetOnError: true,
         resetOnComplete: true,
         resetOnRefCountZero: true,
-      }),
-      // Reconnect with exponential backoff capped at 30 s
-      retry({
-        count: Infinity,
-        delay: (_, attempt) => {
-          this.connectionState.set('reconnecting');
-          this.startOfflineTimer();
-          this.stopKeepalive();
-          return timer(Math.min(30_000, 2 ** attempt * 1000));
-        },
-      }),
+      })
     );
   }
 
@@ -133,14 +106,13 @@ export class BinanceWsService implements OnDestroy {
   private addSymbol(symbol: string): void {
     if (!this.subscribedSymbols.has(symbol)) {
       this.subscribedSymbols.add(symbol);
-      this.sendSubscribe([symbol]);
+      this.subscriptionQueue$.next(); // Trigger debounced bulk subscribe
     }
   }
 
   private removeSymbol(symbol: string): void {
     if (this.subscribedSymbols.has(symbol)) {
       this.subscribedSymbols.delete(symbol);
-      this.sendUnsubscribe([symbol]);
     }
   }
 
@@ -148,65 +120,14 @@ export class BinanceWsService implements OnDestroy {
     const symbols = Array.from(this.subscribedSymbols);
     if (symbols.length === 0) return;
 
+    // Map your local symbols to the format Binance expects (lowercase@miniTicker)
     const streams = symbols.map(s => `${s.toLowerCase()}@miniTicker`);
 
-    // Unsubscribe first to clear any server-side state from the previous connection
     try {
-      this.socket$.next({ method: 'UNSUBSCRIBE', params: streams, id: Date.now() } as any);
+      // Send the single bulk payload to respect the 5 msg/sec limit
+      this.socket$.next({ method: 'SUBSCRIBE', params: streams, id: Date.now() } as any);
     } catch {
-      // socket not yet ready
-    }
-
-    setTimeout(() => {
-      try {
-        this.socket$.next({ method: 'SUBSCRIBE', params: streams, id: Date.now() } as any);
-      } catch {
-        // socket not yet ready
-      }
-    }, 500);
-  }
-
-  private sendSubscribe(symbols: string[]): void {
-    try {
-      this.socket$.next({
-        method: 'SUBSCRIBE',
-        params: symbols.map(s => `${s.toLowerCase()}@miniTicker`),
-        id: 1,
-      });
-    } catch {
-      // socket not yet open — subscriptions will be sent after reconnect
-    }
-  }
-
-  private sendUnsubscribe(symbols: string[]): void {
-    try {
-      this.socket$.next({
-        method: 'UNSUBSCRIBE',
-        params: symbols.map(s => `${s.toLowerCase()}@miniTicker`),
-        id: 2,
-      });
-    } catch {
-      // socket already closed
-    }
-  }
-
-  private startKeepalive(): void {
-    this.stopKeepalive();
-    this.keepaliveInterval = setInterval(() => {
-      if (this.connectionState() === 'live') {
-        try {
-          this.socket$.next({ method: 'ping' } as any);
-        } catch {
-          // ignore if socket not ready
-        }
-      }
-    }, 180_000); // every 3 minutes
-  }
-
-  private stopKeepalive(): void {
-    if (this.keepaliveInterval) {
-      clearInterval(this.keepaliveInterval);
-      this.keepaliveInterval = null;
+      // Ignore if socket is temporarily not ready
     }
   }
 
@@ -228,7 +149,7 @@ export class BinanceWsService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.cancelOfflineTimer();
-    this.stopKeepalive();
+    if (this.queueSub) this.queueSub.unsubscribe();
     this.socket$.complete();
   }
 }
