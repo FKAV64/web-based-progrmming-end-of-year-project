@@ -1,7 +1,7 @@
 export const environment = {
-  production: false,
+  production: true,
   apiBaseUrl: 'https://web-based-progrmming-end-of-year-project-production.up.railway.app/api',
-  // Use the .vision domain to bypass firewalls, and /ws/btcusdt to open the connection cleanly
-  binanceWsUrl: 'wss://data-stream.binance.vision/ws/btcusdt@miniTicker',
+  // The flawless URL: standard domain, implicit port 443, raw path, dummy coin to open the connection
+  binanceWsUrl: 'wss://stream.binance.com/ws/btcusdt@miniTicker',
   useMockWs: false,
 };
