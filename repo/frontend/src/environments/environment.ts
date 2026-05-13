@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:3000/api',
+  apiBaseUrl: 'https://web-based-progrmming-end-of-year-project-production.up.railway.app/api',
   binanceWsUrl: 'wss://stream.binance.com:9443/stream',
   useMockWs: false,
 };
