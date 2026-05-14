@@ -307,7 +307,9 @@ export class PriceChartComponent implements OnChanges {
   }
 
   private syncSeries(fromLiveTick: boolean): void {
-    this.syncChartOptions();
+    if (!fromLiveTick) {
+      this.syncChartOptions();
+    }
     if (this.chartType === 'candle') {
       this.series = [{
         name: this.symbol,
