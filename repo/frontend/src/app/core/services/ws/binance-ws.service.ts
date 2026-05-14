@@ -152,6 +152,6 @@ export class BinanceWsService implements OnDestroy {
   ngOnDestroy(): void {
     this.cancelOfflineTimer();
     if (this.queueSub) this.queueSub.unsubscribe();
-    this.socket$.complete();
+    this.socket$?.complete(); // socket$ is lazy — may be undefined if nothing ever subscribed
   }
 }
