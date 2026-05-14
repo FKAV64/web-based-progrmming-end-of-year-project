@@ -65,6 +65,11 @@ export class UsersController {
     const ip = req.ip ?? '';
     const ua = (req.headers['user-agent'] as string) ?? '';
     await this.usersService.deleteMe(userId, ip, ua);
-    res.clearCookie(REFRESH_COOKIE);
+    const isProd = process.env.NODE_ENV === 'production';
+    res.clearCookie(REFRESH_COOKIE, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    });
   }
 }

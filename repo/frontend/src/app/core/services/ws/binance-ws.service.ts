@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, signal } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { Observable, ReplaySubject, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, filter, finalize, map, retry, share, timeout } from 'rxjs/operators';
+import { defer, Observable, ReplaySubject, Subject, Subscription, timer } from 'rxjs';
+import { debounceTime, filter, map, retry, share, timeout } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { PriceTick } from '../../models/price-tick.model';
 
@@ -28,13 +28,48 @@ export class BinanceWsService implements OnDestroy {
   private queueSub: Subscription;
 
   constructor() {
+    // 1. THE DEBOUNCER: Groups rapidly requested symbols into a single bulk payload
+    this.queueSub = this.subscriptionQueue$.pipe(
+      debounceTime(200)
+    ).subscribe(() => {
+       if (this.connectionState() === 'live') {
+         this.resubscribeAll();
+       }
+    });
+
+    // defer() re-executes the factory on every retry, so each attempt gets a fresh
+    // WebSocketSubject — no stale socket reuse after close
+    this.connection$ = defer(() => this.createSocket()).pipe(
+      // Connection-level health check: 60 s of total silence means the connection is dead
+      timeout({ each: 60_000 }),
+
+      // Global retry before share() prevents retry storms
+      retry({
+        count: Infinity,
+        delay: (_: unknown, attempt: number) => {
+          this.connectionState.set('reconnecting');
+          this.startOfflineTimer();
+          return timer(Math.min(30_000, 2 ** attempt * 1000));
+        },
+      }),
+
+      // Multicast to all subscribers sharing one socket
+      share({
+        connector: () => new ReplaySubject(1),
+        resetOnError: true,
+        resetOnComplete: true,
+        resetOnRefCountZero: false,
+      })
+    );
+  }
+
+  private createSocket(): WebSocketSubject<any> {
     this.socket$ = webSocket({
       url: environment.binanceWsUrl,
       openObserver: {
         next: () => {
           this.connectionState.set('live');
           this.cancelOfflineTimer();
-          // Flush the subscription queue as soon as the connection opens
           this.subscriptionQueue$.next();
         },
       },
@@ -47,38 +82,7 @@ export class BinanceWsService implements OnDestroy {
         },
       },
     });
-
-    // 1. THE DEBOUNCER: Groups rapidly requested symbols into a single bulk payload
-    this.queueSub = this.subscriptionQueue$.pipe(
-      debounceTime(200)
-    ).subscribe(() => {
-       if (this.connectionState() === 'live') {
-         this.resubscribeAll();
-       }
-    });
-
-    this.connection$ = this.socket$.pipe(
-      // Connection-level health check: 60 s of total silence means the connection is dead
-      timeout({ each: 60_000 }),
-      
-      // 2. THE RETRY FIX: Global retry before share() prevents retry storms
-      retry({
-        count: Infinity,
-        delay: (_, attempt) => {
-          this.connectionState.set('reconnecting');
-          this.startOfflineTimer();
-          return timer(Math.min(30_000, 2 ** attempt * 1000));
-        },
-      }),
-      
-      // Multicast to all subscribers sharing one socket
-      share({
-        connector: () => new ReplaySubject(1),
-        resetOnError: true,
-        resetOnComplete: true,
-        resetOnRefCountZero: true,
-      })
-    );
+    return this.socket$;
   }
 
   tick$(symbol: string): Observable<PriceTick> {
@@ -98,9 +102,7 @@ export class BinanceWsService implements OnDestroy {
         sub.unsubscribe();
         this.removeSymbol(symbol);
       };
-    }).pipe(
-      finalize(() => this.removeSymbol(symbol)),
-    );
+    });
   }
 
   private addSymbol(symbol: string): void {
