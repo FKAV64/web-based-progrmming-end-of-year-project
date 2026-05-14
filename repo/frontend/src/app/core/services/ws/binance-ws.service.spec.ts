@@ -26,6 +26,11 @@ describe('BinanceWsService', () => {
     capturedConfig = null;
     TestBed.configureTestingModule({});
     service = TestBed.inject(BinanceWsService);
+    // NOTE: do NOT subscribe to connection$ here.
+    // connection$ uses defer(), so createSocket() (and its timeout timer) only
+    // runs on the first subscription. fakeAsync tests must create that subscription
+    // *inside* the fakeAsync zone so tick() can control the timer. Tests that need
+    // capturedConfig subscribe explicitly at the top of their own body.
   });
 
   // -------------------------------------------------------------------------
@@ -39,6 +44,7 @@ describe('BinanceWsService', () => {
   // 2. connectionState → 'live' when openObserver fires
   // -------------------------------------------------------------------------
   it('transitions to live when the socket opens', () => {
+    service.connection$.subscribe(); // trigger createSocket() → populates capturedConfig
     expect(capturedConfig?.openObserver).toBeDefined();
     capturedConfig.openObserver.next();
     expect(service.connectionState()).toBe('live');
@@ -48,6 +54,7 @@ describe('BinanceWsService', () => {
   // 3. connectionState → 'reconnecting' when closeObserver fires (after live)
   // -------------------------------------------------------------------------
   it('transitions to reconnecting when the socket closes', fakeAsync(() => {
+    service.connection$.subscribe(); // trigger createSocket() inside fakeAsync zone
     capturedConfig?.openObserver?.next();
     expect(service.connectionState()).toBe('live');
 

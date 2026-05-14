@@ -120,7 +120,7 @@ export class AuthController {
     const ip = req.ip ?? '';
     const ua = (req.headers['user-agent'] as string) ?? '';
     await this.authService.logout(userId, token, ip, ua);
-    res.clearCookie(REFRESH_COOKIE);
+    this.clearRefreshCookie(res);
     return { message: 'Logged out' };
   }
 
@@ -138,16 +138,28 @@ export class AuthController {
     const ip = req.ip ?? '';
     const ua = (req.headers['user-agent'] as string) ?? '';
     await this.authService.logoutAll(userId, ip, ua);
-    res.clearCookie(REFRESH_COOKIE);
+    this.clearRefreshCookie(res);
     return { message: 'All sessions revoked' };
   }
 
   private setRefreshCookie(res: Response, token: string) {
+    const isProd = process.env.NODE_ENV === 'production';
     res.cookie(REFRESH_COOKIE, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: isProd,
+      // SameSite=None is required for cross-origin deployments (different Railway subdomains).
+      // SameSite=Lax is safe for localhost (same-site) in dev and doesn't need secure:true.
+      sameSite: isProd ? 'none' : 'lax',
       maxAge: SEVEN_DAYS_MS,
+    });
+  }
+
+  private clearRefreshCookie(res: Response) {
+    const isProd = process.env.NODE_ENV === 'production';
+    res.clearCookie(REFRESH_COOKIE, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
     });
   }
 }
