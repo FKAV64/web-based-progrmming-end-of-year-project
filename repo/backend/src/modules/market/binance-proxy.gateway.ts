@@ -28,6 +28,8 @@ export class BinanceProxyGateway
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   onApplicationBootstrap(): void {
+    if (process.env.DISABLE_BINANCE_PROXY) return;
+
     const httpServer: http.Server =
       this.httpAdapterHost.httpAdapter.getHttpServer() as http.Server;
 

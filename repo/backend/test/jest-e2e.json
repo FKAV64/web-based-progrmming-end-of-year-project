@@ -7,6 +7,7 @@
   "testTimeout": 30000,
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "setupFiles": ["<rootDir>/jest-e2e-setup.ts"]
 }
 
