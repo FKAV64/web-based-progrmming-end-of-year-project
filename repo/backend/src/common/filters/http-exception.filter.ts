@@ -42,7 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         }
       }
     } else if (exception && typeof exception === 'object') {
-      // Handle non-Nest errors that still carry an HTTP status (e.g. csurf ForbiddenError).
+      // Handle non-Nest errors that still carry an HTTP status.
       const maybeStatus = (exception as { status?: unknown }).status;
       if (typeof maybeStatus === 'number') {
         status = maybeStatus;

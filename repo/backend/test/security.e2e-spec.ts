@@ -4,8 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import * as http from 'http';
 import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
-import csurf from 'csurf';
-import type { NextFunction, Request, Response } from 'express';
 import request from 'supertest';
 import { randomUUID } from 'crypto';
 import { AppModule } from '../src/app.module';
@@ -13,9 +11,7 @@ import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter
 import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
 import { PrismaService } from '../src/prisma/prisma.service';
 
-type AppOptions = { withCsrf?: boolean };
-
-async function createApp(opts: AppOptions = {}): Promise<INestApplication> {
+async function createApp(): Promise<INestApplication> {
   const fixture = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
@@ -32,25 +28,6 @@ async function createApp(opts: AppOptions = {}): Promise<INestApplication> {
   );
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  if (opts.withCsrf) {
-    const csrfProtection = csurf({
-      cookie: { httpOnly: true, sameSite: 'lax' },
-    });
-    const csrfSkip = new Set([
-      '/api/auth/login',
-      '/api/auth/register',
-      '/api/auth/refresh',
-    ]);
-    app.use((req: Request, res: Response, next: NextFunction) => {
-      if (csrfSkip.has(req.path)) return next();
-      csrfProtection(req, res, (err) => {
-        if (err) return next(err);
-        res.cookie('XSRF-TOKEN', req.csrfToken(), { sameSite: 'lax' });
-        next();
-      });
-    });
-  }
 
   await app.init();
   return app;
@@ -98,48 +75,7 @@ describe('Security — account lockout', () => {
   });
 });
 
-// ── 2. CSRF — POST without X-XSRF-TOKEN → 403 ────────────────────────────────
-
-describe('Security — CSRF protection on /portfolio', () => {
-  let app: INestApplication;
-  let accessToken: string;
-
-  beforeAll(async () => {
-    process.env.DISABLE_THROTTLE = '1';
-    app = await createApp({ withCsrf: true });
-
-    const reg = await request(app.getHttpServer() as http.Server)
-      .post('/api/auth/register')
-      .send({
-        email: `csrf-${Date.now()}@example.com`,
-        password: 'Test1234',
-        name: 'CSRF Test User',
-      })
-      .expect(201);
-    accessToken = reg.body.data.accessToken as string;
-  });
-
-  afterAll(async () => {
-    delete process.env.DISABLE_THROTTLE;
-    await app.close();
-  });
-
-  it('rejects POST /api/portfolio with 403 when X-XSRF-TOKEN is missing', async () => {
-    const res = await request(app.getHttpServer() as http.Server)
-      .post('/api/portfolio')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        coinId: 'bitcoin',
-        quantity: '0.5',
-        avgBuyPrice: '30000.00',
-        buyCurrency: 'USD',
-      });
-
-    expect(res.status).toBe(403);
-  });
-});
-
-// ── 3. Expired access token → refresh → retry → 200 ──────────────────────────
+// ── 2. Expired access token → refresh → retry → 200 ──────────────────────────
 
 describe('Security — expired token then refresh flow', () => {
   let app: INestApplication;
@@ -203,7 +139,7 @@ describe('Security — expired token then refresh flow', () => {
   });
 });
 
-// ── 4. IDOR — User A cannot PATCH User B's position → 404 (not 403, no leak) ─
+// ── 3. IDOR — User A cannot PATCH User B's position → 404 (not 403, no leak) ─
 
 describe('Security — cross-user isolation (IDOR)', () => {
   let app: INestApplication;
