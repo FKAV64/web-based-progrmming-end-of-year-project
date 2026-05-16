@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "ng build --configuration production && ng build --configuration production,en --output-path dist/en-temp && cp -r dist/en-temp/browser dist/crypto-dashboard-frontend/browser/en && rm -rf dist/en-temp",
   "outputDirectory": "dist/crypto-dashboard-frontend/browser",
   "rewrites": [
     { "source": "/en/(.*)", "destination": "/en/index.html" },
