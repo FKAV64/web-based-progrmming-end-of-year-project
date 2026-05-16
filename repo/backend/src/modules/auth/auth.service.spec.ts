@@ -1,6 +1,7 @@
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as argon2 from 'argon2';
 import { AuditService } from '../audit/audit.service';
@@ -59,6 +60,7 @@ describe('AuthService', () => {
         update: jest.fn(),
         updateMany: jest.fn(),
       },
+      $transaction: jest.fn().mockResolvedValue([]),
     };
 
     jwtMock = { sign: jest.fn().mockReturnValue('mock-token') };
@@ -77,6 +79,7 @@ describe('AuthService', () => {
           },
         },
         { provide: AuditService, useValue: auditMock },
+        { provide: EventEmitter2, useValue: { emit: jest.fn() } },
       ],
     }).compile();
 

@@ -28,6 +28,17 @@ self.addEventListener('push', (event) => {
     return;
   }
 
+  if (data.type === 'force-logout') {
+    event.waitUntil(
+      clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+        for (const client of clientList) {
+          client.postMessage({ type: 'FORCE_LOGOUT' });
+        }
+      }),
+    );
+    return;
+  }
+
   const title = data.title || 'Kripto Dashboard';
   const options = {
     body: data.body || '',

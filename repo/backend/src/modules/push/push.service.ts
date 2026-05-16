@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SubscribePushDto } from './dto/subscribe-push.dto';
 import * as webpush from 'web-push';
@@ -91,6 +92,33 @@ export class PushService {
     await this.prisma.pushSubscription.delete({
       where: { id: sub.id },
     });
+  }
+
+  @OnEvent('user.logout_all')
+  async handleForceLogout(event: { userId: string }) {
+    await this.sendForceLogout(event.userId);
+  }
+
+  async sendForceLogout(userId: string) {
+    const subs = await this.prisma.pushSubscription.findMany({ where: { userId } });
+    if (subs.length === 0) return;
+    const payloadStr = JSON.stringify({ type: 'force-logout' });
+    for (const sub of subs) {
+      try {
+        await webpush.sendNotification(
+          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dhKey, auth: sub.authKey } },
+          payloadStr,
+        );
+      } catch (error: unknown) {
+        const statusCode =
+          error !== null && typeof error === 'object' && 'statusCode' in error
+            ? (error as { statusCode: number }).statusCode
+            : undefined;
+        if (statusCode === 410 || statusCode === 404) {
+          await this.prisma.pushSubscription.delete({ where: { id: sub.id } });
+        }
+      }
+    }
   }
 
   /**

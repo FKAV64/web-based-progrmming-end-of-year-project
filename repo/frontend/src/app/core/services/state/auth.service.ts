@@ -33,6 +33,27 @@ export class AuthService {
 
   private _isLoggingOut = false;
 
+  private readonly broadcastChannel =
+    typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('auth') : null;
+
+  constructor() {
+    this.broadcastChannel?.addEventListener('message', (event: MessageEvent) => {
+      if (event.data?.type === 'logout') {
+        this.clearLocalSession();
+        void this.router.navigate(['/login']);
+      }
+    });
+
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event: MessageEvent) => {
+        if (event.data?.type === 'FORCE_LOGOUT') {
+          this.clearLocalSession();
+          void this.router.navigate(['/login']);
+        }
+      });
+    }
+  }
+
   async init(): Promise<void> {
     if (this.initPromise) {
       return this.initPromise;
@@ -109,6 +130,7 @@ export class AuthService {
       this._isLoggingOut = false;
       this.accessToken.set(null);
       this.currentUser.set(null);
+      this.broadcastChannel?.postMessage({ type: 'logout' });
       this.router.navigate(['/login']);
     }
   }
