@@ -3,10 +3,13 @@ import { cpSync, rmSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const bin = join(root, 'node_modules', '.bin');
+const pathSep = process.platform === 'win32' ? ';' : ':';
+const env = { ...process.env, PATH: `${bin}${pathSep}${process.env.PATH ?? ''}` };
 
 function run(cmd) {
   console.log(`\n> ${cmd}`);
-  execSync(cmd, { stdio: 'inherit', cwd: root });
+  execSync(cmd, { stdio: 'inherit', cwd: root, env });
 }
 
 // 1. Turkish (source locale) production build
