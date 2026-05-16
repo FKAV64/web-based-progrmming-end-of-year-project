@@ -36,7 +36,7 @@ export class BinanceProxyGateway
     // Only intercept upgrades for our proxy path; leave other paths untouched.
     httpServer.on('upgrade', (req, socket, head) => {
       if (req.url === PROXY_PATH) {
-        this.wss.handleUpgrade(req, socket as any, head, (ws) => {
+        this.wss.handleUpgrade(req, socket, head, (ws) => {
           this.wss.emit('connection', ws);
         });
       }

@@ -1,4 +1,5 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import * as http from 'http';
 import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
@@ -49,7 +50,7 @@ describe('Auth flow (e2e)', () => {
   });
 
   it('POST /api/auth/register → 201 with accessToken and refresh cookie', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
       .send({ email: testEmail, password: testPassword, name: testName })
       .expect(201);
@@ -63,7 +64,7 @@ describe('Auth flow (e2e)', () => {
   });
 
   it('POST /api/auth/login → 200 with accessToken and refresh cookie', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/login')
       .send({ email: testEmail, password: testPassword })
       .expect(200);
@@ -78,7 +79,7 @@ describe('Auth flow (e2e)', () => {
   });
 
   it('GET /api/auth/me with Bearer token → 200', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .get('/api/auth/me')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
@@ -87,7 +88,7 @@ describe('Auth flow (e2e)', () => {
   });
 
   it('POST /api/auth/refresh with cookie → 200 with rotated accessToken', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/refresh')
       .set('Cookie', refreshCookie)
       .expect(200);
@@ -102,7 +103,7 @@ describe('Auth flow (e2e)', () => {
   });
 
   it('POST /api/auth/logout → 200 and clears cookie', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/logout')
       .set('Authorization', `Bearer ${accessToken}`)
       .set('Cookie', refreshCookie)
@@ -112,7 +113,9 @@ describe('Auth flow (e2e)', () => {
   });
 
   it('GET /api/auth/me without token → 401', async () => {
-    await request(app.getHttpServer()).get('/api/auth/me').expect(401);
+    await request(app.getHttpServer() as http.Server)
+      .get('/api/auth/me')
+      .expect(401);
   });
 });
 
@@ -132,13 +135,13 @@ describe('Throttler (isolated app)', () => {
 
   it('returns 429 after 5 failed login attempts within the 60 s window', async () => {
     for (let i = 0; i < 5; i++) {
-      await request(app.getHttpServer())
+      await request(app.getHttpServer() as http.Server)
         .post('/api/auth/login')
         .send({ email: throttleEmail, password: 'WrongPass1' })
         .expect(401);
     }
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as http.Server)
       .post('/api/auth/login')
       .send({ email: throttleEmail, password: 'WrongPass1' })
       .expect(429);

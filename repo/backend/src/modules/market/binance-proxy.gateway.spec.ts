@@ -19,7 +19,12 @@ jest.mock('ws', () => {
   class MockWss extends EE {
     // Immediately invokes the upgrade callback with a fresh MockWs.
     handleUpgrade = jest.fn(
-      (_req: unknown, _socket: unknown, _head: unknown, cb: (ws: MockWs) => void) => {
+      (
+        _req: unknown,
+        _socket: unknown,
+        _head: unknown,
+        cb: (ws: MockWs) => void,
+      ) => {
         cb(new MockWs());
       },
     );
@@ -41,9 +46,16 @@ function makeAdapter() {
 
 /** Simulates a browser connecting to /ws/binance. Returns the client socket mock. */
 function connectClient(gateway: BinanceProxyGateway, httpServer: EventEmitter) {
-  httpServer.emit('upgrade', { url: '/ws/binance' }, new EventEmitter(), Buffer.alloc(0));
+  httpServer.emit(
+    'upgrade',
+    { url: '/ws/binance' },
+    new EventEmitter(),
+    Buffer.alloc(0),
+  );
   const clients = gateway['clients'] as Set<unknown>;
-  return [...clients].at(-1) as ReturnType<typeof import('events').EventEmitter.prototype.emit> & {
+  return [...clients].at(-1) as ReturnType<
+    typeof import('events').EventEmitter.prototype.emit
+  > & {
     readyState: number;
     send: jest.Mock;
     close: jest.Mock;
@@ -96,12 +108,22 @@ describe('BinanceProxyGateway', () => {
   describe('upgrade handling', () => {
     it('accepts upgrade requests on /ws/binance and registers the client', () => {
       expect(gateway['clients'].size).toBe(0);
-      httpServer.emit('upgrade', { url: '/ws/binance' }, new EventEmitter(), Buffer.alloc(0));
+      httpServer.emit(
+        'upgrade',
+        { url: '/ws/binance' },
+        new EventEmitter(),
+        Buffer.alloc(0),
+      );
       expect(gateway['clients'].size).toBe(1);
     });
 
     it('ignores upgrade requests on other paths', () => {
-      httpServer.emit('upgrade', { url: '/api/other' }, new EventEmitter(), Buffer.alloc(0));
+      httpServer.emit(
+        'upgrade',
+        { url: '/api/other' },
+        new EventEmitter(),
+        Buffer.alloc(0),
+      );
       expect(gateway['clients'].size).toBe(0);
     });
   });
@@ -129,7 +151,11 @@ describe('BinanceProxyGateway', () => {
     it('forwards a client SUBSCRIBE message to Binance when the socket is OPEN', () => {
       const client = connectClient(gateway, httpServer) as any;
       const binance = gateway['binanceWs'] as any;
-      const msg = JSON.stringify({ method: 'SUBSCRIBE', params: ['btcusdt@miniTicker'], id: 1 });
+      const msg = JSON.stringify({
+        method: 'SUBSCRIBE',
+        params: ['btcusdt@miniTicker'],
+        id: 1,
+      });
 
       client.emit('message', Buffer.from(msg));
 
@@ -140,7 +166,11 @@ describe('BinanceProxyGateway', () => {
       const client = connectClient(gateway, httpServer) as any;
       const binance = gateway['binanceWs'] as any;
       binance.readyState = 3; // CLOSED
-      const msg = JSON.stringify({ method: 'SUBSCRIBE', params: ['btcusdt@miniTicker'], id: 1 });
+      const msg = JSON.stringify({
+        method: 'SUBSCRIBE',
+        params: ['btcusdt@miniTicker'],
+        id: 1,
+      });
 
       client.emit('message', Buffer.from(msg));
 
