@@ -80,7 +80,7 @@ describe('BinanceProxyGateway', () => {
     }).compile();
 
     gateway = module.get(BinanceProxyGateway);
-    gateway.onApplicationBootstrap();
+    gateway.onModuleInit();
   });
 
   afterEach(() => {

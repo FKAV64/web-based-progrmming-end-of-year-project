@@ -1,7 +1,7 @@
 import {
   Injectable,
   Logger,
-  OnApplicationBootstrap,
+  OnModuleInit,
   OnApplicationShutdown,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
@@ -14,7 +14,7 @@ const MAX_RECONNECT_DELAY_MS = 30_000;
 
 @Injectable()
 export class BinanceProxyGateway
-  implements OnApplicationBootstrap, OnApplicationShutdown
+  implements OnModuleInit, OnApplicationShutdown
 {
   private readonly logger = new Logger(BinanceProxyGateway.name);
 
@@ -27,7 +27,7 @@ export class BinanceProxyGateway
 
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  onApplicationBootstrap(): void {
+  onModuleInit(): void {
     if (process.env.DISABLE_BINANCE_PROXY) return;
 
     const httpServer: http.Server =
