@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal, effect } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -258,15 +258,18 @@ interface AllocationChartOptions {
               </div>
             </div>
 
-            <ng-container *ngIf="chartSeries().length > 0; else allocationEmpty">
-              <apx-chart
-                [series]="chartSeries()"
-                [chart]="chartConfig.chart"
-                [labels]="chartLabels()"
-                [legend]="chartConfig.legend"
-                [responsive]="chartConfig.responsive"
-                [colors]="chartConfig.colors"
-              ></apx-chart>
+            <ng-container *ngIf="displayedSeries().length > 0; else allocationEmpty">
+              <div (mouseenter)="isHovered.set(true)" (mouseleave)="isHovered.set(false)">
+                <apx-chart
+                  [series]="displayedSeries()"
+                  [chart]="chartConfig.chart"
+                  [labels]="displayedLabels()"
+                  [legend]="chartConfig.legend"
+                  [responsive]="chartConfig.responsive"
+                  [colors]="chartConfig.colors"
+                  [theme]="chartTheme()"
+                ></apx-chart>
+              </div>
             </ng-container>
           </mat-card-content>
         </mat-card>
@@ -332,13 +335,26 @@ export class PortfolioComponent {
     this.portfolio.activeRows().filter(row => row.currentValue > 0)
   );
 
-  readonly chartSeries = computed(() =>
-    this.allocationRows().map(row => Number(row.currentValue.toFixed(2)))
-  );
+  readonly chartTheme = computed(() => ({
+    mode: this.settings.isDarkThemeEffective() ? 'dark' as const : 'light' as const
+  }));
 
-  readonly chartLabels = computed(() =>
-    this.allocationRows().map(row => row.symbol)
-  );
+  // Signals for the chart that can be paused when hovering
+  displayedSeries = signal<number[]>([]);
+  displayedLabels = signal<string[]>([]);
+  isHovered = signal(false);
+
+  constructor() {
+    effect(() => {
+      const rows = this.allocationRows();
+      const hovered = this.isHovered();
+
+      if (!hovered) {
+        this.displayedSeries.set(rows.map(row => Number(row.currentValue.toFixed(2))));
+        this.displayedLabels.set(rows.map(row => row.symbol));
+      }
+    }, { allowSignalWrites: true });
+  }
 
   onTabChange(index: number): void {
     if (index === 1) {
