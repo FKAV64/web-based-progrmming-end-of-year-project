@@ -142,24 +142,28 @@ export class AuthController {
     return { message: 'All sessions revoked' };
   }
 
-  private setRefreshCookie(res: Response, token: string) {
+  private getCookieOptions() {
     const isProd = process.env.NODE_ENV === 'production';
-    res.cookie(REFRESH_COOKIE, token, {
+    const frontendOrigin = process.env.FRONTEND_ORIGIN || '';
+    // If we're in production or the configured frontend origin is an external HTTPS URL,
+    // we must treat this as a cross-site deployment, requiring SameSite=None and Secure=true.
+    const isCrossSite = isProd || frontendOrigin.startsWith('https://');
+    
+    return {
       httpOnly: true,
-      secure: isProd,
-      // SameSite=None is required for cross-origin deployments (different Railway subdomains).
-      // SameSite=Lax is safe for localhost (same-site) in dev and doesn't need secure:true.
-      sameSite: isProd ? 'none' : 'lax',
+      secure: isCrossSite,
+      sameSite: (isCrossSite ? 'none' : 'lax') as 'none' | 'lax',
+    };
+  }
+
+  private setRefreshCookie(res: Response, token: string) {
+    res.cookie(REFRESH_COOKIE, token, {
+      ...this.getCookieOptions(),
       maxAge: SEVEN_DAYS_MS,
     });
   }
 
   private clearRefreshCookie(res: Response) {
-    const isProd = process.env.NODE_ENV === 'production';
-    res.clearCookie(REFRESH_COOKIE, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
-    });
+    res.clearCookie(REFRESH_COOKIE, this.getCookieOptions());
   }
 }

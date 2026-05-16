@@ -147,3 +147,31 @@ describe('Throttler (isolated app)', () => {
       .expect(429);
   });
 });
+
+// ── Cookie Configuration ──────────────────────────────────────────────────────
+
+describe('Cross-Origin Cookies (e2e)', () => {
+  let app: INestApplication;
+  const originalFrontendOrigin = process.env.FRONTEND_ORIGIN;
+
+  beforeAll(async () => {
+    process.env.FRONTEND_ORIGIN = 'https://example.com';
+    app = await createApp();
+  });
+
+  afterAll(async () => {
+    process.env.FRONTEND_ORIGIN = originalFrontendOrigin;
+    await app.close();
+  });
+
+  it('sets SameSite=None and Secure=true for cross-origin FRONTEND_ORIGIN', async () => {
+    const res = await request(app.getHttpServer() as http.Server)
+      .post('/api/auth/register')
+      .send({ email: `cookie-${Date.now()}@example.com`, password: 'Password1', name: 'User' })
+      .expect(201);
+
+    const cookie = (res.headers['set-cookie'] as string[])[0];
+    expect(cookie).toMatch(/SameSite=None/i);
+    expect(cookie).toMatch(/Secure/i);
+  });
+});
