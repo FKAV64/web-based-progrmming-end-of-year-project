@@ -175,7 +175,8 @@ export class SettingsPageComponent {
     if (environment.production) {
       const currentPath = window.location.pathname;
       const pathWithoutLocale = currentPath.replace(/^\/(en|tr)/, '') || '/';
-      window.location.href = `/${locale.toLowerCase()}${pathWithoutLocale}`;
+      const prefix = locale === 'TR' ? '' : `/${locale.toLowerCase()}`;
+      window.location.href = `${prefix}${pathWithoutLocale}`;
     }
   }
 

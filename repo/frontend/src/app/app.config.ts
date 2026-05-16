@@ -1,7 +1,8 @@
-import { ApplicationConfig, ENVIRONMENT_INITIALIZER, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, ENVIRONMENT_INITIALIZER, importProvidersFrom, isDevMode } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideServiceWorker } from '@angular/service-worker';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
@@ -33,5 +34,9 @@ export const appConfig: ApplicationConfig = {
       deps: [AuthService],
       multi: true,
     },
+    provideServiceWorker('custom-sw.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };

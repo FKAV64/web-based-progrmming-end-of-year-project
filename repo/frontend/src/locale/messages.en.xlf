@@ -566,6 +566,94 @@
         <source> Piyasalara Git </source>
         <target> Go to Markets </target>
       </trans-unit>
+      <trans-unit id="portfolio.loading" datatype="html">
+        <source>Portföy yükleniyor</source>
+        <target>Loading portfolio</target>
+      </trans-unit>
+      <trans-unit id="settings.delete-title" datatype="html">
+        <source>Hesabı Sil</source>
+        <target>Delete Account</target>
+      </trans-unit>
+      <trans-unit id="settings.delete-warning" datatype="html">
+        <source>Bu işlem geri alınamaz. Tüm verileriniz silinecektir.</source>
+        <target>This action cannot be undone. All your data will be deleted.</target>
+      </trans-unit>
+      <trans-unit id="settings.delete-cancel" datatype="html">
+        <source>İptal</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="settings.delete-confirm" datatype="html">
+        <source>Hesabı Sil</source>
+        <target>Delete Account</target>
+      </trans-unit>
+      <trans-unit id="settings.data" datatype="html">
+        <source>Verilerim</source>
+        <target>My Data</target>
+      </trans-unit>
+      <trans-unit id="settings.export-title" datatype="html">
+        <source>Verileri dışa aktar</source>
+        <target>Export data</target>
+      </trans-unit>
+      <trans-unit id="settings.export-desc" datatype="html">
+        <source> Tüm kişisel verilerinizi JSON olarak indirin. </source>
+        <target> Download all your personal data as JSON. </target>
+      </trans-unit>
+      <trans-unit id="settings.export-btn" datatype="html">
+        <source>İndir</source>
+        <target>Download</target>
+      </trans-unit>
+      <trans-unit id="settings.danger-zone" datatype="html">
+        <source>Tehlikeli Bölge</source>
+        <target>Danger Zone</target>
+      </trans-unit>
+      <trans-unit id="settings.delete-account-title" datatype="html">
+        <source>Hesabı sil</source>
+        <target>Delete account</target>
+      </trans-unit>
+      <trans-unit id="settings.delete-account-desc" datatype="html">
+        <source> Hesabınızı ve tüm verilerinizi kalıcı olarak silin. </source>
+        <target> Permanently delete your account and all your data. </target>
+      </trans-unit>
+      <trans-unit id="settings.delete-btn" datatype="html">
+        <source>Hesabı Sil</source>
+        <target>Delete Account</target>
+      </trans-unit>
+      <trans-unit id="settings.logout-all-title" datatype="html">
+        <source>Tüm oturumları kapat</source>
+        <target>Sign out all sessions</target>
+      </trans-unit>
+      <trans-unit id="settings.logout-all-desc" datatype="html">
+        <source> Bu cihaz dahil tüm aktif oturumlarınızı sonlandırın. </source>
+        <target> Sign out of all active sessions including this device. </target>
+      </trans-unit>
+      <trans-unit id="settings.logout-all-btn" datatype="html">
+        <source>Tümünü Kapat</source>
+        <target>Sign Out All</target>
+      </trans-unit>
+      <trans-unit id="4152305250140611750" datatype="html">
+        <source>Ad Soyad zorunludur</source>
+        <target>Full name is required</target>
+      </trans-unit>
+      <trans-unit id="5541566583266213693" datatype="html">
+        <source>Ad Soyad en az 3 karakter olmalıdır</source>
+        <target>Full name must be at least 3 characters</target>
+      </trans-unit>
+      <trans-unit id="shell.install-app" datatype="html">
+        <source>Yükle</source>
+        <target>Install</target>
+      </trans-unit>
+      <trans-unit id="shell.offline-banner" datatype="html">
+        <source>Çevrimdışı — veriler güncel olmayabilir</source>
+        <target>Offline — data may be outdated</target>
+      </trans-unit>
+      <trans-unit id="markets.title" datatype="html">
+        <source>Piyasalar</source>
+        <target>Markets</target>
+      </trans-unit>
+      <trans-unit id="markets.loading" datatype="html">
+        <source>Veriler yükleniyor</source>
+        <target>Loading data</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -74,16 +74,10 @@
               "sourceMap": true
             },
             "tr": {
-              "localize": ["tr"],
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
+              "localize": ["tr"]
             },
             "en": {
-              "localize": ["en"],
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
+              "localize": ["en"]
             }
           },
           "defaultConfiguration": "production"
