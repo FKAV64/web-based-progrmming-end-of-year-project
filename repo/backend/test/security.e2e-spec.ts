@@ -1,6 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import * as http from 'http';
 import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import csurf from 'csurf';
@@ -65,7 +66,7 @@ describe('Security — account lockout', () => {
   beforeAll(async () => {
     process.env.DISABLE_THROTTLE = '1';
     app = await createApp();
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
       .send({ email, password, name: 'Lockout User' })
       .expect(201);
@@ -78,19 +79,19 @@ describe('Security — account lockout', () => {
 
   it('returns 429 on the 11th failed login (10 wrong attempts trip the lockout)', async () => {
     for (let i = 0; i < 10; i++) {
-      const res = await request(app.getHttpServer())
+      const res = await request(app.getHttpServer() as http.Server)
         .post('/api/auth/login')
         .send({ email, password: 'WrongPass1' });
       expect(res.status).toBe(401);
     }
 
-    const res11 = await request(app.getHttpServer())
+    const res11 = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/login')
       .send({ email, password: 'WrongPass1' });
     expect(res11.status).toBe(429);
 
     // Even the correct password is rejected while locked
-    const correctWhileLocked = await request(app.getHttpServer())
+    const correctWhileLocked = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/login')
       .send({ email, password });
     expect(correctWhileLocked.status).toBe(429);
@@ -107,7 +108,7 @@ describe('Security — CSRF protection on /portfolio', () => {
     process.env.DISABLE_THROTTLE = '1';
     app = await createApp({ withCsrf: true });
 
-    const reg = await request(app.getHttpServer())
+    const reg = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
       .send({
         email: `csrf-${Date.now()}@example.com`,
@@ -124,7 +125,7 @@ describe('Security — CSRF protection on /portfolio', () => {
   });
 
   it('rejects POST /api/portfolio with 403 when X-XSRF-TOKEN is missing', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .post('/api/portfolio')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -155,9 +156,13 @@ describe('Security — expired token then refresh flow', () => {
     config = app.get(ConfigService);
 
     userEmail = `expired-${Date.now()}@example.com`;
-    const reg = await request(app.getHttpServer())
+    const reg = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
-      .send({ email: userEmail, password: 'Test1234', name: 'Expired Token User' })
+      .send({
+        email: userEmail,
+        password: 'Test1234',
+        name: 'Expired Token User',
+      })
       .expect(201);
 
     userId = reg.body.data.user.id as string;
@@ -178,12 +183,12 @@ describe('Security — expired token then refresh flow', () => {
       },
     );
 
-    const expiredRes = await request(app.getHttpServer())
+    const expiredRes = await request(app.getHttpServer() as http.Server)
       .get('/api/portfolio')
       .set('Authorization', `Bearer ${expiredToken}`);
     expect(expiredRes.status).toBe(401);
 
-    const refreshRes = await request(app.getHttpServer())
+    const refreshRes = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/refresh')
       .set('Cookie', refreshCookie)
       .expect(200);
@@ -191,7 +196,7 @@ describe('Security — expired token then refresh flow', () => {
     const freshToken = refreshRes.body.data.accessToken as string;
     expect(freshToken).toBeDefined();
 
-    const retryRes = await request(app.getHttpServer())
+    const retryRes = await request(app.getHttpServer() as http.Server)
       .get('/api/portfolio')
       .set('Authorization', `Bearer ${freshToken}`);
     expect(retryRes.status).toBe(200);
@@ -213,16 +218,24 @@ describe('Security — cross-user isolation (IDOR)', () => {
     prisma = app.get(PrismaService);
 
     const ts = Date.now();
-    const a = await request(app.getHttpServer())
+    const a = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
-      .send({ email: `idor-a-${ts}@example.com`, password: 'Test1234', name: 'IDOR User A' })
+      .send({
+        email: `idor-a-${ts}@example.com`,
+        password: 'Test1234',
+        name: 'IDOR User A',
+      })
       .expect(201);
     tokenA = a.body.data.accessToken as string;
     const userAId = a.body.data.user.id as string;
 
-    const b = await request(app.getHttpServer())
+    const b = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
-      .send({ email: `idor-b-${ts}@example.com`, password: 'Test1234', name: 'IDOR User B' })
+      .send({
+        email: `idor-b-${ts}@example.com`,
+        password: 'Test1234',
+        name: 'IDOR User B',
+      })
       .expect(201);
     tokenB = b.body.data.accessToken as string;
 
@@ -244,7 +257,7 @@ describe('Security — cross-user isolation (IDOR)', () => {
   });
 
   it("returns 404 (not 403) when user B tries to PATCH user A's position", async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .patch(`/api/portfolio/${positionAId}`)
       .set('Authorization', `Bearer ${tokenB}`)
       .send({ notes: 'pwned' });
@@ -253,7 +266,7 @@ describe('Security — cross-user isolation (IDOR)', () => {
   });
 
   it('user A can still PATCH their own position normally', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .patch(`/api/portfolio/${positionAId}`)
       .set('Authorization', `Bearer ${tokenA}`)
       .send({ notes: 'mine' })

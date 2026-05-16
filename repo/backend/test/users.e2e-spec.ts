@@ -1,4 +1,5 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import * as http from 'http';
 import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
@@ -47,7 +48,7 @@ describe('Users + Settings + KVKK (e2e)', () => {
   });
 
   it('POST /api/auth/register → seeds user + default settings', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .post('/api/auth/register')
       .send({ email: testEmail, password: testPassword, name: 'Phase 3' })
       .expect(201);
@@ -58,7 +59,7 @@ describe('Users + Settings + KVKK (e2e)', () => {
   });
 
   it('PATCH /api/settings → applies partial update and returns the new row', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .patch('/api/settings')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({ theme: 'DARK', currency: 'TRY', notificationsEnabled: false })
@@ -72,7 +73,7 @@ describe('Users + Settings + KVKK (e2e)', () => {
   });
 
   it('GET /api/me → returns user with the updated settings', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .get('/api/me')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
@@ -92,7 +93,7 @@ describe('Users + Settings + KVKK (e2e)', () => {
       data: { userId, coinId: 'bitcoin' },
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as http.Server)
       .get('/api/me/export')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
@@ -120,7 +121,7 @@ describe('Users + Settings + KVKK (e2e)', () => {
   });
 
   it('DELETE /api/me → 204 and cascades all related rows', async () => {
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as http.Server)
       .delete('/api/me')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(204);
@@ -147,7 +148,7 @@ describe('Users + Settings + KVKK (e2e)', () => {
   });
 
   it('GET /api/me after deletion → 401 (JWT validates user existence)', async () => {
-    await request(app.getHttpServer())
+    await request(app.getHttpServer() as http.Server)
       .get('/api/me')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(401);

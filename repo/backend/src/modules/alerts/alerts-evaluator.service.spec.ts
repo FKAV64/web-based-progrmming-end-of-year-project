@@ -7,7 +7,9 @@ import { CoingeckoService } from '../market/coingecko.service';
 
 describe('AlertsEvaluatorService', () => {
   let service: AlertsEvaluatorService;
-  let prismaMock: { priceAlert: { findMany: jest.Mock; updateMany: jest.Mock } };
+  let prismaMock: {
+    priceAlert: { findMany: jest.Mock; updateMany: jest.Mock };
+  };
   let pushMock: { send: jest.Mock };
   let auditMock: { log: jest.Mock };
   let coingeckoMock: { getExchangeRates: jest.Mock };

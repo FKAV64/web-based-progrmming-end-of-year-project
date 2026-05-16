@@ -3,12 +3,15 @@ import { PushService } from './push.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 
-// Mock web-push at module level
-const mockSendNotification = jest.fn();
+// jest.mock() is hoisted before const declarations, so the factory must not
+// reference outer variables. Create the mock inside the factory and retrieve
+// the reference via jest.requireMock() after registration.
 jest.mock('web-push', () => ({
   setVapidDetails: jest.fn(),
-  sendNotification: (...args: any[]) => mockSendNotification(...args),
+  sendNotification: jest.fn(),
 }));
+
+const mockSendNotification = jest.requireMock('web-push').sendNotification;
 
 describe('PushService', () => {
   let service: PushService;

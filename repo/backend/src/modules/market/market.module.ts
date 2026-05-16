@@ -7,6 +7,7 @@ import { MarketSnapshotService } from './market-snapshot.service';
 import { CoingeckoFetcherService } from './coingecko-fetcher.service';
 import { CoingeckoService } from './coingecko.service';
 import { BinanceRestService } from './binance-rest.service';
+import { BinanceProxyGateway } from './binance-proxy.gateway';
 import { SentimentService } from './sentiment.service';
 import { NewsService } from './news.service';
 
@@ -27,6 +28,7 @@ import { NewsService } from './news.service';
     CoingeckoFetcherService,
     CoingeckoService,
     BinanceRestService,
+    BinanceProxyGateway,
     SentimentService,
     NewsService,
   ],
