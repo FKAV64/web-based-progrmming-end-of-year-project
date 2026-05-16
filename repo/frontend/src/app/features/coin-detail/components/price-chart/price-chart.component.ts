@@ -300,18 +300,21 @@ export class PriceChartComponent implements OnChanges {
       background: 'transparent',
       events: {
         mounted: (chart: any) => {
+          // passive:false required so ApexCharts can call preventDefault() during zoom
+          // without the "Unable to preventDefault inside passive event listener" browser warning.
           chart.el.addEventListener(
             'wheel',
-            (e: Event) => e.stopPropagation(),
-            { passive: true }
+            (e: WheelEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+            { passive: false }
           );
         },
         mouseMove: (e: any, chartContext: any, config: any) => {
           if (config.dataPointIndex !== undefined && config.dataPointIndex !== -1) {
             this.hoveredIndex = config.dataPointIndex;
-            // Update absolute mouse coordinates for the custom tooltip div
             if (e && e.clientX !== undefined) {
-              // Get the chart container bounding rect to calculate relative position
               const rect = chartContext.el.getBoundingClientRect();
               this.mouseX = e.clientX - rect.left;
               this.mouseY = e.clientY - rect.top;
