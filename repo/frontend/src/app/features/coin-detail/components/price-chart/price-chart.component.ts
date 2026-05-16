@@ -9,6 +9,7 @@ import {
   effect,
   inject,
   signal,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -54,7 +55,11 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
   standalone: true,
   imports: [CommonModule, NgApexchartsModule, MatProgressSpinnerModule],
   template: `
-    <div class="relative min-h-[430px] rounded border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
+    <div 
+      class="relative min-h-[430px] rounded border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+    >
       <div *ngIf="loading()" class="absolute inset-0 z-10 flex items-center justify-center bg-white/60 dark:bg-gray-950/60">
         <mat-spinner [diameter]="48"></mat-spinner>
       </div>
@@ -78,6 +83,36 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
         [theme]="theme"
         [dataLabels]="dataLabels"
       ></apx-chart>
+
+      <!-- Custom Tooltip -->
+      <div *ngIf="hoveredIndex !== null && chartType === 'candle'"
+           class="pointer-events-none absolute z-50 rounded border border-gray-200 bg-white p-2 text-xs shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+           [style.left.px]="mouseX + 15"
+           [style.top.px]="mouseY + 15">
+        <div class="mb-1 text-gray-500 dark:text-gray-400 font-medium">
+          {{ formatTime(klines[hoveredIndex]?.time) }}
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <div class="flex justify-between gap-3">
+            <span class="font-medium">Open:</span>
+            <span>{{ formatPrice(klines[hoveredIndex]?.open ?? 0) }}</span>
+          </div>
+          <div class="flex justify-between gap-3">
+            <span class="font-medium">High:</span>
+            <span class="text-green-600 dark:text-green-400">{{ formatPrice(klines[hoveredIndex]?.high ?? 0) }}</span>
+          </div>
+          <div class="flex justify-between gap-3">
+            <span class="font-medium">Low:</span>
+            <span class="text-red-600 dark:text-red-400">{{ formatPrice(klines[hoveredIndex]?.low ?? 0) }}</span>
+          </div>
+          <div class="flex justify-between gap-3">
+            <span class="font-medium">Close:</span>
+            <span [ngClass]="(klines[hoveredIndex]?.close ?? 0) >= (klines[hoveredIndex]?.open ?? 0) ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+              {{ formatPrice(klines[hoveredIndex]?.close ?? 0) }}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,6 +122,7 @@ export class PriceChartComponent implements OnChanges {
   private settings = inject(SettingsService);
   private ws = inject(BINANCE_WS);
   private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
 
   @ViewChild('chart') chartRef?: ChartComponent;
 
@@ -114,6 +150,11 @@ export class PriceChartComponent implements OnChanges {
   private readonly cache = new Map<string, OHLC[]>();
   private fetchKey = '';
   private liveTickSub: Subscription | null = null;
+  
+  // Custom tooltip state
+  hoveredIndex: number | null = null;
+  mouseX = 0;
+  mouseY = 0;
 
   constructor() {
     effect(() => {
@@ -136,6 +177,15 @@ export class PriceChartComponent implements OnChanges {
     if (changes['chartType']) {
       this.syncSeries(false);
     }
+  }
+
+  onMouseEnter(): void {
+    // Left for template binding compatibility
+  }
+
+  onMouseLeave(): void {
+    this.hoveredIndex = null;
+    this.cdr.markForCheck();
   }
 
   private loadKlines(): void {
@@ -209,7 +259,14 @@ export class PriceChartComponent implements OnChanges {
       last.low = Math.min(last.low, tick.price);
     }
 
+    // We no longer block updates when hovered. 
+    // The custom tooltip will read from the updated klines array naturally!
     this.syncSeries(true);
+    
+    // Trigger change detection to update the custom tooltip with live prices
+    if (this.hoveredIndex !== null) {
+      this.cdr.markForCheck();
+    }
   }
 
   private syncChartOptions(): void {
@@ -242,6 +299,23 @@ export class PriceChartComponent implements OnChanges {
             { passive: true }
           );
         },
+        mouseMove: (e: any, chartContext: any, config: any) => {
+          if (config.dataPointIndex !== undefined && config.dataPointIndex !== -1) {
+            this.hoveredIndex = config.dataPointIndex;
+            // Update absolute mouse coordinates for the custom tooltip div
+            if (e && e.clientX !== undefined) {
+              // Get the chart container bounding rect to calculate relative position
+              const rect = chartContext.el.getBoundingClientRect();
+              this.mouseX = e.clientX - rect.left;
+              this.mouseY = e.clientY - rect.top;
+            }
+            this.cdr.markForCheck();
+          }
+        },
+        mouseLeave: () => {
+          this.hoveredIndex = null;
+          this.cdr.markForCheck();
+        }
       },
     };
 
@@ -283,11 +357,16 @@ export class PriceChartComponent implements OnChanges {
       width: this.chartType === 'candle' ? 1 : 2,
     };
     this.colors = this.chartType === 'area' ? ['#2563eb'] : ['#26a69a'];
+    
+    // Disable native tooltip for candlestick to use our custom one,
+    // but keep it for line/area chart if needed (or we can disable it everywhere if we build custom for both)
     this.tooltip = {
+      enabled: this.chartType !== 'candle',
       theme: dark ? 'dark' : 'light',
       x: { formatter: (value: number | string) => this.formatTime(value, this.interval) },
       y: { formatter: (value: number) => this.formatPrice(value) },
     };
+    
     this.grid = { borderColor: muted, strokeDashArray: 3 };
     this.theme = { mode: dark ? 'dark' : 'light' };
 
@@ -351,7 +430,7 @@ export class PriceChartComponent implements OnChanges {
     return Math.floor(timestamp / intervalMs) * intervalMs;
   }
 
-  private formatTime(value: number | string | null | undefined, interval?: BinanceInterval): string {
+  formatTime(value: number | string | null | undefined, interval?: BinanceInterval): string {
     if (value == null || value === 0 || value === '0') return '';
 
     const ms = typeof value === 'string' ? Number(value) : value;
@@ -380,7 +459,7 @@ export class PriceChartComponent implements OnChanges {
     }
   }
 
-  private formatPrice(value: number): string {
+  formatPrice(value: number): string {
     return new Intl.NumberFormat(this.localeCode(), {
       maximumFractionDigits: value >= 100 ? 2 : 6,
     }).format(value);
