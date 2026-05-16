@@ -1,6 +1,5 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'http://localhost:3000/api',
-  binanceWsUrl: 'wss://stream.binance.com/ws',
-  useMockWs: false,
+  binanceWsUrl: 'ws://localhost:3000/ws/binance',
 };
