@@ -300,16 +300,25 @@ export class PriceChartComponent implements OnChanges {
       background: 'transparent',
       events: {
         mounted: (chart: any) => {
-          // passive:false required so ApexCharts can call preventDefault() during zoom
-          // without the "Unable to preventDefault inside passive event listener" browser warning.
-          chart.el.addEventListener(
-            'wheel',
-            (e: WheelEvent) => {
+          // Listen in the capture phase with passive: false.
+          // This allows us to safely call preventDefault() before the event
+          // reaches ApexCharts' internal passive listeners, preventing the warning.
+          const preventPassiveWarning = (e: Event) => {
+            if (e.cancelable) {
               e.preventDefault();
-              e.stopPropagation();
-            },
-            { passive: false }
-          );
+            }
+            // Prevent ApexCharts from calling the original preventDefault
+            // and triggering the "passive event listener" warning.
+            Object.defineProperty(e, 'preventDefault', {
+              value: () => {},
+              writable: true,
+              configurable: true
+            });
+          };
+
+          chart.el.addEventListener('wheel', preventPassiveWarning, { passive: false, capture: true });
+          chart.el.addEventListener('touchstart', preventPassiveWarning, { passive: false, capture: true });
+          chart.el.addEventListener('touchmove', preventPassiveWarning, { passive: false, capture: true });
         },
         mouseMove: (e: any, chartContext: any, config: any) => {
           if (config.dataPointIndex !== undefined && config.dataPointIndex !== -1) {
