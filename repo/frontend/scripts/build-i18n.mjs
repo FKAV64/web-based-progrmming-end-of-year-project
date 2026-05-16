@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { cpSync, rmSync, existsSync } from 'fs';
+import { cpSync, rmSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 const root = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
@@ -19,11 +19,14 @@ run('ng build --configuration production');
 run('ng build --configuration production,en --output-path dist/en-temp');
 
 // 3. Copy English browser output into the Turkish browser tree at /en/
-const enSrc = join(root, 'dist', 'en-temp', 'browser');
+// Angular's application builder puts each localized build in browser/{locale}/,
+// so the English files are at en-temp/browser/en/ — not directly in en-temp/browser/.
+const enSrc = join(root, 'dist', 'en-temp', 'browser', 'en');
 const enDst = join(root, 'dist', 'crypto-dashboard-frontend', 'browser', 'en');
 
 if (!existsSync(enSrc)) {
   console.error(`English build output not found at ${enSrc}`);
+  console.error('Contents of dist/en-temp:', readdirSync(join(root, 'dist', 'en-temp'), { recursive: true }).join('\n'));
   process.exit(1);
 }
 
