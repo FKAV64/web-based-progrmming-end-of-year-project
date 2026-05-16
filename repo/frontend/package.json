@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "node scripts/build-i18n.mjs",
     "watch": "ng build --watch --configuration development",
     "lint": "tsc --noEmit --project tsconfig.app.json",
     "test": "ng test",
