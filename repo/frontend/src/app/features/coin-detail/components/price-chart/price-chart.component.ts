@@ -90,25 +90,25 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
            [style.left.px]="mouseX + 15"
            [style.top.px]="mouseY + 15">
         <div class="mb-1 text-gray-500 dark:text-gray-400 font-medium">
-          {{ formatTime(klines[hoveredIndex]?.time) }}
+          {{ formatTime(hoveredKline?.time) }}
         </div>
         <div class="flex flex-col gap-0.5">
           <div class="flex justify-between gap-3">
             <span class="font-medium">Open:</span>
-            <span>{{ formatPrice(klines[hoveredIndex]?.open ?? 0) }}</span>
+            <span>{{ formatPrice(hoveredKline?.open ?? 0) }}</span>
           </div>
           <div class="flex justify-between gap-3">
             <span class="font-medium">High:</span>
-            <span class="text-green-600 dark:text-green-400">{{ formatPrice(klines[hoveredIndex]?.high ?? 0) }}</span>
+            <span class="text-green-600 dark:text-green-400">{{ formatPrice(hoveredKline?.high ?? 0) }}</span>
           </div>
           <div class="flex justify-between gap-3">
             <span class="font-medium">Low:</span>
-            <span class="text-red-600 dark:text-red-400">{{ formatPrice(klines[hoveredIndex]?.low ?? 0) }}</span>
+            <span class="text-red-600 dark:text-red-400">{{ formatPrice(hoveredKline?.low ?? 0) }}</span>
           </div>
           <div class="flex justify-between gap-3">
             <span class="font-medium">Close:</span>
-            <span [ngClass]="(klines[hoveredIndex]?.close ?? 0) >= (klines[hoveredIndex]?.open ?? 0) ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
-              {{ formatPrice(klines[hoveredIndex]?.close ?? 0) }}
+            <span [ngClass]="(hoveredKline?.close ?? 0) >= (hoveredKline?.open ?? 0) ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+              {{ formatPrice(hoveredKline?.close ?? 0) }}
             </span>
           </div>
         </div>
@@ -155,6 +155,13 @@ export class PriceChartComponent implements OnChanges {
   hoveredIndex: number | null = null;
   mouseX = 0;
   mouseY = 0;
+
+  get hoveredKline(): OHLC | undefined {
+    if (this.hoveredIndex === null || this.hoveredIndex < 0 || this.hoveredIndex >= this.klines.length) {
+      return undefined;
+    }
+    return this.klines[this.hoveredIndex];
+  }
 
   constructor() {
     effect(() => {

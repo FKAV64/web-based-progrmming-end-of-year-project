@@ -264,10 +264,9 @@ interface AllocationChartOptions {
                   [series]="displayedSeries()"
                   [chart]="chartConfig.chart"
                   [labels]="displayedLabels()"
-                  [legend]="chartConfig.legend"
+                  [legend]="chartLegend()"
                   [responsive]="chartConfig.responsive"
                   [colors]="chartConfig.colors"
-                  [theme]="chartTheme()"
                 ></apx-chart>
               </div>
             </ng-container>
@@ -313,14 +312,14 @@ export class PortfolioComponent {
   private dialog = inject(MatDialog);
 
   // Static chart config — never changes, so defined once to avoid triggering ApexCharts redraws
-  readonly chartConfig: Pick<AllocationChartOptions, 'chart' | 'legend' | 'responsive' | 'colors'> = {
+  readonly chartConfig: Pick<AllocationChartOptions, 'chart' | 'responsive' | 'colors'> = {
     chart: {
       type: 'donut',
       height: 320,
       toolbar: { show: false },
       animations: { enabled: false },
+      background: 'transparent',
     },
-    legend: { position: 'bottom', fontSize: '12px' },
     responsive: [
       {
         breakpoint: 640,
@@ -335,9 +334,17 @@ export class PortfolioComponent {
     this.portfolio.activeRows().filter(row => row.currentValue > 0)
   );
 
-  readonly chartTheme = computed(() => ({
-    mode: this.settings.isDarkThemeEffective() ? 'dark' as const : 'light' as const
-  }));
+  // Reactive legend to handle dark/light mode text colors
+  readonly chartLegend = computed(() => {
+    const isDark = this.settings.isDarkThemeEffective();
+    return {
+      position: 'bottom' as const,
+      fontSize: '12px',
+      labels: {
+        colors: isDark ? '#d1d5db' : '#374151',
+      }
+    };
+  });
 
   // Signals for the chart that can be paused when hovering
   displayedSeries = signal<number[]>([]);
