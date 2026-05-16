@@ -258,14 +258,14 @@ interface AllocationChartOptions {
               </div>
             </div>
 
-            <ng-container *ngIf="allocationChart().series.length > 0; else allocationEmpty">
+            <ng-container *ngIf="chartSeries().length > 0; else allocationEmpty">
               <apx-chart
-                [series]="allocationChart().series"
-                [chart]="allocationChart().chart"
-                [labels]="allocationChart().labels"
-                [legend]="allocationChart().legend"
-                [responsive]="allocationChart().responsive"
-                [colors]="allocationChart().colors"
+                [series]="chartSeries()"
+                [chart]="chartConfig.chart"
+                [labels]="chartLabels()"
+                [legend]="chartConfig.legend"
+                [responsive]="chartConfig.responsive"
+                [colors]="chartConfig.colors"
               ></apx-chart>
             </ng-container>
           </mat-card-content>
@@ -309,34 +309,36 @@ export class PortfolioComponent {
 
   private dialog = inject(MatDialog);
 
-  readonly allocationChart = computed<AllocationChartOptions>(() => {
-    const rows = this.portfolio.activeRows().filter(row => row.currentValue > 0);
+  // Static chart config — never changes, so defined once to avoid triggering ApexCharts redraws
+  readonly chartConfig: Pick<AllocationChartOptions, 'chart' | 'legend' | 'responsive' | 'colors'> = {
+    chart: {
+      type: 'donut',
+      height: 320,
+      toolbar: { show: false },
+      animations: { enabled: false },
+    },
+    legend: { position: 'bottom', fontSize: '12px' },
+    responsive: [
+      {
+        breakpoint: 640,
+        options: { chart: { height: 280 }, legend: { position: 'bottom' } },
+      },
+    ],
+    colors: ['#1d4ed8', '#0891b2', '#14b8a6', '#84cc16', '#f59e0b', '#ef4444'],
+  };
 
-    return {
-      series: rows.map(row => Number(row.currentValue.toFixed(2))),
-      chart: {
-        type: 'donut',
-        height: 320,
-        toolbar: { show: false },
-        animations: { enabled: true },
-      },
-      labels: rows.map(row => row.symbol),
-      legend: {
-        position: 'bottom',
-        fontSize: '12px',
-      },
-      responsive: [
-        {
-          breakpoint: 640,
-          options: {
-            chart: { height: 280 },
-            legend: { position: 'bottom' },
-          },
-        },
-      ],
-      colors: ['#1d4ed8', '#0891b2', '#14b8a6', '#84cc16', '#f59e0b', '#ef4444'],
-    };
-  });
+  // Only series and labels are reactive — they update when prices change
+  private readonly allocationRows = computed(() =>
+    this.portfolio.activeRows().filter(row => row.currentValue > 0)
+  );
+
+  readonly chartSeries = computed(() =>
+    this.allocationRows().map(row => Number(row.currentValue.toFixed(2)))
+  );
+
+  readonly chartLabels = computed(() =>
+    this.allocationRows().map(row => row.symbol)
+  );
 
   onTabChange(index: number): void {
     if (index === 1) {
@@ -349,6 +351,7 @@ export class PortfolioComponent {
       this.dialog.open(AddPositionDialogComponent, {
         width: '520px',
         panelClass: ['dark-panel', 'rounded-lg'],
+        autoFocus: 'dialog',
       }).afterClosed(),
     );
 
@@ -363,6 +366,7 @@ export class PortfolioComponent {
         width: '520px',
         data: { position },
         panelClass: ['dark-panel', 'rounded-lg'],
+        autoFocus: 'dialog',
       }).afterClosed(),
     );
 
@@ -376,6 +380,7 @@ export class PortfolioComponent {
       this.dialog.open(ClosePositionDialogComponent, {
         width: '420px',
         panelClass: ['dark-panel', 'rounded-lg'],
+        autoFocus: 'dialog',
         data: {
           coinId: row.position.coinId,
           coinName: row.label,

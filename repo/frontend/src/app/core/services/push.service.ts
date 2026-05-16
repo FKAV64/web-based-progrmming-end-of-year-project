@@ -55,6 +55,9 @@ export class PushService {
     }
 
     const publicKey = await this.api.getVapidPublicKey();
+    if (!publicKey) {
+      throw new Error('VAPID public key missing — check backend VAPID_PUBLIC_KEY env var');
+    }
     const registration = await navigator.serviceWorker.ready;
     const existing = await registration.pushManager.getSubscription();
     const subscription =

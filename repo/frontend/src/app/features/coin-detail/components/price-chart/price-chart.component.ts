@@ -311,10 +311,6 @@ export class PriceChartComponent implements OnChanges {
             }
             this.cdr.markForCheck();
           }
-        },
-        mouseLeave: () => {
-          this.hoveredIndex = null;
-          this.cdr.markForCheck();
         }
       },
     };
@@ -358,10 +354,11 @@ export class PriceChartComponent implements OnChanges {
     };
     this.colors = this.chartType === 'area' ? ['#2563eb'] : ['#26a69a'];
     
-    // Disable native tooltip for candlestick to use our custom one,
-    // but keep it for line/area chart if needed (or we can disable it everywhere if we build custom for both)
+    // Disable native tooltip visual for candlestick to use our custom one,
+    // but keep enabled=true so ApexCharts still calculates dataPointIndex on hover
     this.tooltip = {
-      enabled: this.chartType !== 'candle',
+      enabled: true,
+      custom: this.chartType === 'candle' ? () => '<span style="display:none;"></span>' : undefined,
       theme: dark ? 'dark' : 'light',
       x: { formatter: (value: number | string) => this.formatTime(value, this.interval) },
       y: { formatter: (value: number) => this.formatPrice(value) },
