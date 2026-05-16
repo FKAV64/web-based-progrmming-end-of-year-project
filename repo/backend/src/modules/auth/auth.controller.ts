@@ -142,7 +142,7 @@ export class AuthController {
     return { message: 'All sessions revoked' };
   }
 
-  private getCookieOptions() {
+  private getCookieOptions(): import('express').CookieOptions {
     const isProd = process.env.NODE_ENV === 'production';
     const frontendOrigin = process.env.FRONTEND_ORIGIN || '';
     // If we're in production or the configured frontend origin is an external HTTPS URL,
@@ -152,7 +152,7 @@ export class AuthController {
     return {
       httpOnly: true,
       secure: isCrossSite,
-      sameSite: (isCrossSite ? 'none' : 'lax') as 'none' | 'lax',
+      sameSite: isCrossSite ? 'none' : 'lax',
     };
   }
 
