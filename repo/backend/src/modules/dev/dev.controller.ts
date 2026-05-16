@@ -29,10 +29,7 @@ export class DevController {
     }
 
     const fixturePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
+      process.cwd(),
       'test',
       'fixtures',
       'top-20-coins.json',
@@ -57,10 +54,7 @@ export class DevController {
     }
 
     const fixturePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
+      process.cwd(),
       'test',
       'fixtures',
       'top-20-coins.json',
