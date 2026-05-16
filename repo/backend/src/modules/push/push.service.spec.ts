@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 const mockSendNotification = jest.fn();
 jest.mock('web-push', () => ({
   setVapidDetails: jest.fn(),
-  sendNotification: (...args: any[]) => mockSendNotification(...args),
+  sendNotification: mockSendNotification,
 }));
 
 describe('PushService', () => {

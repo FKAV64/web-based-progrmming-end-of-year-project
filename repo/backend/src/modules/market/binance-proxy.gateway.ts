@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import * as http from 'http';
-import { WebSocket, WebSocketServer } from 'ws';
+import { RawData, WebSocket, WebSocketServer } from 'ws';
 
 const BINANCE_WS_URL = 'wss://stream.binance.com/ws';
 const PROXY_PATH = '/ws/binance';
@@ -29,7 +29,7 @@ export class BinanceProxyGateway
 
   onApplicationBootstrap(): void {
     const httpServer: http.Server =
-      this.httpAdapterHost.httpAdapter.getHttpServer();
+      this.httpAdapterHost.httpAdapter.getHttpServer() as http.Server;
 
     this.wss = new WebSocketServer({ noServer: true });
 
@@ -57,7 +57,7 @@ export class BinanceProxyGateway
     this.logger.debug(`Client connected — total: ${this.clients.size}`);
 
     clientWs.on('message', (raw) => {
-      const text = raw.toString();
+      const text = BinanceProxyGateway.rawToText(raw);
 
       // Track subscribed streams so we can replay them after a Binance reconnect.
       try {
@@ -101,7 +101,7 @@ export class BinanceProxyGateway
     });
 
     this.binanceWs.on('message', (raw) => {
-      const text = raw.toString();
+      const text = BinanceProxyGateway.rawToText(raw);
       for (const client of this.clients) {
         if (client.readyState === WebSocket.OPEN) {
           client.send(text);
@@ -142,6 +142,14 @@ export class BinanceProxyGateway
       this.reconnectTimer = null;
       this.connectToBinance();
     }, delay);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  private static rawToText(raw: RawData): string {
+    if (Buffer.isBuffer(raw)) return raw.toString();
+    if (Array.isArray(raw)) return Buffer.concat(raw).toString();
+    return Buffer.from(raw).toString();
   }
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
