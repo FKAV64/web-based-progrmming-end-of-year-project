@@ -10,9 +10,9 @@ export class PushApi {
 
   async getVapidPublicKey(): Promise<string> {
     const res = await firstValueFrom(
-      this.http.get<{ publicKey: string }>(`${this.base}/vapid-public-key`),
+      this.http.get<{ data: { publicKey: string } }>(`${this.base}/vapid-public-key`),
     );
-    return res.publicKey;
+    return res.data.publicKey;
   }
 
   subscribe(subscription: { endpoint: string; keys: { p256dh: string; auth: string } }): Promise<unknown> {
