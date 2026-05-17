@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -57,7 +57,7 @@ function minNumeric(min: number) {
           <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@alerts.dialog.condition">Koşul</label>
           <mat-form-field appearance="outline" class="w-full">
             <mat-select formControlName="condition" i18n-aria-label="@@alerts.dialog.condition" aria-label="Koşul" panelClass="dark-panel" class="w-full">
-              <mat-option *ngFor="let option of conditions" [value]="option.value">
+              <mat-option *ngFor="let option of conditions()" [value]="option.value">
                 {{ option.label }}
               </mat-option>
             </mat-select>
@@ -86,10 +86,13 @@ export class CreateAlertDialogComponent {
   private settings = inject(SettingsService);
 
   readonly dialogRef = inject(MatDialogRef<CreateAlertDialogComponent>);
-  readonly conditions: { label: string; value: AlertCondition }[] = [
-    { label: $localize`:@@alerts.condition.above:Üstünde`, value: 'ABOVE' },
-    { label: $localize`:@@alerts.condition.below:Altında`, value: 'BELOW' },
-  ];
+  readonly conditions = computed<{ label: string; value: AlertCondition }[]>(() => {
+    const isEn = this.settings.locale() === 'EN';
+    return [
+      { label: isEn ? 'Above' : 'Üstünde', value: 'ABOVE' },
+      { label: isEn ? 'Below' : 'Altında', value: 'BELOW' },
+    ];
+  });
   readonly form = this.fb.nonNullable.group({
     coinId: ['', [Validators.required, Validators.maxLength(100)]],
     condition: ['ABOVE' as AlertCondition, [Validators.required]],
