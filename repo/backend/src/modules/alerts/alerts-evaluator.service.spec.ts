@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AlertsEvaluatorService } from './alerts-evaluator.service';
+import { AlertsNotifyGateway } from './alerts-notify.gateway';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PushService } from '../push/push.service';
 import { AuditService } from '../audit/audit.service';
@@ -13,6 +14,7 @@ describe('AlertsEvaluatorService', () => {
   let pushMock: { send: jest.Mock };
   let auditMock: { log: jest.Mock };
   let coingeckoMock: { getExchangeRates: jest.Mock };
+  let notifyGatewayMock: { notifyUser: jest.Mock };
 
   beforeEach(async () => {
     prismaMock = {
@@ -27,6 +29,7 @@ describe('AlertsEvaluatorService', () => {
     coingeckoMock = {
       getExchangeRates: jest.fn().mockRejectedValue(new Error('unreachable')), // default: fallback rates
     };
+    notifyGatewayMock = { notifyUser: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,6 +38,7 @@ describe('AlertsEvaluatorService', () => {
         { provide: PushService, useValue: pushMock },
         { provide: AuditService, useValue: auditMock },
         { provide: CoingeckoService, useValue: coingeckoMock },
+        { provide: AlertsNotifyGateway, useValue: notifyGatewayMock },
       ],
     }).compile();
 

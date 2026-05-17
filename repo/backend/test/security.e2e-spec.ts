@@ -102,7 +102,7 @@ describe('Security — expired token then refresh flow', () => {
       .expect(201);
 
     userId = reg.body.data.user.id as string;
-    refreshCookie = (reg.headers['set-cookie'] as string[])[0];
+    refreshCookie = (reg.headers['set-cookie'] as unknown as string[])[0];
   });
 
   afterAll(async () => {

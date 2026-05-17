@@ -1,0 +1,43 @@
+<div class="alarm-backdrop">
+  <div class="alarm-card" role="alertdialog" aria-modal="true" aria-labelledby="alarm-title">
+
+    <div class="alarm-header">
+      <span class="alarm-bell" aria-hidden="true">
+        <mat-icon>notifications_active</mat-icon>
+      </span>
+      <span id="alarm-title" class="alarm-title" i18n="@@alarmModal.title">ALARM TETİKLENDİ</span>
+    </div>
+
+    <div class="alarm-body">
+      <div class="alarm-coin">{{ alarm.coinId.toUpperCase() }}</div>
+
+      <div class="alarm-rows">
+        <div class="alarm-row">
+          <span class="alarm-label" i18n="@@alarmModal.condition">Koşul</span>
+          <span class="alarm-value alarm-condition" [class.above]="alarm.condition === 'ABOVE'" [class.below]="alarm.condition === 'BELOW'">
+            {{ alarm.condition === 'ABOVE' ? ('ABOVE' | uppercase) : ('BELOW' | uppercase) }}
+          </span>
+        </div>
+        <div class="alarm-row">
+          <span class="alarm-label" i18n="@@alarmModal.target">Hedef</span>
+          <span class="alarm-value">{{ alarm.targetPrice | number:'1.2-8' }} {{ alarm.currency }}</span>
+        </div>
+        <div class="alarm-row">
+          <span class="alarm-label" i18n="@@alarmModal.current">Mevcut</span>
+          <span class="alarm-value alarm-current">{{ alarm.currentPrice | number:'1.2-8' }} {{ alarm.currency }}</span>
+        </div>
+        <div class="alarm-row">
+          <span class="alarm-label" i18n="@@alarmModal.time">Zaman</span>
+          <span class="alarm-value alarm-time">{{ alarm.triggeredAt | date:'dd MMM yyyy · HH:mm:ss' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="alarm-footer">
+      <button class="alarm-dismiss-btn" (click)="dismiss()" i18n="@@alarmModal.dismiss">
+        ALARMI KAPAT
+      </button>
+    </div>
+
+  </div>
+</div>

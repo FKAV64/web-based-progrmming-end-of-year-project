@@ -20,3 +20,14 @@ export interface CreateAlertDto {
   targetPrice: string;
   currency: Currency;
 }
+
+/** Payload received via the /ws/alerts WebSocket when an alert fires. */
+export interface AlarmNotification {
+  id: string;
+  coinId: string;
+  condition: AlertCondition;
+  targetPrice: string;
+  currency: Currency;
+  triggeredAt: string;
+  currentPrice: string;
+}

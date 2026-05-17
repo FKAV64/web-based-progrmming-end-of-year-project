@@ -667,7 +667,7 @@
         <target>Quantity</target>
       </trans-unit>
       <trans-unit id="portfolio.dialog.avg-buy" datatype="html">
-        <source>Ortalama Alis</source>
+        <source>Ortalama Alış</source>
         <target>Avg Buy Price</target>
       </trans-unit>
       <trans-unit id="portfolio.dialog.notes" datatype="html">
@@ -679,15 +679,15 @@
         <target>Save</target>
       </trans-unit>
       <trans-unit id="common.cancel" datatype="html">
-        <source>Vazgec</source>
+        <source>Vazgeç</source>
         <target>Cancel</target>
       </trans-unit>
       <trans-unit id="portfolio.dialog.edit-title" datatype="html">
-        <source>Pozisyonu Duzenle</source>
+        <source>Pozisyonu Düzenle</source>
         <target>Edit Position</target>
       </trans-unit>
       <trans-unit id="common.update" datatype="html">
-        <source>Guncelle</source>
+        <source>Güncelle</source>
         <target>Update</target>
       </trans-unit>
       <trans-unit id="portfolio.dialog.close-title" datatype="html">
@@ -711,7 +711,7 @@
         <target>Coin</target>
       </trans-unit>
       <trans-unit id="alerts.dialog.condition" datatype="html">
-        <source>Kosul</source>
+        <source>Koşul</source>
         <target>Condition</target>
       </trans-unit>
       <trans-unit id="alerts.dialog.target-price" datatype="html">
@@ -719,7 +719,7 @@
         <target>Target Price</target>
       </trans-unit>
       <trans-unit id="alerts.dialog.create-btn" datatype="html">
-        <source>Alarmi Olustur</source>
+        <source>Alarmı Oluştur</source>
         <target>Create Alert</target>
       </trans-unit>
       <trans-unit id="alerts.error.poll" datatype="html">
@@ -727,15 +727,15 @@
         <target>Could not check alert notifications.</target>
       </trans-unit>
       <trans-unit id="alerts.error.load-active" datatype="html">
-        <source>Aktif alarmlar yuklenemedi.</source>
+        <source>Aktif alarmlar yüklenemedi.</source>
         <target>Could not load active alerts.</target>
       </trans-unit>
       <trans-unit id="alerts.error.load-triggered" datatype="html">
-        <source>Tetiklenen alarmlar yuklenemedi.</source>
+        <source>Tetiklenen alarmlar yüklenemedi.</source>
         <target>Could not load triggered alerts.</target>
       </trans-unit>
       <trans-unit id="alerts.error.create" datatype="html">
-        <source>Alarm olusturulamadi.</source>
+        <source>Alarm oluşturulamadı.</source>
         <target>Could not create alert.</target>
       </trans-unit>
       <trans-unit id="alerts.error.delete" datatype="html">
@@ -745,6 +745,30 @@
       <trans-unit id="alerts.notification.triggered" datatype="html">
         <source>Alarm tetiklendi: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> hedef <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></source>
         <target>Alert triggered: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> target <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></target>
+      </trans-unit>
+      <trans-unit id="alerts.condition.above" datatype="html">
+        <source>Üstünde</source>
+        <target>Above</target>
+      </trans-unit>
+      <trans-unit id="alerts.condition.below" datatype="html">
+        <source>Altında</source>
+        <target>Below</target>
+      </trans-unit>
+      <trans-unit id="ws.status.live" datatype="html">
+        <source>Canlı</source>
+        <target>Live</target>
+      </trans-unit>
+      <trans-unit id="ws.status.reconnecting" datatype="html">
+        <source>Yeniden bağlanıyor...</source>
+        <target>Reconnecting...</target>
+      </trans-unit>
+      <trans-unit id="ws.status.offline" datatype="html">
+        <source>Çevrimdışı</source>
+        <target>Offline</target>
+      </trans-unit>
+      <trans-unit id="ws.status.connecting" datatype="html">
+        <source>Bağlanıyor...</source>
+        <target>Connecting...</target>
       </trans-unit>
     </body>
   </file>

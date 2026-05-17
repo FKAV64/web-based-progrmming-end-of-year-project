@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { PushService } from '../push/push.service';
 import { AuditService } from '../audit/audit.service';
 import { CoingeckoService } from '../market/coingecko.service';
+import { AlertsNotifyGateway } from './alerts-notify.gateway';
 
 interface CoinGeckoRateEntry {
   value: number;
@@ -54,6 +55,7 @@ export class AlertsEvaluatorService {
     private readonly pushService: PushService,
     private readonly auditService: AuditService,
     private readonly coingeckoService: CoingeckoService,
+    private readonly alertsNotifyGateway: AlertsNotifyGateway,
   ) {}
 
   /**
@@ -126,9 +128,21 @@ export class AlertsEvaluatorService {
       });
       if (result.count === 0) continue; // someone else triggered it first
 
+      const triggeredAt = new Date();
       this.logger.log(
         `Alert ${t.alert.id} triggered: ${t.alert.coinId} ${t.alert.condition} ${t.alert.targetPrice.toString()} ${t.alert.currency}`,
       );
+
+      // Push real-time event to all open browser sessions for this user
+      this.alertsNotifyGateway.notifyUser(t.alert.userId, {
+        id: t.alert.id,
+        coinId: t.alert.coinId,
+        condition: t.alert.condition,
+        targetPrice: t.alert.targetPrice.toString(),
+        currency: t.alert.currency,
+        triggeredAt: triggeredAt.toISOString(),
+        currentPrice: t.priceInAlertCurrency.toFixed(2),
+      });
 
       await this.pushService.send(t.alert.userId, {
         title: `${t.alert.coinId.toUpperCase()} ${t.alert.condition.toLowerCase()} ${t.alert.targetPrice.toString()} ${t.alert.currency}`,

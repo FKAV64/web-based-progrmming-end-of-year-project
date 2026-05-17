@@ -41,7 +41,7 @@ const makeRefreshRecord = (overrides: Record<string, unknown> = {}) => ({
 
 describe('AuthService', () => {
   let service: AuthService;
-  let prismaMock: Record<string, Record<string, jest.Mock>>;
+  let prismaMock: Record<string, Record<string, jest.Mock> | jest.Mock>;
   let jwtMock: { sign: jest.Mock };
   let auditMock: { log: jest.Mock };
 
@@ -109,7 +109,7 @@ describe('AuthService', () => {
 
       await expect(
         service.register(
-          { email: 'test@example.com', password: 'Test1234' },
+          { email: 'test@example.com', password: 'Test1234', name: 'Test User' },
           '',
           '',
         ),
@@ -124,7 +124,7 @@ describe('AuthService', () => {
       prismaMock.refreshToken.create.mockResolvedValue({});
 
       await service.register(
-        { email: 'test@example.com', password: 'Test1234' },
+        { email: 'test@example.com', password: 'Test1234', name: 'Test User' },
         '1.2.3.4',
         'test-agent',
       );

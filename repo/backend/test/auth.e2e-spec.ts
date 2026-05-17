@@ -60,7 +60,7 @@ describe('Auth flow (e2e)', () => {
     expect(res.headers['set-cookie']).toBeDefined();
 
     accessToken = res.body.data.accessToken as string;
-    refreshCookie = (res.headers['set-cookie'] as string[])[0];
+    refreshCookie = (res.headers['set-cookie'] as unknown as string[])[0];
   });
 
   it('POST /api/auth/login → 200 with accessToken and refresh cookie', async () => {
@@ -75,7 +75,7 @@ describe('Auth flow (e2e)', () => {
 
     // Switch to the login-issued tokens for the rest of the flow
     accessToken = res.body.data.accessToken as string;
-    refreshCookie = (res.headers['set-cookie'] as string[])[0];
+    refreshCookie = (res.headers['set-cookie'] as unknown as string[])[0];
   });
 
   it('GET /api/auth/me with Bearer token → 200', async () => {
@@ -99,7 +99,7 @@ describe('Auth flow (e2e)', () => {
 
     // Carry the new tokens for subsequent tests
     accessToken = res.body.data.accessToken as string;
-    refreshCookie = (res.headers['set-cookie'] as string[])[0];
+    refreshCookie = (res.headers['set-cookie'] as unknown as string[])[0];
   });
 
   it('POST /api/auth/logout → 200 and clears cookie', async () => {
@@ -170,7 +170,7 @@ describe('Cross-Origin Cookies (e2e)', () => {
       .send({ email: `cookie-${Date.now()}@example.com`, password: 'Password1', name: 'User' })
       .expect(201);
 
-    const cookie = (res.headers['set-cookie'] as string[])[0];
+    const cookie = (res.headers['set-cookie'] as unknown as string[])[0];
     expect(cookie).toMatch(/SameSite=None/i);
     expect(cookie).toMatch(/Secure/i);
   });

@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { AlertsService } from './alerts.service';
 import { AuthService } from './auth.service';
 import { NotificationService } from '../notification.service';
+import { AlarmModalService } from '../alarm-modal.service';
 import { AlertsApiService } from '../api/alerts.api';
 import { PriceAlert } from '../../models/alerts.model';
 
@@ -11,6 +12,7 @@ describe('AlertsService', () => {
   let service: AlertsService;
   let apiMock: jest.Mocked<AlertsApiService>;
   let notificationsMock: { showError: jest.Mock; info: jest.Mock };
+  let alarmModalMock: { show: jest.Mock; dismissById: jest.Mock };
 
   const authMock = {
     currentUser: signal({
@@ -64,12 +66,18 @@ describe('AlertsService', () => {
       info: jest.fn(),
     };
 
+    alarmModalMock = {
+      show: jest.fn(),
+      dismissById: jest.fn(),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         AlertsService,
         { provide: AuthService, useValue: authMock },
         { provide: AlertsApiService, useValue: apiMock },
         { provide: NotificationService, useValue: notificationsMock },
+        { provide: AlarmModalService, useValue: alarmModalMock },
       ],
     });
 
@@ -94,14 +102,20 @@ describe('AlertsService', () => {
     expect(service.triggered()).toEqual([triggeredAlert]);
   });
 
-  it('shows an in-app toast for newly triggered alerts after the baseline snapshot is seeded', () => {
+  it('opens the alarm modal for newly triggered alerts after the baseline snapshot is seeded', () => {
     const internal = service as any;
 
     internal.applyAlertSnapshot([activeAlert], false);
     internal.applyAlertSnapshot([activeAlert, triggeredAlert], true);
 
-    expect(notificationsMock.info).toHaveBeenCalledWith(
-      'Alarm tetiklendi: ETHEREUM hedef 2500 EUR',
+    expect(alarmModalMock.show).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: triggeredAlert.id,
+        coinId: triggeredAlert.coinId,
+        condition: triggeredAlert.condition,
+        targetPrice: triggeredAlert.targetPrice,
+        currency: triggeredAlert.currency,
+      }),
     );
     expect(service.triggered()).toEqual([triggeredAlert]);
   });

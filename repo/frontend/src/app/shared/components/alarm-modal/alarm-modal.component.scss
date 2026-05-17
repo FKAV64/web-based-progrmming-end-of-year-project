@@ -1,0 +1,164 @@
+@keyframes ring {
+  0%   { transform: rotate(-15deg); }
+  10%  { transform: rotate(15deg); }
+  20%  { transform: rotate(-15deg); }
+  30%  { transform: rotate(15deg); }
+  40%  { transform: rotate(-8deg); }
+  50%  { transform: rotate(8deg); }
+  60%  { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.5); }
+  50%       { box-shadow: 0 0 0 16px rgba(234, 88, 12, 0); }
+}
+
+.alarm-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.78);
+  z-index: 9999;
+  pointer-events: all;
+}
+
+.alarm-card {
+  width: min(460px, 92vw);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  animation: pulse-glow 1.4s ease-in-out infinite;
+  background: #1a1a1a;
+}
+
+/* ─── Header ────────────────────────────────── */
+
+.alarm-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #c2410c 0%, #ea580c 50%, #f97316 100%);
+  color: #fff;
+}
+
+.alarm-bell {
+  display: inline-flex;
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    animation: ring 1s ease-in-out infinite;
+    display: block;
+  }
+}
+
+.alarm-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ─── Body ──────────────────────────────────── */
+
+.alarm-body {
+  padding: 24px 24px 16px;
+  background: #1e1e1e;
+}
+
+.alarm-coin {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #f97316;
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.alarm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alarm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2d2d2d;
+  padding-bottom: 8px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.alarm-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.alarm-value {
+  font-size: 0.95rem;
+  color: #f3f4f6;
+  font-weight: 600;
+}
+
+.alarm-condition {
+  &.above { color: #4ade80; }
+  &.below { color: #f87171; }
+}
+
+.alarm-current {
+  color: #fbbf24;
+}
+
+.alarm-time {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+/* ─── Footer ────────────────────────────────── */
+
+.alarm-footer {
+  padding: 16px 24px 24px;
+  display: flex;
+  justify-content: center;
+  background: #1e1e1e;
+}
+
+.alarm-dismiss-btn {
+  width: 100%;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #c2410c, #ea580c);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    filter: brightness(1.15);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #f97316;
+    outline-offset: 2px;
+  }
+}

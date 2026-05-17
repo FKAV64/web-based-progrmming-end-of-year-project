@@ -37,6 +37,8 @@ interface SparklineOptions {
     height: number;
     sparkline: { enabled: boolean };
     animations: { enabled: boolean };
+    redrawOnWindowResize: boolean;
+    redrawOnParentResize: boolean;
   };
   stroke: {
     curve: 'smooth';
@@ -239,6 +241,8 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
         height: 35,
         sparkline: { enabled: true },
         animations: { enabled: false },
+        redrawOnWindowResize: false,
+        redrawOnParentResize: false,
       },
       stroke: {
         curve: 'smooth',

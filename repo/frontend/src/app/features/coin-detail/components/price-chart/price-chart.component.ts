@@ -156,6 +156,9 @@ export class PriceChartComponent implements OnChanges {
   mouseX = 0;
   mouseY = 0;
 
+  // Zoom state — preserved across live tick updates
+  private zoomedXRange: { min: number; max: number } | null = null;
+
   get hoveredKline(): OHLC | undefined {
     if (this.hoveredIndex === null || this.hoveredIndex < 0 || this.hoveredIndex >= this.klines.length) {
       return undefined;
@@ -197,6 +200,9 @@ export class PriceChartComponent implements OnChanges {
 
   private loadKlines(): void {
     if (!this.symbol || !this.interval || !this.limit) return;
+
+    // Clear saved zoom when loading new data
+    this.zoomedXRange = null;
 
     const key = this.cacheKey();
     this.fetchKey = key;
@@ -296,29 +302,31 @@ export class PriceChartComponent implements OnChanges {
           reset: true,
         },
       },
+      zoom: {
+        enabled: true,
+        type: 'x',
+        autoScaleYaxis: true,
+      },
+      selection: {
+        enabled: true,
+      },
       animations: { enabled: false },
       background: 'transparent',
       events: {
-        mounted: (chart: any) => {
-          // Listen in the capture phase with passive: false.
-          // This allows us to safely call preventDefault() before the event
-          // reaches ApexCharts' internal passive listeners, preventing the warning.
-          const preventPassiveWarning = (e: Event) => {
-            if (e.cancelable) {
-              e.preventDefault();
-            }
-            // Prevent ApexCharts from calling the original preventDefault
-            // and triggering the "passive event listener" warning.
-            Object.defineProperty(e, 'preventDefault', {
-              value: () => {},
-              writable: true,
-              configurable: true
-            });
-          };
-
-          chart.el.addEventListener('wheel', preventPassiveWarning, { passive: false, capture: true });
-          chart.el.addEventListener('touchstart', preventPassiveWarning, { passive: false, capture: true });
-          chart.el.addEventListener('touchmove', preventPassiveWarning, { passive: false, capture: true });
+        zoomed: (_chartContext: any, { xaxis }: any) => {
+          // Save the user's zoom range so we can re-apply it after live tick updates
+          if (xaxis && xaxis.min != null && xaxis.max != null) {
+            this.zoomedXRange = { min: xaxis.min, max: xaxis.max };
+          }
+        },
+        scrolled: (_chartContext: any, { xaxis }: any) => {
+          if (xaxis && xaxis.min != null && xaxis.max != null) {
+            this.zoomedXRange = { min: xaxis.min, max: xaxis.max };
+          }
+        },
+        beforeResetZoom: () => {
+          // User clicked the reset icon — clear the saved zoom
+          this.zoomedXRange = null;
         },
         mouseMove: (e: any, chartContext: any, config: any) => {
           if (config.dataPointIndex !== undefined && config.dataPointIndex !== -1) {
@@ -422,6 +430,18 @@ export class PriceChartComponent implements OnChanges {
 
     if (fromLiveTick && this.hasRenderedChart()) {
       this.chartRef?.updateSeries(this.series, false);
+
+      // Re-apply the user's zoom range after the series update to prevent reset
+      if (this.zoomedXRange) {
+        const { min, max } = this.zoomedXRange;
+        setTimeout(() => {
+          try {
+            this.chartRef?.zoomX(min, max);
+          } catch {
+            // Ignore if chart is not ready
+          }
+        });
+      }
     }
   }
 

@@ -27,6 +27,11 @@
       "@angular/localize"
     ]
   },
+  "exclude": [
+    "node_modules",
+    "e2e",
+    "playwright.config.ts"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

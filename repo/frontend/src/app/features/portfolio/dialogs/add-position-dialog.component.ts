@@ -63,9 +63,9 @@ function minNumeric(min: number) {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@portfolio.dialog.avg-buy">Ortalama Alis</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@portfolio.dialog.avg-buy">Ortalama Alış</label>
           <mat-form-field appearance="outline" class="w-full">
-            <input matInput formControlName="avgBuyPrice" inputmode="decimal" placeholder="30000" i18n-aria-label="@@portfolio.dialog.avg-buy" aria-label="Ortalama Alis" class="w-full">
+            <input matInput formControlName="avgBuyPrice" inputmode="decimal" placeholder="30000" i18n-aria-label="@@portfolio.dialog.avg-buy" aria-label="Ortalama Alış" class="w-full">
           </mat-form-field>
         </div>
 
@@ -78,7 +78,7 @@ function minNumeric(min: number) {
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()" i18n="@@common.cancel">Vazgec</button>
+        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()" i18n="@@common.cancel">Vazgeç</button>
         <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid" i18n="@@common.save">
           Kaydet
         </button>

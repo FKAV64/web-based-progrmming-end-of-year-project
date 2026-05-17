@@ -32,6 +32,7 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.accessToken() || !!this.currentUser());
 
   private _isLoggingOut = false;
+  private refreshTimerId: ReturnType<typeof setTimeout> | null = null;
 
   private readonly broadcastChannel =
     typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('auth') : null;
@@ -64,6 +65,7 @@ export class AuthService {
       try {
         const { accessToken } = await firstValueFrom(this.api.refresh());
         this.accessToken.set(accessToken);
+        this.scheduleTokenRefresh(accessToken);
 
         const user = await firstValueFrom(this.api.me());
         this.currentUser.set(user);
@@ -90,6 +92,7 @@ export class AuthService {
   async login(dto: LoginDto): Promise<void> {
     const { user, accessToken } = await firstValueFrom(this.api.login(dto));
     this.accessToken.set(accessToken);
+    this.scheduleTokenRefresh(accessToken);
     this.currentUser.set(user);
     this.isInitialized.set(true);
   }
@@ -97,6 +100,7 @@ export class AuthService {
   async register(dto: RegisterDto): Promise<void> {
     const { user, accessToken } = await firstValueFrom(this.api.register(dto));
     this.accessToken.set(accessToken);
+    this.scheduleTokenRefresh(accessToken);
     this.currentUser.set(user);
     this.isInitialized.set(true);
   }
@@ -148,11 +152,53 @@ export class AuthService {
   }
 
   clearLocalSession(): void {
+    this.cancelScheduledRefresh();
     this.accessToken.set(null);
     this.currentUser.set(null);
   }
 
   setToken(token: string): void {
     this.accessToken.set(token);
+    this.scheduleTokenRefresh(token);
+  }
+
+  /**
+   * Decodes the JWT `exp` claim and schedules a silent refresh ~1 minute
+   * before the access token expires so polling services never encounter
+   * a 401 with a stale token.
+   */
+  private scheduleTokenRefresh(token: string): void {
+    this.cancelScheduledRefresh();
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expiresMs = payload.exp * 1000;
+      const refreshInMs = expiresMs - Date.now() - 60_000; // 1 min before expiry
+      if (refreshInMs <= 0) {
+        // Token is already (nearly) expired — refresh immediately
+        void this.doProactiveRefresh();
+        return;
+      }
+      this.refreshTimerId = setTimeout(() => void this.doProactiveRefresh(), refreshInMs);
+    } catch {
+      // Malformed token — don't schedule
+    }
+  }
+
+  private cancelScheduledRefresh(): void {
+    if (this.refreshTimerId !== null) {
+      clearTimeout(this.refreshTimerId);
+      this.refreshTimerId = null;
+    }
+  }
+
+  private async doProactiveRefresh(): Promise<void> {
+    try {
+      const { accessToken } = await firstValueFrom(this.api.refresh());
+      this.accessToken.set(accessToken);
+      this.scheduleTokenRefresh(accessToken);
+    } catch {
+      this.clearLocalSession();
+      this.router.navigate(['/login']);
+    }
   }
 }
