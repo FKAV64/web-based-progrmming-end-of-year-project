@@ -12,6 +12,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
+  <script>
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window.deferredPrompt = e;
+    });
+  </script>
 </head>
 <body>
   <app-root></app-root>

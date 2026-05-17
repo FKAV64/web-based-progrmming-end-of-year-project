@@ -17,6 +17,12 @@ export class PwaService {
   constructor() {
     if (!this.isBrowser) return;
 
+    // Check if the event was already captured by index.html before Angular loaded
+    if ((window as any).deferredPrompt) {
+      this.deferredPrompt = (window as any).deferredPrompt;
+      this.canInstall.set(true);
+    }
+
     window.addEventListener('beforeinstallprompt', (e: Event) => {
       e.preventDefault();
       this.deferredPrompt = e as BeforeInstallPromptEvent;
@@ -25,6 +31,7 @@ export class PwaService {
 
     window.addEventListener('appinstalled', () => {
       this.deferredPrompt = null;
+      (window as any).deferredPrompt = null;
       this.canInstall.set(false);
     });
 
