@@ -22,10 +22,10 @@ export class ConnectionStatusComponent {
 
   get label(): string {
     switch (this.state) {
-      case 'live':         return 'Live';
-      case 'reconnecting': return 'Yeniden bağlanıyor...';
-      case 'offline':      return 'Çevrimdışı';
-      default:             return 'Bağlanıyor...';
+      case 'live':         return $localize`:@@ws.status.live:Canlı`;
+      case 'reconnecting': return $localize`:@@ws.status.reconnecting:Yeniden bağlanıyor...`;
+      case 'offline':      return $localize`:@@ws.status.offline:Çevrimdışı`;
+      default:             return $localize`:@@ws.status.connecting:Bağlanıyor...`;
     }
   }
 

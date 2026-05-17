@@ -754,6 +754,22 @@
         <source>Altında</source>
         <target>Below</target>
       </trans-unit>
+      <trans-unit id="ws.status.live" datatype="html">
+        <source>Canlı</source>
+        <target>Live</target>
+      </trans-unit>
+      <trans-unit id="ws.status.reconnecting" datatype="html">
+        <source>Yeniden bağlanıyor...</source>
+        <target>Reconnecting...</target>
+      </trans-unit>
+      <trans-unit id="ws.status.offline" datatype="html">
+        <source>Çevrimdışı</source>
+        <target>Offline</target>
+      </trans-unit>
+      <trans-unit id="ws.status.connecting" datatype="html">
+        <source>Bağlanıyor...</source>
+        <target>Connecting...</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
