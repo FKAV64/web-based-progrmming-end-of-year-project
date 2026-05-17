@@ -6,46 +6,39 @@
         <source>Alarm bildirimleri kontrol edilemedi.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.error.load-active" datatype="html">
-        <source>Aktif alarmlar yuklenemedi.</source>
+        <source>Aktif alarmlar yüklenemedi.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.error.load-triggered" datatype="html">
-        <source>Tetiklenen alarmlar yuklenemedi.</source>
+        <source>Tetiklenen alarmlar yüklenemedi.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.error.create" datatype="html">
-        <source>Alarm olusturulamadi.</source>
+        <source>Alarm oluşturulamadı.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.error.delete" datatype="html">
         <source>Alarm silinemedi.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">124</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="alerts.notification.triggered" datatype="html">
-        <source>Alarm tetiklendi: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> hedef <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/services/state/alerts.service.ts</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.title" datatype="html">
@@ -143,20 +136,6 @@
           <context context-type="linenumber">135,137</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="alerts.condition-above" datatype="html">
-        <source>Fiyat üstünde</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
-          <context context-type="linenumber">182</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="alerts.condition-below" datatype="html">
-        <source>Fiyat altında</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/features/alerts/alerts.component.ts</context>
-          <context context-type="linenumber">183</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="alerts.pending" datatype="html">
         <source>Beklemede</source>
         <context-group purpose="location">
@@ -179,10 +158,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.dialog.condition" datatype="html">
-        <source>Kosul</source>
+        <source>Koşul</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/alerts/create-alert-dialog.component.ts</context>
           <context context-type="linenumber">57,58</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/alerts/create-alert-dialog.component.ts</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.dialog.target-price" datatype="html">
@@ -197,7 +180,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="common.cancel" datatype="html">
-        <source>Vazgec</source>
+        <source>Vazgeç</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/alerts/create-alert-dialog.component.ts</context>
           <context context-type="linenumber">76,77</context>
@@ -216,7 +199,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="alerts.dialog.create-btn" datatype="html">
-        <source> Alarmi Olustur </source>
+        <source> Alarmı Oluştur </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/alerts/create-alert-dialog.component.ts</context>
           <context context-type="linenumber">78,80</context>
@@ -455,7 +438,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dashboard.watchlist-cta" datatype="html">
@@ -645,28 +628,28 @@
         <source>&quot;<x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-medium&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{input.value}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>&quot; ile eşleşen sonuç bulunamadı.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
-          <context context-type="linenumber">138,139</context>
+          <context context-type="linenumber">140,141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.paginator" datatype="html">
         <source>Sayfa seçin</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.html</context>
-          <context context-type="linenumber">144,146</context>
+          <context context-type="linenumber">146,148</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.watchlist-add" datatype="html">
         <source>İzleme listesine ekle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="table.watchlist-remove" datatype="html">
         <source>İzleme listesinden kaldır</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/markets/coins-table/coins-table.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="markets.title" datatype="html">
@@ -766,7 +749,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="portfolio.dialog.avg-buy" datatype="html">
-        <source>Ortalama Alis</source>
+        <source>Ortalama Alış</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/portfolio/dialogs/add-position-dialog.component.ts</context>
           <context context-type="linenumber">66,67</context>
@@ -832,14 +815,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="portfolio.dialog.edit-title" datatype="html">
-        <source>Pozisyonu Duzenle</source>
+        <source>Pozisyonu Düzenle</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/portfolio/dialogs/edit-position-dialog.component.ts</context>
           <context context-type="linenumber">40,42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="common.update" datatype="html">
-        <source> Guncelle </source>
+        <source> Güncelle </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/portfolio/dialogs/edit-position-dialog.component.ts</context>
           <context context-type="linenumber">78,79</context>
@@ -1334,42 +1317,42 @@
         <source>Dashboard</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.markets" datatype="html">
         <source>Piyasalar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.portfolio" datatype="html">
         <source>Portföy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.alerts" datatype="html">
         <source>Alarmlar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.news" datatype="html">
         <source>Haberler</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.settings" datatype="html">
         <source>Ayarlar</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/shell/shell.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="watchlist.title" datatype="html">
@@ -1440,6 +1423,76 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/watchlist/watchlist.component.ts</context>
           <context context-type="linenumber">109,111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alarmModal.title" datatype="html">
+        <source>ALARM TETİKLENDİ</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/alarm-modal/alarm-modal.component.html</context>
+          <context context-type="linenumber">8,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alarmModal.condition" datatype="html">
+        <source>Koşul</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/alarm-modal/alarm-modal.component.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alarmModal.target" datatype="html">
+        <source>Hedef</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/alarm-modal/alarm-modal.component.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alarmModal.current" datatype="html">
+        <source>Mevcut</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/alarm-modal/alarm-modal.component.html</context>
+          <context context-type="linenumber">26,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alarmModal.time" datatype="html">
+        <source>Zaman</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/alarm-modal/alarm-modal.component.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="alarmModal.dismiss" datatype="html">
+        <source> ALARMI KAPAT </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/alarm-modal/alarm-modal.component.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ws.status.live" datatype="html">
+        <source>Canlı</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/connection-status/connection-status.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ws.status.reconnecting" datatype="html">
+        <source>Yeniden bağlanıyor...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/connection-status/connection-status.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ws.status.offline" datatype="html">
+        <source>Çevrimdışı</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/connection-status/connection-status.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ws.status.connecting" datatype="html">
+        <source>Bağlanıyor...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/connection-status/connection-status.component.ts</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
     </body>

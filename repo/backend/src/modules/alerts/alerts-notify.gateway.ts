@@ -108,6 +108,20 @@ export class AlertsNotifyGateway
   }
 
   /**
+   * Returns true if the user has at least one open WebSocket session.
+   * Used by AlertsEvaluatorService to skip Web Push when the in-app
+   * AlarmModal will already deliver the notification via alert.triggered.
+   */
+  hasActiveSessions(userId: string): boolean {
+    const sockets = this.userSockets.get(userId);
+    if (!sockets) return false;
+    for (const s of sockets) {
+      if (s.readyState === WebSocket.OPEN) return true;
+    }
+    return false;
+  }
+
+  /**
    * Push an alert.triggered event to every open session of the user.
    * Called by AlertsEvaluatorService immediately after the CAS succeeds.
    */

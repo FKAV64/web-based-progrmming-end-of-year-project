@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpAdapterHost } from '@nestjs/core';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EventEmitter } from 'events';
 import { BinanceProxyGateway } from './binance-proxy.gateway';
 
@@ -65,17 +66,20 @@ function connectClient(gateway: BinanceProxyGateway, httpServer: EventEmitter) {
 describe('BinanceProxyGateway', () => {
   let gateway: BinanceProxyGateway;
   let httpServer: EventEmitter;
+  let eventEmitterMock: { emit: jest.Mock };
 
   beforeEach(async () => {
     jest.useFakeTimers();
 
     const { httpAdapterHost, httpServer: hs } = makeAdapter();
     httpServer = hs;
+    eventEmitterMock = { emit: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BinanceProxyGateway,
         { provide: HttpAdapterHost, useValue: httpAdapterHost },
+        { provide: EventEmitter2, useValue: eventEmitterMock },
       ],
     }).compile();
 
@@ -271,6 +275,101 @@ describe('BinanceProxyGateway', () => {
       const binance = gateway['binanceWs'] as any;
       binance.emit('open');
       expect(gateway['reconnectAttempt']).toBe(0);
+    });
+  });
+
+  // ── addServerSubscription ──────────────────────────────────────────────────
+
+  describe('addServerSubscription', () => {
+    it('adds stream to activeStreams and sends SUBSCRIBE to Binance when open', () => {
+      const binance = gateway['binanceWs'] as any;
+      binance.send.mockClear();
+
+      gateway.addServerSubscription('btcusdt@miniTicker');
+
+      expect(gateway['activeStreams'].has('btcusdt@miniTicker')).toBe(true);
+      expect(binance.send).toHaveBeenCalledWith(
+        expect.stringContaining('btcusdt@miniTicker'),
+      );
+    });
+
+    it('is idempotent — calling twice only sends one SUBSCRIBE', () => {
+      const binance = gateway['binanceWs'] as any;
+      binance.send.mockClear();
+
+      gateway.addServerSubscription('btcusdt@miniTicker');
+      gateway.addServerSubscription('btcusdt@miniTicker');
+
+      expect(binance.send).toHaveBeenCalledTimes(1);
+    });
+
+    it('adds to activeStreams without sending when Binance is closed', () => {
+      const binance = gateway['binanceWs'] as any;
+      binance.readyState = 3; // CLOSED
+      binance.send.mockClear();
+
+      gateway.addServerSubscription('btcusdt@miniTicker');
+
+      expect(gateway['activeStreams'].has('btcusdt@miniTicker')).toBe(true);
+      expect(binance.send).not.toHaveBeenCalled();
+    });
+
+    it('server-subscribed streams are replayed by resubscribeAll on reconnect', () => {
+      const binance = gateway['binanceWs'] as any;
+      gateway.addServerSubscription('btcusdt@miniTicker');
+      binance.send.mockClear();
+
+      binance.emit('open');
+
+      expect(binance.send).toHaveBeenCalledWith(
+        expect.stringContaining('btcusdt@miniTicker'),
+      );
+    });
+  });
+
+  // ── binance.tick event emission ────────────────────────────────────────────
+
+  describe('binance.tick event', () => {
+    it('emits binance.tick for valid miniTicker frames', () => {
+      const binance = gateway['binanceWs'] as any;
+      const tick = JSON.stringify({ s: 'BTCUSDT', c: '51000.00', E: 1234567890 });
+
+      binance.emit('message', Buffer.from(tick));
+
+      expect(eventEmitterMock.emit).toHaveBeenCalledWith('binance.tick', {
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: 1234567890,
+      });
+    });
+
+    it('falls back to Date.now() for timestamp when E field is absent', () => {
+      const binance = gateway['binanceWs'] as any;
+      const tick = JSON.stringify({ s: 'ETHUSDT', c: '3000.00' });
+
+      binance.emit('message', Buffer.from(tick));
+
+      expect(eventEmitterMock.emit).toHaveBeenCalledWith(
+        'binance.tick',
+        expect.objectContaining({ symbol: 'ETHUSDT', price: 3000 }),
+      );
+    });
+
+    it('does NOT emit binance.tick for subscription confirmation frames', () => {
+      const binance = gateway['binanceWs'] as any;
+      const confirmation = JSON.stringify({ result: null, id: 1 });
+
+      binance.emit('message', Buffer.from(confirmation));
+
+      expect(eventEmitterMock.emit).not.toHaveBeenCalled();
+    });
+
+    it('does NOT emit binance.tick for non-JSON frames', () => {
+      const binance = gateway['binanceWs'] as any;
+
+      binance.emit('message', Buffer.from('not-json'));
+
+      expect(eventEmitterMock.emit).not.toHaveBeenCalled();
     });
   });
 

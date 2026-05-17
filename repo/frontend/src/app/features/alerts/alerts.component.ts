@@ -178,9 +178,10 @@ export class AlertsComponent {
   }
 
   conditionLabel(condition: 'ABOVE' | 'BELOW'): string {
+    const isEn = this.settings.locale() === 'EN';
     return condition === 'ABOVE'
-      ? $localize`:@@alerts.condition-above:Fiyat üstünde`
-      : $localize`:@@alerts.condition-below:Fiyat altında`;
+      ? (isEn ? 'Price above' : 'Fiyat üstünde')
+      : (isEn ? 'Price below' : 'Fiyat altında');
   }
 
   formatCurrency(value: string, currency: 'USD' | 'EUR' | 'TRY'): string {

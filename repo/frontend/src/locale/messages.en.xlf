@@ -54,14 +54,6 @@
         <source> Tetiklenen alarmlar burada listelenecek. </source>
         <target> Triggered alerts will be listed here. </target>
       </trans-unit>
-      <trans-unit id="alerts.condition-above" datatype="html">
-        <source>Fiyat üstünde</source>
-        <target>Price above</target>
-      </trans-unit>
-      <trans-unit id="alerts.condition-below" datatype="html">
-        <source>Fiyat altında</source>
-        <target>Price below</target>
-      </trans-unit>
       <trans-unit id="alerts.pending" datatype="html">
         <source>Beklemede</source>
         <target>Pending</target>
@@ -745,14 +737,6 @@
       <trans-unit id="alerts.notification.triggered" datatype="html">
         <source>Alarm tetiklendi: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> hedef <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></source>
         <target>Alert triggered: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> target <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></target>
-      </trans-unit>
-      <trans-unit id="alerts.condition.above" datatype="html">
-        <source>Üstünde</source>
-        <target>Above</target>
-      </trans-unit>
-      <trans-unit id="alerts.condition.below" datatype="html">
-        <source>Altında</source>
-        <target>Below</target>
       </trans-unit>
       <trans-unit id="ws.status.live" datatype="html">
         <source>Canlı</source>
