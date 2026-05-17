@@ -27,7 +27,9 @@ const ALERTS_WS_PATH = '/ws/alerts';
  * @see AlertsEvaluatorService – calls notifyUser() after atomic CAS
  */
 @Injectable()
-export class AlertsNotifyGateway implements OnModuleInit, OnApplicationShutdown {
+export class AlertsNotifyGateway
+  implements OnModuleInit, OnApplicationShutdown
+{
   private readonly logger = new Logger(AlertsNotifyGateway.name);
 
   private wss!: WebSocketServer;
@@ -78,7 +80,12 @@ export class AlertsNotifyGateway implements OnModuleInit, OnApplicationShutdown 
     );
 
     ws.on('message', (raw) => {
-      this.handleClientMessage(ws, userId, raw.toString());
+      const text = Buffer.isBuffer(raw)
+        ? raw.toString()
+        : Array.isArray(raw)
+          ? Buffer.concat(raw).toString()
+          : Buffer.from(raw).toString();
+      this.handleClientMessage(ws, userId, text);
     });
 
     const cleanup = () => {
