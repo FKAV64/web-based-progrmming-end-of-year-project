@@ -158,6 +158,7 @@ export class PriceChartComponent implements OnChanges {
 
   // Zoom state — preserved across live tick updates
   private zoomedXRange: { min: number; max: number } | null = null;
+  private isRestoringZoom = false;
 
   get hoveredKline(): OHLC | undefined {
     if (this.hoveredIndex === null || this.hoveredIndex < 0 || this.hoveredIndex >= this.klines.length) {
@@ -313,19 +314,27 @@ export class PriceChartComponent implements OnChanges {
       animations: { enabled: false },
       background: 'transparent',
       events: {
+        mounted: (chart: any) => {
+          // Suppress the passive event listener warning for wheel events only.
+          // Touch events are left untouched so mobile pinch-to-zoom works.
+          chart.el.addEventListener('wheel', (e: WheelEvent) => {
+            if (e.cancelable) e.preventDefault();
+          }, { passive: false, capture: true });
+        },
         zoomed: (_chartContext: any, { xaxis }: any) => {
-          // Save the user's zoom range so we can re-apply it after live tick updates
+          // Only save when the user zoomed, not when we restored programmatically
+          if (this.isRestoringZoom) return;
           if (xaxis && xaxis.min != null && xaxis.max != null) {
             this.zoomedXRange = { min: xaxis.min, max: xaxis.max };
           }
         },
         scrolled: (_chartContext: any, { xaxis }: any) => {
+          if (this.isRestoringZoom) return;
           if (xaxis && xaxis.min != null && xaxis.max != null) {
             this.zoomedXRange = { min: xaxis.min, max: xaxis.max };
           }
         },
         beforeResetZoom: () => {
-          // User clicked the reset icon — clear the saved zoom
           this.zoomedXRange = null;
         },
         mouseMove: (e: any, chartContext: any, config: any) => {
@@ -429,18 +438,21 @@ export class PriceChartComponent implements OnChanges {
     }
 
     if (fromLiveTick && this.hasRenderedChart()) {
-      this.chartRef?.updateSeries(this.series, false);
-
-      // Re-apply the user's zoom range after the series update to prevent reset
       if (this.zoomedXRange) {
-        const { min, max } = this.zoomedXRange;
-        setTimeout(() => {
-          try {
-            this.chartRef?.zoomX(min, max);
-          } catch {
-            // Ignore if chart is not ready
-          }
-        });
+        // When zoomed, use updateOptions to push new series data AND
+        // preserve the xaxis range in a single atomic call — no zoom reset.
+        this.isRestoringZoom = true;
+        this.chartRef?.updateOptions({
+          series: this.series,
+          xaxis: {
+            ...this.xaxis,
+            min: this.zoomedXRange.min,
+            max: this.zoomedXRange.max,
+          },
+        }, false, false);
+        this.isRestoringZoom = false;
+      } else {
+        this.chartRef?.updateSeries(this.series, false);
       }
     }
   }
