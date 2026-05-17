@@ -1,6 +1,7 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
 import { AlarmModalService } from '../alarm-modal.service';
 import { AlarmNotification } from '../../models/alerts.model';
+import { environment } from '../../../../environments/environment';
 
 const MAX_RECONNECT_DELAY_MS = 30_000;
 
@@ -62,8 +63,7 @@ export class AlertWsService implements OnDestroy {
   private open(): void {
     if (!this.token) return;
 
-    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-    const url = `${proto}://${location.host}/ws/alerts?token=${this.token}`;
+    const url = `${environment.alertsWsUrl}?token=${this.token}`;
 
     this.ws = new WebSocket(url);
 
