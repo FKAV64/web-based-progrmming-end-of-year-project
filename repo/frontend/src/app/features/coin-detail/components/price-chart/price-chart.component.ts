@@ -84,6 +84,14 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
         [dataLabels]="dataLabels"
       ></apx-chart>
 
+      <!-- Custom crosshair — stays visible between candles unlike ApexCharts native -->
+      <ng-container *ngIf="hoveredIndex !== null && chartType === 'candle'">
+        <div class="pointer-events-none absolute z-30 w-px bg-gray-400/60 dark:bg-gray-500/60"
+             style="top:0;bottom:0;" [style.left.px]="mouseX"></div>
+        <div class="pointer-events-none absolute z-30 h-px bg-gray-400/60 dark:bg-gray-500/60"
+             style="left:0;right:0;" [style.top.px]="mouseY"></div>
+      </ng-container>
+
       <!-- Custom Tooltip -->
       <div *ngIf="hoveredIndex !== null && chartType === 'candle'"
            class="pointer-events-none absolute z-50 rounded border border-gray-200 bg-white p-2 text-xs shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
@@ -115,6 +123,8 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
       </div>
     </div>
   `,
+  styles: [`:host ::ng-deep .apexcharts-xcrosshairs,
+            :host ::ng-deep .apexcharts-ycrosshairs { display: none !important; }`],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PriceChartComponent implements OnChanges {
@@ -315,11 +325,51 @@ export class PriceChartComponent implements OnChanges {
       background: 'transparent',
       events: {
         mounted: (chart: any) => {
-          // Suppress the passive event listener warning for wheel events only.
-          // Touch events are left untouched so mobile pinch-to-zoom works.
-          chart.el.addEventListener('wheel', (e: WheelEvent) => {
-            if (e.cancelable) e.preventDefault();
-          }, { passive: false, capture: true });
+          // Pinch-to-zoom for mobile (ApexCharts has no built-in support).
+          let pinchDist0: number | null = null;
+          let pinchRange0: { min: number; max: number } | null = null;
+          let rafId: number | null = null;
+
+          const touchDist = (a: Touch, b: Touch) =>
+            Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
+
+          chart.el.addEventListener('touchstart', (e: TouchEvent) => {
+            if (e.touches.length !== 2) return;
+            e.preventDefault();
+            pinchDist0 = touchDist(e.touches[0], e.touches[1]);
+            pinchRange0 = this.zoomedXRange
+              ? { ...this.zoomedXRange }
+              : this.klines.length > 0
+                ? { min: this.klines[0].time, max: this.klines[this.klines.length - 1].time }
+                : null;
+          }, { passive: false });
+
+          chart.el.addEventListener('touchmove', (e: TouchEvent) => {
+            if (e.touches.length !== 2 || !pinchDist0 || !pinchRange0) return;
+            e.preventDefault();
+            if (rafId !== null) return;
+
+            const scale  = pinchDist0 / touchDist(e.touches[0], e.touches[1]);
+            const center = (pinchRange0.min + pinchRange0.max) / 2;
+            const half   = ((pinchRange0.max - pinchRange0.min) / 2) * scale;
+            const dataMin = this.klines[0]?.time ?? 0;
+            const dataMax = this.klines[this.klines.length - 1]?.time ?? Date.now();
+            const newMin  = Math.max(dataMin, Math.round(center - half));
+            const newMax  = Math.min(dataMax, Math.round(center + half));
+
+            if (newMax - newMin < 60_000 || !this.hasRenderedChart()) return;
+
+            rafId = requestAnimationFrame(() => {
+              this.chartRef?.zoomX(newMin, newMax);
+              rafId = null;
+            });
+          }, { passive: false });
+
+          chart.el.addEventListener('touchend', () => {
+            pinchDist0  = null;
+            pinchRange0 = null;
+            if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+          }, { passive: true });
         },
         zoomed: (_chartContext: any, { xaxis }: any) => {
           // Only save when the user zoomed, not when we restored programmatically
@@ -338,13 +388,16 @@ export class PriceChartComponent implements OnChanges {
           this.zoomedXRange = null;
         },
         mouseMove: (e: any, chartContext: any, config: any) => {
+          // Always update position so custom crosshair follows mouse between candles
+          if (e?.clientX !== undefined) {
+            const rect = chartContext.el.getBoundingClientRect();
+            this.mouseX = e.clientX - rect.left;
+            this.mouseY = e.clientY - rect.top;
+          }
           if (config.dataPointIndex !== undefined && config.dataPointIndex !== -1) {
             this.hoveredIndex = config.dataPointIndex;
-            if (e && e.clientX !== undefined) {
-              const rect = chartContext.el.getBoundingClientRect();
-              this.mouseX = e.clientX - rect.left;
-              this.mouseY = e.clientY - rect.top;
-            }
+          }
+          if (this.hoveredIndex !== null) {
             this.cdr.markForCheck();
           }
         }
