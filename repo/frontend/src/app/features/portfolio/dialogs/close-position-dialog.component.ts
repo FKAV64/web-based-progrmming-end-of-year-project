@@ -21,10 +21,10 @@ interface ClosePositionDialogData {
     MatButtonModule,
   ],
   template: `
-    <h2 mat-dialog-title>Pozisyonu Kapat</h2>
+    <h2 mat-dialog-title i18n="@@portfolio.dialog.close-title">Pozisyonu Kapat</h2>
 
     <mat-dialog-content class="max-w-sm">
-      <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">
+      <p class="text-gray-600 dark:text-gray-300 text-sm mt-2" i18n="@@portfolio.dialog.close-desc">
         <strong>{{ data.coinName }}</strong> pozisyonunuzu kapatmak istediğinizden emin misiniz?
         Güncel fiyat
         <span class="font-mono font-semibold text-gray-900 dark:text-white">{{ formatPrice(currentPrice) }}</span>
@@ -35,13 +35,13 @@ interface ClosePositionDialogData {
     <mat-dialog-actions align="end">
       <button mat-button type="button"
               class="text-gray-500 hover:text-gray-700 dark:text-gray-400"
-              (click)="dialogRef.close()">
+              (click)="dialogRef.close()" i18n="@@common.cancel">
         Vazgeç
       </button>
       <button mat-flat-button type="button"
               color="primary"
               class="bg-blue-600 hover:bg-blue-500 text-white font-medium"
-              (click)="confirm()">
+              (click)="confirm()" i18n="@@portfolio.dialog.close-btn">
         Pozisyonu Kapat
       </button>
     </mat-dialog-actions>

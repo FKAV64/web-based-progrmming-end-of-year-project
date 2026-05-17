@@ -654,6 +654,98 @@
         <source>Veriler yükleniyor</source>
         <target>Loading data</target>
       </trans-unit>
+      <trans-unit id="portfolio.dialog.add-title" datatype="html">
+        <source>Yeni Pozisyon</source>
+        <target>New Position</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.coin" datatype="html">
+        <source>Coin</source>
+        <target>Coin</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.quantity" datatype="html">
+        <source>Adet</source>
+        <target>Quantity</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.avg-buy" datatype="html">
+        <source>Ortalama Alis</source>
+        <target>Avg Buy Price</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.notes" datatype="html">
+        <source>Notlar</source>
+        <target>Notes</target>
+      </trans-unit>
+      <trans-unit id="common.save" datatype="html">
+        <source>Kaydet</source>
+        <target>Save</target>
+      </trans-unit>
+      <trans-unit id="common.cancel" datatype="html">
+        <source>Vazgec</source>
+        <target>Cancel</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.edit-title" datatype="html">
+        <source>Pozisyonu Duzenle</source>
+        <target>Edit Position</target>
+      </trans-unit>
+      <trans-unit id="common.update" datatype="html">
+        <source>Guncelle</source>
+        <target>Update</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.close-title" datatype="html">
+        <source>Pozisyonu Kapat</source>
+        <target>Close Position</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.close-desc" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ data.coinName }}"/> pozisyonunuzu kapatmak istediğinizden emin misiniz? Güncel fiyat <x id="INTERPOLATION_1" equiv-text="{{ formatPrice(currentPrice) }}"/> olarak kullanılacaktır.</source>
+        <target>Are you sure you want to close your <x id="INTERPOLATION" equiv-text="{{ data.coinName }}"/> position? The current price <x id="INTERPOLATION_1" equiv-text="{{ formatPrice(currentPrice) }}"/> will be used.</target>
+      </trans-unit>
+      <trans-unit id="portfolio.dialog.close-btn" datatype="html">
+        <source>Pozisyonu Kapat</source>
+        <target>Close Position</target>
+      </trans-unit>
+      <trans-unit id="alerts.dialog.create-title" datatype="html">
+        <source>Yeni Alarm</source>
+        <target>New Alert</target>
+      </trans-unit>
+      <trans-unit id="alerts.dialog.coin" datatype="html">
+        <source>Coin</source>
+        <target>Coin</target>
+      </trans-unit>
+      <trans-unit id="alerts.dialog.condition" datatype="html">
+        <source>Kosul</source>
+        <target>Condition</target>
+      </trans-unit>
+      <trans-unit id="alerts.dialog.target-price" datatype="html">
+        <source>Hedef Fiyat</source>
+        <target>Target Price</target>
+      </trans-unit>
+      <trans-unit id="alerts.dialog.create-btn" datatype="html">
+        <source>Alarmi Olustur</source>
+        <target>Create Alert</target>
+      </trans-unit>
+      <trans-unit id="alerts.error.poll" datatype="html">
+        <source>Alarm bildirimleri kontrol edilemedi.</source>
+        <target>Could not check alert notifications.</target>
+      </trans-unit>
+      <trans-unit id="alerts.error.load-active" datatype="html">
+        <source>Aktif alarmlar yuklenemedi.</source>
+        <target>Could not load active alerts.</target>
+      </trans-unit>
+      <trans-unit id="alerts.error.load-triggered" datatype="html">
+        <source>Tetiklenen alarmlar yuklenemedi.</source>
+        <target>Could not load triggered alerts.</target>
+      </trans-unit>
+      <trans-unit id="alerts.error.create" datatype="html">
+        <source>Alarm olusturulamadi.</source>
+        <target>Could not create alert.</target>
+      </trans-unit>
+      <trans-unit id="alerts.error.delete" datatype="html">
+        <source>Alarm silinemedi.</source>
+        <target>Could not delete alert.</target>
+      </trans-unit>
+      <trans-unit id="alerts.notification.triggered" datatype="html">
+        <source>Alarm tetiklendi: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> hedef <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></source>
+        <target>Alert triggered: <x id="PH" equiv-text="alert.coinId.toUpperCase()"/> target <x id="PH_1" equiv-text="alert.targetPrice"/> <x id="PH_2" equiv-text="alert.currency"/></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
