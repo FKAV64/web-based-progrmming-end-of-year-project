@@ -158,10 +158,14 @@ export class AlertsEvaluatorService implements OnApplicationBootstrap {
         currentPrice: t.priceInAlertCurrency.toFixed(2),
       });
 
-      await this.pushService.send(t.alert.userId, {
-        title: `${t.alert.coinId.toUpperCase()} ${t.alert.condition.toLowerCase()} ${t.alert.targetPrice.toString()} ${t.alert.currency}`,
-        body: `Now at ${t.priceInAlertCurrency.toFixed(2)} ${t.alert.currency}`,
-      });
+      // Skip Web Push when the user has an open WS session — the AlarmModal
+      // already fired via alert.triggered. Push is kept for app-closed devices.
+      if (!this.alertsNotifyGateway.hasActiveSessions(t.alert.userId)) {
+        await this.pushService.send(t.alert.userId, {
+          title: `${t.alert.coinId.toUpperCase()} ${t.alert.condition.toLowerCase()} ${t.alert.targetPrice.toString()} ${t.alert.currency}`,
+          body: `Now at ${t.priceInAlertCurrency.toFixed(2)} ${t.alert.currency}`,
+        });
+      }
 
       await this.auditService.log(
         'alert.triggered',

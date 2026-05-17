@@ -40,10 +40,14 @@ export class AlarmModalService {
   private currentRef: ComponentRef<AlarmModalComponent> | null = null;
   private currentHost: HTMLElement | null = null;
   private currentAlertId: string | null = null;
+  // Tracks every alarm that was ever shown or remotely dismissed so polling
+  // cannot re-enqueue an alarm the user already dealt with.
+  private readonly shownIds = new Set<string>();
 
   show(alarm: AlarmNotification): void {
-    // Ignore duplicates already in queue or currently displayed
+    // Ignore duplicates already in queue, currently displayed, or already shown.
     if (
+      this.shownIds.has(alarm.id) ||
       this.currentAlertId === alarm.id ||
       this.queue.some(a => a.id === alarm.id)
     ) {
@@ -63,6 +67,7 @@ export class AlarmModalService {
 
   /** Remote dismiss received from another device — close silently, no relay */
   dismissById(alertId: string): void {
+    this.shownIds.add(alertId);
     this.queue = this.queue.filter(a => a.id !== alertId);
     if (this.currentAlertId === alertId) {
       this.closeAndAdvance(alertId);
@@ -94,6 +99,8 @@ export class AlarmModalService {
   }
 
   private closeAndAdvance(alertId: string): void {
+    this.shownIds.add(alertId);
+
     if (this.currentAlertId !== alertId) {
       // It was queued but not yet displayed
       this.queue = this.queue.filter(a => a.id !== alertId);

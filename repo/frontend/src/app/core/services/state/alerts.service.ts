@@ -8,22 +8,6 @@ import { NotificationService } from '../notification.service';
 import { AlarmModalService } from '../alarm-modal.service';
 import { AuthService } from './auth.service';
 
-/**
- * Price alert state service with background polling.
- *
- * Maintains active and triggered alerts as separate signals. The poller
- * (started once by ShellComponent when a user logs in) polls the backend
- * every 30 seconds starting 15 s after login; when a new triggered alert
- * appears in the snapshot, an in-app notification is shown without
- * requiring a page refresh.
- *
- * Alert mutations (add, remove) update the signals optimistically and
- * roll back on API failure.
- *
- * @see AlertsApiService
- * @see AuthService
- * @see ShellComponent
- */
 @Injectable({ providedIn: 'root' })
 export class AlertsService {
   private auth = inject(AuthService);
@@ -38,7 +22,6 @@ export class AlertsService {
   private loadedUserId: string | null = null;
   private previousTriggeredIds = new Set<string>();
   private pollerStarted = false;
-  private seededTriggeredSnapshot = false;
 
   constructor() {
     effect(() => {
@@ -47,7 +30,6 @@ export class AlertsService {
       if (!userId) {
         this.loadedUserId = null;
         this.previousTriggeredIds.clear();
-        this.seededTriggeredSnapshot = false;
         this.active.set([]);
         this.triggered.set([]);
         return;
@@ -56,7 +38,6 @@ export class AlertsService {
       if (this.loadedUserId !== userId) {
         this.loadedUserId = userId;
         this.previousTriggeredIds.clear();
-        this.seededTriggeredSnapshot = false;
         void this.loadActive(true);
       }
     }, { allowSignalWrites: true });
@@ -66,9 +47,11 @@ export class AlertsService {
     if (this.pollerStarted) return;
     this.pollerStarted = true;
 
-    void this.syncTriggeredAlerts(false);
-
-    timer(15_000, 30_000)
+    // Start immediately (timer(0, ...)), then repeat every 30 s.
+    // The first emission seeds previousTriggeredIds and shows modals for
+    // recently-triggered alerts (WS fallback). Subsequent emissions only
+    // show modals for IDs not yet seen.
+    timer(0, 30_000)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(() => (this.auth.currentUser() ? this.api.list(true) : EMPTY)),
@@ -94,6 +77,7 @@ export class AlertsService {
   async loadTriggered(): Promise<void> {
     try {
       const alerts = await firstValueFrom(this.api.list(true));
+      // Update signals only — do not show modals (WS / poller handle that).
       this.applyAlertSnapshot(alerts, false);
     } catch (error) {
       this.triggered.set([]);
@@ -128,64 +112,30 @@ export class AlertsService {
     }
   }
 
-  private async syncTriggeredAlerts(notifyNewTriggered: boolean): Promise<void> {
-    if (!this.auth.currentUser()) return;
-
-    try {
-      const alerts = await firstValueFrom(this.api.list(true));
-      this.applyAlertSnapshot(alerts, notifyNewTriggered);
-    } catch (error) {
-      this.notifications.showError(error, $localize`:@@alerts.error.poll:Alarm bildirimleri kontrol edilemedi.`);
-    }
-  }
-
-  private applyAlertSnapshot(alerts: PriceAlert[], notifyNewTriggered: boolean): void {
+  private applyAlertSnapshot(alerts: PriceAlert[], showModals: boolean): void {
     const triggeredAlerts = alerts.filter(alert => !!alert.triggeredAt);
     this.active.set(alerts.filter(alert => !alert.triggeredAt));
     this.triggered.set(triggeredAlerts);
 
-    const THREE_MINUTES_AGO = Date.now() - 3 * 60 * 1_000;
+    if (!showModals) return;
 
-    if (!this.seededTriggeredSnapshot || !notifyNewTriggered) {
-      triggeredAlerts.forEach(alert => {
-        this.previousTriggeredIds.add(alert.id);
-        // Safety net: show the alarm modal even on first load if the alert
-        // fired within the last 3 minutes (catches devices that reconnect
-        // shortly after the WebSocket event was missed).
-        if (
-          alert.triggeredAt &&
-          new Date(alert.triggeredAt).getTime() > THREE_MINUTES_AGO
-        ) {
-          this.alarmModal.show({
-            id: alert.id,
-            coinId: alert.coinId,
-            condition: alert.condition,
-            targetPrice: alert.targetPrice,
-            currency: alert.currency,
-            triggeredAt: alert.triggeredAt,
-            currentPrice: alert.targetPrice, // best available without live price
-          });
-        }
-      });
-      this.seededTriggeredSnapshot = true;
-      return;
-    }
-
+    const cutoff = Date.now() - 3 * 60_000;
     for (const alert of triggeredAlerts) {
       if (this.previousTriggeredIds.has(alert.id)) continue;
-
       this.previousTriggeredIds.add(alert.id);
-      // Fallback path: polling detected a new trigger (WebSocket may have been
-      // unavailable). Show the alarm modal the same way the WS path does.
-      this.alarmModal.show({
-        id: alert.id,
-        coinId: alert.coinId,
-        condition: alert.condition,
-        targetPrice: alert.targetPrice,
-        currency: alert.currency,
-        triggeredAt: alert.triggeredAt ?? new Date().toISOString(),
-        currentPrice: alert.targetPrice, // live price not available via polling
-      });
+      // Show modal for alerts that fired within the last 3 minutes — catches
+      // triggers that arrived while the WebSocket was reconnecting.
+      if (alert.triggeredAt && new Date(alert.triggeredAt).getTime() > cutoff) {
+        this.alarmModal.show({
+          id: alert.id,
+          coinId: alert.coinId,
+          condition: alert.condition,
+          targetPrice: alert.targetPrice,
+          currency: alert.currency,
+          triggeredAt: alert.triggeredAt,
+          currentPrice: alert.targetPrice,
+        });
+      }
     }
   }
 }

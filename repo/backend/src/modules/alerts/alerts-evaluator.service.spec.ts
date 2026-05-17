@@ -15,7 +15,7 @@ describe('AlertsEvaluatorService', () => {
   let pushMock: { send: jest.Mock };
   let auditMock: { log: jest.Mock };
   let coingeckoMock: { getExchangeRates: jest.Mock };
-  let notifyGatewayMock: { notifyUser: jest.Mock };
+  let notifyGatewayMock: { notifyUser: jest.Mock; hasActiveSessions: jest.Mock };
   let binanceGatewayMock: { addServerSubscription: jest.Mock };
 
   beforeEach(async () => {
@@ -31,7 +31,10 @@ describe('AlertsEvaluatorService', () => {
     coingeckoMock = {
       getExchangeRates: jest.fn().mockRejectedValue(new Error('unreachable')),
     };
-    notifyGatewayMock = { notifyUser: jest.fn() };
+    notifyGatewayMock = {
+      notifyUser: jest.fn(),
+      hasActiveSessions: jest.fn().mockReturnValue(false),
+    };
     binanceGatewayMock = { addServerSubscription: jest.fn() };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -222,6 +225,17 @@ describe('AlertsEvaluatorService', () => {
       await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 52000, timestamp: Date.now() });
 
       expect(prismaMock.priceAlert.updateMany).not.toHaveBeenCalled();
+    });
+
+    it('skips push when user has active WS sessions (AlarmModal handles it)', async () => {
+      notifyGatewayMock.hasActiveSessions.mockReturnValue(true);
+      service.addToCache(btcAlert);
+      prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
+
+      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+
+      expect(notifyGatewayMock.notifyUser).toHaveBeenCalledTimes(1);
+      expect(pushMock.send).not.toHaveBeenCalled();
     });
   });
 
