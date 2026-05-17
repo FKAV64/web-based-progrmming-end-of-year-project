@@ -10,8 +10,10 @@ import { SettingsService } from '../../core/services/state/settings.service';
 import { PushService } from '../../core/services/push.service';
 import { AuthService } from '../../core/services/state/auth.service';
 import { Locale } from '../../core/models/user.model';
+import { LOCALE_ID } from '@angular/core';
 import { DeleteAccountDialogComponent } from './delete-account-dialog.component';
 import { environment } from '../../../environments/environment';
+import { SettingsApiService } from '../../core/services/api/settings.api';
 
 @Component({
   selector: 'app-settings-page',
@@ -62,7 +64,7 @@ import { environment } from '../../../environments/environment';
           <mat-card-title i18n="@@settings.language">Dil</mat-card-title>
         </mat-card-header>
         <mat-card-content class="pt-4">
-          <mat-button-toggle-group [value]="settings.locale()" (change)="switchLocale($event.value)"
+          <mat-button-toggle-group [value]="currentLocale" (change)="switchLocale($event.value)"
                                    i18n-aria-label="@@settings.language-select" aria-label="Dil seç">
             <mat-button-toggle value="TR" i18n="@@settings.lang-tr">Türkçe</mat-button-toggle>
             <mat-button-toggle value="EN" i18n="@@settings.lang-en">English</mat-button-toggle>
@@ -161,17 +163,33 @@ export class SettingsPageComponent {
   push = inject(PushService);
   private auth = inject(AuthService);
   private dialog = inject(MatDialog);
+  private settingsApi = inject(SettingsApiService);
+  private localeId = inject(LOCALE_ID);
 
   isProd = environment.production;
   exportLoading = signal(false);
   logoutAllLoading = signal(false);
+
+  get currentLocale(): string {
+    return this.localeId.startsWith('en') ? 'EN' : 'TR';
+  }
 
   onPushToggle(enable: boolean): void {
     void this.push.toggle(enable);
   }
 
   switchLocale(locale: Locale): void {
+    if (locale === this.currentLocale) return;
+
     this.settings.setLocale(locale);
+    // Persist immediately before navigating
+    this.settingsApi.update({ locale }).subscribe({
+      next: () => this.navigateLocale(locale),
+      error: () => this.navigateLocale(locale) // fallback if network fails
+    });
+  }
+
+  private navigateLocale(locale: Locale): void {
     if (environment.production) {
       const currentPath = window.location.pathname;
       const pathWithoutLocale = currentPath.replace(/^\/(en|tr)/, '') || '/';

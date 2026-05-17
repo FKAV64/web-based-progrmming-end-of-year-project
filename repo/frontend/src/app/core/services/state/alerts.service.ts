@@ -73,7 +73,7 @@ export class AlertsService {
       )
       .subscribe({
         next: alerts => this.applyAlertSnapshot(alerts, true),
-        error: error => this.notifications.showError(error, 'Alarm bildirimleri kontrol edilemedi.'),
+        error: error => this.notifications.showError(error, $localize`:@@alerts.error.poll:Alarm bildirimleri kontrol edilemedi.`),
       });
   }
 
@@ -84,7 +84,7 @@ export class AlertsService {
     } catch (error) {
       this.active.set([]);
       if (!silent) {
-        this.notifications.showError(error, 'Aktif alarmlar yuklenemedi.');
+        this.notifications.showError(error, $localize`:@@alerts.error.load-active:Aktif alarmlar yuklenemedi.`);
       }
     }
   }
@@ -95,7 +95,7 @@ export class AlertsService {
       this.applyAlertSnapshot(alerts, false);
     } catch (error) {
       this.triggered.set([]);
-      this.notifications.showError(error, 'Tetiklenen alarmlar yuklenemedi.');
+      this.notifications.showError(error, $localize`:@@alerts.error.load-triggered:Tetiklenen alarmlar yuklenemedi.`);
     }
   }
 
@@ -104,7 +104,7 @@ export class AlertsService {
       const created = await firstValueFrom(this.api.add(dto));
       this.active.update(alerts => [created, ...alerts]);
     } catch (error) {
-      this.notifications.showError(error, 'Alarm olusturulamadi.');
+      this.notifications.showError(error, $localize`:@@alerts.error.create:Alarm olusturulamadi.`);
       throw error;
     }
   }
@@ -121,7 +121,7 @@ export class AlertsService {
     } catch (error) {
       this.active.set(previousActive);
       this.triggered.set(previousTriggered);
-      this.notifications.showError(error, 'Alarm silinemedi.');
+      this.notifications.showError(error, $localize`:@@alerts.error.delete:Alarm silinemedi.`);
       throw error;
     }
   }
@@ -133,7 +133,7 @@ export class AlertsService {
       const alerts = await firstValueFrom(this.api.list(true));
       this.applyAlertSnapshot(alerts, notifyNewTriggered);
     } catch (error) {
-      this.notifications.showError(error, 'Alarm bildirimleri kontrol edilemedi.');
+      this.notifications.showError(error, $localize`:@@alerts.error.poll:Alarm bildirimleri kontrol edilemedi.`);
     }
   }
 
@@ -153,7 +153,7 @@ export class AlertsService {
 
       this.previousTriggeredIds.add(alert.id);
       this.notifications.info(
-        `Alarm tetiklendi: ${alert.coinId.toUpperCase()} hedef ${alert.targetPrice} ${alert.currency}`,
+        $localize`:@@alerts.notification.triggered:Alarm tetiklendi: ${alert.coinId.toUpperCase()} hedef ${alert.targetPrice} ${alert.currency}`
       );
     }
   }

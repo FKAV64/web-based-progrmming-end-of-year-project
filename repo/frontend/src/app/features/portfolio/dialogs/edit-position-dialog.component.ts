@@ -37,7 +37,7 @@ function minNumeric(min: number) {
     MatInputModule,
   ],
   template: `
-    <h2 mat-dialog-title>Pozisyonu Duzenle</h2>
+    <h2 mat-dialog-title i18n="@@portfolio.dialog.edit-title">Pozisyonu Duzenle</h2>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
       <mat-dialog-content class="grid gap-4 sm:grid-cols-2">
@@ -51,30 +51,30 @@ function minNumeric(min: number) {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Adet</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@portfolio.dialog.quantity">Adet</label>
           <mat-form-field appearance="outline" class="w-full">
-            <input matInput formControlName="quantity" inputmode="decimal" aria-label="Adet" class="w-full">
+            <input matInput formControlName="quantity" inputmode="decimal" i18n-aria-label="@@portfolio.dialog.quantity" aria-label="Adet" class="w-full">
           </mat-form-field>
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Ortalama Alis</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@portfolio.dialog.avg-buy">Ortalama Alis</label>
           <mat-form-field appearance="outline" class="w-full">
-            <input matInput formControlName="avgBuyPrice" inputmode="decimal" aria-label="Ortalama Alis" class="w-full">
+            <input matInput formControlName="avgBuyPrice" inputmode="decimal" i18n-aria-label="@@portfolio.dialog.avg-buy" aria-label="Ortalama Alis" class="w-full">
           </mat-form-field>
         </div>
 
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200">Notlar</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@portfolio.dialog.notes">Notlar</label>
           <mat-form-field appearance="outline" class="w-full">
-            <textarea matInput rows="3" formControlName="notes" aria-label="Notlar" class="w-full"></textarea>
+            <textarea matInput rows="3" formControlName="notes" i18n-aria-label="@@portfolio.dialog.notes" aria-label="Notlar" class="w-full"></textarea>
           </mat-form-field>
         </div>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()">Vazgec</button>
-        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()" i18n="@@common.cancel">Vazgec</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid" i18n="@@common.update">
           Guncelle
         </button>
       </mat-dialog-actions>
