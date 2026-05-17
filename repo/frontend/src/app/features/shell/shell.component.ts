@@ -19,6 +19,7 @@ import { BINANCE_WS } from '../../core/services/ws/binance-ws.token';
 import { ConnectionStatusComponent } from '../../shared/components/connection-status/connection-status.component';
 import { PwaService } from '../../core/services/pwa.service';
 import { PushService } from '../../core/services/push.service';
+import { AlertWsService } from '../../core/services/ws/alert-ws.service';
 
 interface NavItem {
   label: string;
@@ -70,6 +71,7 @@ export class ShellComponent {
   ws = inject(BINANCE_WS);
   pwa = inject(PwaService);
   push = inject(PushService);
+  alertWs = inject(AlertWsService);
 
   isMobile = signal(false);
   sidenavOpen = signal(true);
@@ -101,6 +103,7 @@ export class ShellComponent {
 
       if (!userId) {
         this.initializedUserId = null;
+        this.alertWs.disconnect();
         return;
       }
 
@@ -108,6 +111,9 @@ export class ShellComponent {
 
       this.initializedUserId = userId;
       this.alerts.startAlertPoller();
+
+      const token = this.auth.accessToken();
+      if (token) this.alertWs.connect(token);
 
       if (this.push.state() === 'granted') {
         void this.push.subscribe();

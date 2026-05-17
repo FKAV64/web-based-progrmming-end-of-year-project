@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { CreateAlertDto, PriceAlert } from '../../models/alerts.model';
 import { AlertsApiService } from '../api/alerts.api';
 import { NotificationService } from '../notification.service';
+import { AlarmModalService } from '../alarm-modal.service';
 import { AuthService } from './auth.service';
 
 /**
@@ -28,6 +29,7 @@ export class AlertsService {
   private auth = inject(AuthService);
   private api = inject(AlertsApiService);
   private notifications = inject(NotificationService);
+  private alarmModal = inject(AlarmModalService);
   private destroyRef = inject(DestroyRef);
 
   readonly active = signal<PriceAlert[]>([]);
@@ -142,8 +144,29 @@ export class AlertsService {
     this.active.set(alerts.filter(alert => !alert.triggeredAt));
     this.triggered.set(triggeredAlerts);
 
+    const THREE_MINUTES_AGO = Date.now() - 3 * 60 * 1_000;
+
     if (!this.seededTriggeredSnapshot || !notifyNewTriggered) {
-      triggeredAlerts.forEach(alert => this.previousTriggeredIds.add(alert.id));
+      triggeredAlerts.forEach(alert => {
+        this.previousTriggeredIds.add(alert.id);
+        // Safety net: show the alarm modal even on first load if the alert
+        // fired within the last 3 minutes (catches devices that reconnect
+        // shortly after the WebSocket event was missed).
+        if (
+          alert.triggeredAt &&
+          new Date(alert.triggeredAt).getTime() > THREE_MINUTES_AGO
+        ) {
+          this.alarmModal.show({
+            id: alert.id,
+            coinId: alert.coinId,
+            condition: alert.condition,
+            targetPrice: alert.targetPrice,
+            currency: alert.currency,
+            triggeredAt: alert.triggeredAt,
+            currentPrice: alert.targetPrice, // best available without live price
+          });
+        }
+      });
       this.seededTriggeredSnapshot = true;
       return;
     }
@@ -152,9 +175,17 @@ export class AlertsService {
       if (this.previousTriggeredIds.has(alert.id)) continue;
 
       this.previousTriggeredIds.add(alert.id);
-      this.notifications.info(
-        $localize`:@@alerts.notification.triggered:Alarm tetiklendi: ${alert.coinId.toUpperCase()} hedef ${alert.targetPrice} ${alert.currency}`
-      );
+      // Fallback path: polling detected a new trigger (WebSocket may have been
+      // unavailable). Show the alarm modal the same way the WS path does.
+      this.alarmModal.show({
+        id: alert.id,
+        coinId: alert.coinId,
+        condition: alert.condition,
+        targetPrice: alert.targetPrice,
+        currency: alert.currency,
+        triggeredAt: alert.triggeredAt ?? new Date().toISOString(),
+        currentPrice: alert.targetPrice, // live price not available via polling
+      });
     }
   }
 }
