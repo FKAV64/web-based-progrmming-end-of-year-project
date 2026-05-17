@@ -84,7 +84,7 @@ export class AlertsService {
     } catch (error) {
       this.active.set([]);
       if (!silent) {
-        this.notifications.showError(error, $localize`:@@alerts.error.load-active:Aktif alarmlar yuklenemedi.`);
+        this.notifications.showError(error, $localize`:@@alerts.error.load-active:Aktif alarmlar yüklenemedi.`);
       }
     }
   }
@@ -95,7 +95,7 @@ export class AlertsService {
       this.applyAlertSnapshot(alerts, false);
     } catch (error) {
       this.triggered.set([]);
-      this.notifications.showError(error, $localize`:@@alerts.error.load-triggered:Tetiklenen alarmlar yuklenemedi.`);
+      this.notifications.showError(error, $localize`:@@alerts.error.load-triggered:Tetiklenen alarmlar yüklenemedi.`);
     }
   }
 
@@ -104,7 +104,7 @@ export class AlertsService {
       const created = await firstValueFrom(this.api.add(dto));
       this.active.update(alerts => [created, ...alerts]);
     } catch (error) {
-      this.notifications.showError(error, $localize`:@@alerts.error.create:Alarm olusturulamadi.`);
+      this.notifications.showError(error, $localize`:@@alerts.error.create:Alarm oluşturulamadı.`);
       throw error;
     }
   }

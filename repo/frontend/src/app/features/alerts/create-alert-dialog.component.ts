@@ -54,9 +54,9 @@ function minNumeric(min: number) {
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@alerts.dialog.condition">Kosul</label>
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-200" i18n="@@alerts.dialog.condition">Koşul</label>
           <mat-form-field appearance="outline" class="w-full">
-            <mat-select formControlName="condition" aria-label="Kosul" panelClass="dark-panel" class="w-full">
+            <mat-select formControlName="condition" i18n-aria-label="@@alerts.dialog.condition" aria-label="Koşul" panelClass="dark-panel" class="w-full">
               <mat-option *ngFor="let option of conditions" [value]="option.value">
                 {{ option.label }}
               </mat-option>
@@ -73,9 +73,9 @@ function minNumeric(min: number) {
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()" i18n="@@common.cancel">Vazgec</button>
+        <button mat-button type="button" class="text-gray-500 hover:text-gray-700 dark:text-gray-400" (click)="dialogRef.close()" i18n="@@common.cancel">Vazgeç</button>
         <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid" i18n="@@alerts.dialog.create-btn">
-          Alarmi Olustur
+          Alarmı Oluştur
         </button>
       </mat-dialog-actions>
     </form>
@@ -87,8 +87,8 @@ export class CreateAlertDialogComponent {
 
   readonly dialogRef = inject(MatDialogRef<CreateAlertDialogComponent>);
   readonly conditions: { label: string; value: AlertCondition }[] = [
-    { label: 'Ustunde', value: 'ABOVE' },
-    { label: 'Altinda', value: 'BELOW' },
+    { label: $localize`:@@alerts.condition.above:Üstünde`, value: 'ABOVE' },
+    { label: $localize`:@@alerts.condition.below:Altında`, value: 'BELOW' },
   ];
   readonly form = this.fb.nonNullable.group({
     coinId: ['', [Validators.required, Validators.maxLength(100)]],
