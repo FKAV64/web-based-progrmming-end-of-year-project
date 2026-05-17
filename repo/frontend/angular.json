@@ -77,7 +77,8 @@
               "localize": ["tr"]
             },
             "en": {
-              "localize": ["en"]
+              "localize": ["en"],
+              "serviceWorker": "ngsw-config.en.json"
             }
           },
           "defaultConfiguration": "production"
