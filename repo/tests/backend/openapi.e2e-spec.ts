@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from '../src/app.module';
+import { AppModule } from '../../backend/src/app.module';
 
 describe('OpenAPI spec', () => {
   it('generates a valid openapi spec with all expected paths', async () => {

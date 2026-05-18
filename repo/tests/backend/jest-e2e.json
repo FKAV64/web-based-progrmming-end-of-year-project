@@ -1,0 +1,15 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "../../backend",
+  "roots": ["<rootDir>/../tests/backend"],
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "maxWorkers": 1,
+  "testTimeout": 30000,
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "setupFiles": ["<rootDir>/../tests/backend/jest-e2e-setup.ts"],
+  "modulePaths": ["<rootDir>/node_modules"],
+  "moduleDirectories": ["node_modules", "<rootDir>/node_modules"]
+}

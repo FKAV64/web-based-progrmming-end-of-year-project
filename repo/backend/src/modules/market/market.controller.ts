@@ -21,6 +21,14 @@ import { BinanceRestService } from './binance-rest.service';
 import { SentimentService } from './sentiment.service';
 import { NewsService } from './news.service';
 
+// CoinGecko coin ids are lowercase slugs (e.g. "bitcoin", "matic-network",
+// "avalanche-2"). `days` is "max" or a small positive integer. Rejecting
+// anything else turns malformed input into a clean 400 instead of a 500
+// (the latter also tripped ZAP's error-based SQL-injection heuristic even
+// though this path performs no DB query — it only fetches CoinGecko).
+const COIN_ID_RE = /^[a-z0-9._-]{1,64}$/;
+const DAYS_RE = /^(max|[1-9]\d{0,4})$/;
+
 @ApiTags('Market')
 @ApiBearerAuth()
 @Controller('market')
@@ -46,6 +54,9 @@ export class MarketController {
   @ApiParam({ name: 'id', description: 'CoinGecko coin ID (e.g. bitcoin)' })
   @ApiResponse({ status: 200, description: 'Coin detail object' })
   async getCoin(@Param('id') id: string): Promise<unknown> {
+    if (!COIN_ID_RE.test(id)) {
+      throw new BadRequestException('Invalid coin id');
+    }
     return this.coingeckoService.getCoin(id);
   }
 
@@ -89,7 +100,14 @@ export class MarketController {
     @Param('id') id: string,
     @Query('days') days?: string,
   ): Promise<unknown> {
-    return this.coingeckoService.getMarketChart(id, days || '1');
+    if (!COIN_ID_RE.test(id)) {
+      throw new BadRequestException('Invalid coin id');
+    }
+    const normalizedDays = days ?? '1';
+    if (!DAYS_RE.test(normalizedDays)) {
+      throw new BadRequestException('Invalid days parameter');
+    }
+    return this.coingeckoService.getMarketChart(id, normalizedDays);
   }
 
   @Get('exchange-rates')

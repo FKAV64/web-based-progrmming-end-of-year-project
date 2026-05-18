@@ -7,6 +7,45 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 
+// Node/undici network failure codes. When an outbound dependency
+// (CoinGecko, exchange rates, Binance REST, RSS news, …) is unreachable,
+// the global `fetch` rejects with one of these — it is a gateway
+// failure, not an application bug, and must surface as 502, never as a
+// 500 that echoes the internal error class.
+const NETWORK_ERROR_CODES = new Set<string>([
+  'ENOTFOUND',
+  'ECONNREFUSED',
+  'ECONNRESET',
+  'ETIMEDOUT',
+  'EAI_AGAIN',
+  'EPIPE',
+  'UND_ERR_CONNECT_TIMEOUT',
+  'UND_ERR_HEADERS_TIMEOUT',
+  'UND_ERR_BODY_TIMEOUT',
+  'UND_ERR_SOCKET',
+]);
+
+function isUpstreamNetworkError(exception: unknown): boolean {
+  if (!(exception instanceof Error)) return false;
+  if (exception.name === 'FetchError') return true;
+  // Node global fetch / undici throws `TypeError: fetch failed` on a
+  // network-level failure (DNS, refused, reset, timeout).
+  if (exception instanceof TypeError && exception.message === 'fetch failed') {
+    return true;
+  }
+  const code = (exception as { code?: unknown }).code;
+  if (typeof code === 'string' && NETWORK_ERROR_CODES.has(code)) return true;
+  const cause = (exception as { cause?: { code?: unknown } }).cause;
+  if (
+    cause &&
+    typeof cause.code === 'string' &&
+    NETWORK_ERROR_CODES.has(cause.code)
+  ) {
+    return true;
+  }
+  return false;
+}
+
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
@@ -41,30 +80,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
           message = payload.error;
         }
       }
-    } else if (exception && typeof exception === 'object') {
-      // Handle non-Nest errors that still carry an HTTP status.
-      const maybeStatus = (exception as { status?: unknown }).status;
-      if (typeof maybeStatus === 'number') {
-        status = maybeStatus;
-      }
-      const maybeCode = (exception as { code?: unknown }).code;
-      if (typeof maybeCode === 'string') {
-        code = maybeCode;
-      } else {
-        const maybeName = (exception as { name?: unknown }).name;
-        if (typeof maybeName === 'string' && maybeName) {
-          code = maybeName;
-        }
-      }
-      const maybeMsg = (exception as { message?: unknown }).message;
-      if (typeof maybeMsg === 'string' && maybeMsg) {
-        message = maybeMsg;
-      }
-    } else if (exception instanceof Error) {
-      code = exception.name || code;
-      if (process.env.NODE_ENV !== 'production') {
-        message = exception.message;
-      }
+    } else if (isUpstreamNetworkError(exception)) {
+      // A third-party/upstream dependency is unreachable. Report a
+      // gateway error with a generic message — do NOT leak the internal
+      // error class/message (OWASP: Application Error Disclosure).
+      status = HttpStatus.BAD_GATEWAY;
+      code = 'BadGateway';
+      message = 'Upstream service temporarily unavailable';
+    } else {
+      // Any other non-HttpException is unexpected. Never disclose the
+      // internal error name/message/stack to the client — return an
+      // opaque 500. (The full error is still logged server-side by the
+      // logger; only the client-facing body is sanitised here.)
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+      code = 'InternalServerError';
+      message = 'Internal server error';
     }
 
     response.status(status).json({

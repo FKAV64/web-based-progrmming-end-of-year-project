@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'repo/backend/**'
+      - 'repo/tests/backend/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     paths:
       - 'repo/backend/**'
+      - 'repo/tests/backend/**'
       - '.github/workflows/backend-ci.yml'
 
 jobs:

@@ -3,9 +3,9 @@ import * as http from 'http';
 import { Test } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
-import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
+import { AppModule } from '../../backend/src/app.module';
+import { HttpExceptionFilter } from '../../backend/src/common/filters/http-exception.filter';
+import { TransformInterceptor } from '../../backend/src/common/interceptors/transform.interceptor';
 
 async function createApp(): Promise<INestApplication> {
   const fixture = await Test.createTestingModule({

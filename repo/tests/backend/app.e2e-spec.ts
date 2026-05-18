@@ -2,9 +2,9 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
-import { HttpExceptionFilter } from './../src/common/filters/http-exception.filter';
-import { TransformInterceptor } from './../src/common/interceptors/transform.interceptor';
+import { AppModule } from '../../backend/src/app.module';
+import { HttpExceptionFilter } from '../../backend/src/common/filters/http-exception.filter';
+import { TransformInterceptor } from '../../backend/src/common/interceptors/transform.interceptor';
 
 describe('Health (e2e)', () => {
   let app: INestApplication<App>;

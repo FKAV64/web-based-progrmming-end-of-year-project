@@ -27,6 +27,10 @@ playwright-report/
 test-results/
 *.test.local
 
+# Security scan workdir (transient; may hold throwaway auth tokens / scan output)
+.zapwrk/
+**/.zapwrk/
+
 # OS
 .DS_Store
 Thumbs.db

@@ -30,7 +30,6 @@ export class DevController {
 
     const fixturePath = path.join(
       process.cwd(),
-      'test',
       'fixtures',
       'top-20-coins.json',
     );
@@ -55,7 +54,6 @@ export class DevController {
 
     const fixturePath = path.join(
       process.cwd(),
-      'test',
       'fixtures',
       'top-20-coins.json',
     );
