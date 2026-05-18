@@ -752,7 +752,7 @@ sequenceDiagram
     EV->>EV: Cache'ten O(1) bul, ABOVE/BELOW değerlendir
     alt Koşul sağlandı
         EV->>D: updateMany (id + triggered_at=null → triggered_at=now, atomik CAS)
-        D-->>EV: count (yarış guard; 0 ise atla)
+        D-->>EV: count (yarış guard, 0 ise atlanır)
         EV->>WS: alert.triggered (kullanıcının WS oturumuna)
         WS-->>U: Anlık AlarmModal
         opt Kullanıcının aktif WS oturumu yok
