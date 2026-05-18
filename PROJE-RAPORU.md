@@ -685,7 +685,7 @@ flowchart LR
     System --> Push
 ```
 
-*Diyagram ayrıca: `repo/docs/diagrams/architecture.md`.*
+*Ayrıntılı mimari (Türkçe): [repo/docs/diagrams/architecture.md](repo/docs/diagrams/architecture.md).*
 
 ### 8.2 Container Seviyesi (C4 — Level 2)
 
@@ -706,7 +706,7 @@ flowchart TD
     API --> EXT
 ```
 
-*Container diyagramı; ayrıntı: `repo/docs/diagrams/architecture.md`.*
+*Container diyagramı; ayrıntı (Türkçe): [repo/docs/diagrams/architecture.md](repo/docs/diagrams/architecture.md).*
 
 ### 8.3 Önemli Akışlar (Sequence Diagrams)
 
@@ -732,18 +732,34 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
+    participant U as Kullanıcı
     participant BN as Binance WS
     participant A as NestJS API
-    participant EV as Alarm Değerlendirici
+    participant EV as Alarm Değerlendirici (bellek-içi cache)
     participant D as PostgreSQL
+    participant WS as WS Bildirim Gateway
     participant P as Web Push
 
-    BN-->>A: Canlı fiyat snapshot
-    A->>EV: snapshot.updated olayı
-    EV->>D: Aktif (triggeredAt=null) alarmları getir
-    EV->>EV: ABOVE/BELOW koşulunu değerlendir
-    EV->>D: Eşleşen alarm triggeredAt = now
-    EV->>P: Eşleşen kullanıcıya web-push gönder
+    Note over EV,D: Uygulama açılışında (onApplicationBootstrap)
+    EV->>D: Aktif alarmları sorgula (triggered_at = null)
+    D-->>EV: Aktif alarm listesi
+    EV->>EV: Bellek-içi cache'i doldur (coinId → alarmlar)
+
+    Note over A: snapshot.updated yalnızca sembol haritası + döviz kuru +<br/>Binance aboneliklerini tazeler — DB sorgusu / değerlendirme yok
+
+    BN-->>A: Canlı fiyat tick'i
+    A->>EV: binance.tick olayı
+    EV->>EV: Cache'ten O(1) bul, ABOVE/BELOW değerlendir
+    alt Koşul sağlandı
+        EV->>D: updateMany (id + triggered_at=null → triggered_at=now, atomik CAS)
+        D-->>EV: count (yarış guard; 0 ise atla)
+        EV->>WS: alert.triggered (kullanıcının WS oturumuna)
+        WS-->>U: Anlık AlarmModal
+        opt Kullanıcının aktif WS oturumu yok
+            EV->>P: Web Push gönder
+        end
+        EV->>D: audit_log kaydı (alert.triggered)
+    end
 ```
 
 ### 8.4 Deployment Topology
@@ -805,13 +821,13 @@ En az **3 ADR** yazın. Her biri `ADR-00X-[kısa-ad].md` formatında repo'nuzda 
 
 ```mermaid
 erDiagram
-    User ||--o{ RefreshToken : has
-    User ||--o{ WatchlistItem : has
-    User ||--o{ PortfolioPosition : has
-    User ||--o{ PriceAlert : has
-    User ||--o{ PushSubscription : has
-    User ||--|| UserSettings : has
-    User ||--o{ AuditLog : writes
+    User ||--o{ RefreshToken : "sahiptir"
+    User ||--o{ WatchlistItem : "sahiptir"
+    User ||--o{ PortfolioPosition : "sahiptir"
+    User ||--o{ PriceAlert : "sahiptir"
+    User ||--o{ PushSubscription : "sahiptir"
+    User ||--|| UserSettings : "1:1"
+    User |o--o{ AuditLog : "yazar (SetNull)"
 
     User {
         uuid id PK
@@ -819,18 +835,29 @@ erDiagram
         varchar password_hash
         varchar name
         Role role
+        timestamp email_verified_at
+        int failed_login_attempts
+        timestamp last_failed_login_at
+        timestamp locked_until
+        timestamp logout_all_at
         timestamp created_at
+        timestamp updated_at
     }
     RefreshToken {
         uuid id PK
         uuid user_id FK
         varchar token_hash UK
         timestamp expires_at
+        timestamp revoked_at
+        varchar user_agent
+        varchar ip
+        timestamp created_at
     }
     WatchlistItem {
         uuid id PK
         uuid user_id FK
         varchar coin_id
+        timestamp added_at
     }
     PortfolioPosition {
         uuid id PK
@@ -839,6 +866,11 @@ erDiagram
         decimal quantity
         decimal avg_buy_price
         Currency buy_currency
+        varchar notes
+        timestamp closed_at
+        decimal close_price
+        timestamp created_at
+        timestamp updated_at
     }
     PriceAlert {
         uuid id PK
@@ -846,27 +878,57 @@ erDiagram
         varchar coin_id
         AlertCondition condition
         decimal target_price
+        Currency currency
         timestamp triggered_at
+        timestamp created_at
+        timestamp updated_at
     }
     PushSubscription {
         uuid id PK
         uuid user_id FK
         varchar endpoint UK
+        varchar p256dh_key
+        varchar auth_key
+        varchar user_agent
+        timestamp created_at
     }
     UserSettings {
-        uuid user_id PK
+        uuid user_id PK "users.id'e FK (1:1)"
         Theme theme
         Currency currency
         Locale locale
+        boolean notifications_enabled
+        timestamp updated_at
     }
     AuditLog {
         uuid id PK
-        uuid user_id FK
+        uuid user_id FK "nullable, onDelete SetNull"
         varchar action
+        varchar resource_type
+        varchar resource_id
+        varchar ip
+        varchar user_agent
+        json meta
+        timestamp created_at
     }
 ```
 
-*Kaynak: `repo/backend/prisma/schema.prisma`.*
+**Enum'lar:** `Role` = USER · ADMIN | `AlertCondition` = ABOVE · BELOW |
+`Currency` = USD · EUR · TRY | `Theme` = LIGHT · DARK · SYSTEM |
+`Locale` = TR · EN.
+
+**Index / benzersizlik kısıtları:** `users.email` UNIQUE ·
+`refresh_tokens.token_hash` UNIQUE + index `(user_id, revoked_at)` ·
+`watchlist_items` UNIQUE `(user_id, coin_id)` ·
+`portfolio_positions` index `(user_id, closed_at)` ·
+`price_alerts` index `(user_id, triggered_at)` + `(triggered_at)` ·
+`push_subscriptions.endpoint` UNIQUE + index `(user_id)` ·
+`audit_log` index `(user_id, created_at)` + `(action, created_at)`.
+Tüm `user_id` yabancı anahtarları `onDelete: Cascade`'tir
+(`audit_log` hariç — `SetNull`, denetim izi kullanıcı silinse de kalır).
+
+*Kaynak: [repo/backend/prisma/schema.prisma](repo/backend/prisma/schema.prisma)
+· Ayrıntılı ERD: [repo/docs/diagrams/erd.md](repo/docs/diagrams/erd.md)*
 
 ### 9.2 Tablolar (Ayrıntılı)
 
@@ -1060,12 +1122,19 @@ doğrudan dashboard'a geçilir.*
 
 ```mermaid
 flowchart LR
-    A(Alarm oluştur ABOVE/BELOW) --> B(Sunucu snapshot ile değerlendir)
-    B --> C{Koşul sağlandı?}
-    C -->|Hayır| B
-    C -->|Evet| D(triggeredAt set + web-push)
-    D --> E(Kullanıcı bildirim alır)
+    A(Alarm oluştur ABOVE/BELOW) --> B(Bellek-içi cache'e eklenir)
+    B --> C(Her Binance tick'inde cache'ten değerlendirilir)
+    C --> D{Koşul sağlandı?}
+    D -->|Hayır| C
+    D -->|Evet| E(Atomik CAS: triggered_at = now)
+    E --> F{Aktif WS oturumu?}
+    F -->|Var| G(WS ile anlık AlarmModal)
+    F -->|Yok| H(Web Push bildirimi)
+    G --> I(audit_log kaydı)
+    H --> I
 ```
+
+*Tüm kullanıcı akışı diyagramları (Türkçe): [repo/docs/diagrams/user-flow.md](repo/docs/diagrams/user-flow.md).*
 
 ### 10.3 Design System
 
@@ -1467,15 +1536,14 @@ geri dönüş → daha fazla alarm/izleme.
 - Öğrenci No: 24080410152
 - E-posta: fomavalerio@gmail.com
 - GitHub: https://github.com/FKAV64/web-based-progrmming-end-of-year-project
-- LinkedIn (opsiyonel): [*…*]
-
+- LinkedIn : https://www.linkedin.com/in/foma-valerio-478920336
 ---
 
 ## Ekler
 
 - [x] Mimari karar kayıtları (ADR) — `repo/docs/adr/`
-- [ ] 8+ ekran görüntüsü — `repo/docs/screenshots/` (yer hazır, görseller eklenecek)
-- [x] Mimari diyagramlar — bu raporda (Context/Container/Sequence/ERD/User flow, mermaid) + `repo/docs/diagrams/architecture.md`
+- [x] 8 ekran görüntüsü — [repo/docs/screenshots/](repo/docs/screenshots/) (01–08 PNG; §10.5'te gömülü)
+- [x] Mimari diyagramlar — bu raporda (Context/Container/Sequence/ERD/User flow, mermaid) + Türkçe doküman seti: [architecture.md](repo/docs/diagrams/architecture.md) · [erd.md](repo/docs/diagrams/erd.md) · [user-flow.md](repo/docs/diagrams/user-flow.md)
 - [ ] Wireframe + mockup (Figma) — eklenmedi
 - [x] OpenAPI spec — `repo/docs/openapi.yaml` (+ `openapi.json`), CI drift kontrollü
 - [ ] Rakip analizi ekran görüntüleri — eklenmedi

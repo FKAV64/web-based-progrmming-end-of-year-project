@@ -1,32 +1,33 @@
 # Backend
 
-NestJS API for the crypto dashboard. It uses Prisma with PostgreSQL for persistence and Redis for cached market snapshots.
+Kripto dashboard için NestJS API. Kalıcılık için PostgreSQL ile Prisma,
+önbelleklenen piyasa anlık görüntüleri (snapshot) için Redis kullanır.
 
-## Quick start
+## Hızlı başlangıç
 
-From the repository root, start the local services first:
+Önce depo kökünden (`repo/`) yerel servisleri başlatın:
 
 ```bash
 docker compose up -d
 ```
 
-That command now starts PostgreSQL + Redis and also runs a one-shot
-`prisma migrate deploy` container after PostgreSQL becomes healthy, so a
-fresh Docker volume gets the schema automatically.
+Bu komut PostgreSQL + Redis'i başlatır ve PostgreSQL sağlıklı olduğunda
+tek seferlik bir `prisma migrate deploy` container'ı çalıştırır; böylece
+yeni bir Docker volume şemayı otomatik alır.
 
-Then in this `backend/` folder:
+Ardından bu `backend/` klasöründe:
 
 ```bash
-copy .env.example .env
+cp .env.example .env
 npm install
 npm run start:dev
 ```
 
-The API runs on `http://localhost:3000/api`.
+API `http://localhost:3000/api` adresinde çalışır.
 
-## Prisma setup
+## Prisma kurulumu
 
-These helper scripts are available:
+Şu yardımcı script'ler mevcuttur:
 
 ```bash
 npm run prisma:generate
@@ -34,13 +35,15 @@ npm run prisma:migrate
 npm run prisma:setup
 ```
 
-`npm run prisma:setup` is the normal command to use after a fresh Docker reset, a new PostgreSQL volume, or any time the database schema has not been created yet.
+`npm run prisma:setup`; yeni bir Docker sıfırlamasından, yeni bir
+PostgreSQL volume'ünden sonra veya veritabanı şeması henüz
+oluşturulmadığında kullanılacak normal komuttur.
 
-With the current `docker compose.yml`, a fresh `docker compose up -d`
-already applies migrations automatically. `npm run prisma:setup` remains a
-useful fallback if you want to apply them manually from the host.
+Mevcut `docker-compose.yml` ile yeni bir `docker compose up -d` zaten
+migration'ları otomatik uygular. `npm run prisma:setup`, host'tan elle
+uygulamak isterseniz yine de kullanışlı bir yedek yöntemdir.
 
-## Development
+## Geliştirme
 
 ```bash
 npm run start
@@ -48,10 +51,16 @@ npm run start:dev
 npm run start:prod
 ```
 
-## Tests
+## Testler
+
+Birim testleri (`*.spec.ts`) Nest geleneği gereği `src/` içinde
+kaynağının yanında durur. Uçtan-uca (e2e) süiti depo kökündeki
+`repo/tests/backend/` altına taşınmıştır (yapılandırma:
+`repo/tests/backend/jest-e2e.json`); `npm run test:e2e` bunu kullanır
+ve çalışan bir PostgreSQL + Redis gerektirir.
 
 ```bash
-npm run test
-npm run test:e2e
-npm run test:cov
+npm run test       # birim testleri (Jest)
+npm run test:e2e   # e2e (Jest + Supertest, repo/tests/backend)
+npm run test:cov   # kapsam (coverage) raporu
 ```

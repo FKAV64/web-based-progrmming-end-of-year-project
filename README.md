@@ -57,7 +57,7 @@ Görseller: [`repo/docs/screenshots/`](repo/docs/screenshots/)
 - ✅ PWA: ana ekrana ekle + push notification (uyarı)
 - ✅ Çoklu para birimi (TRY, USD, EUR)
 
-## 🧰 Tech Stack
+## 🧰 Teknoloji Yığını
 
 **Frontend:** `Angular 17 (standalone components, signals)`, `Angular Material`, `Tailwind CSS 3`  
 **Reaktiflik:** `RxJS 7 (Observable, Subject, operators)`  
@@ -82,20 +82,22 @@ Görseller: [`repo/docs/screenshots/`](repo/docs/screenshots/)
 
 Frontend (Angular SPA) Vercel'de, backend (NestJS API) Railway'de çalışır.
 Piyasa anlık görüntüleri Redis'te önbelleklenir; kalıcı veri PostgreSQL'de
-Prisma ORM ile tutulur. Diyagram ve ayrıntılar:
-`repo/docs/diagrams/architecture.md`.
+Prisma ORM ile tutulur. Türkçe diyagram dokümanları:
+[mimari](repo/docs/diagrams/architecture.md) ·
+[ERD](repo/docs/diagrams/erd.md) ·
+[kullanıcı akışları](repo/docs/diagrams/user-flow.md).
 
 [Detaylı mimari ve ADR'lar →](PROJE-RAPORU.md#8-sistem-mimarisi)
 
-## 📦 Subprojects
+## 📦 Alt Projeler
 
 | Klasör | Açıklama | README |
 |--------|----------|--------|
-| `repo/frontend/` | Angular 17 SPA — UI, RxJS streams, charts | [repo/frontend/README.md](repo/frontend/README.md) |
+| `repo/frontend/` | Angular 17 SPA — arayüz, RxJS akışları, grafikler | [repo/frontend/README.md](repo/frontend/README.md) |
 | `repo/backend/` | NestJS 11 API — Prisma, PostgreSQL, Redis | [repo/backend/README.md](repo/backend/README.md) |
-| `repo/tests/` | Tüm e2e testleri — `backend/` (Jest+Supertest), `frontend/` (Playwright) | [repo/README.md](repo/README.md#testing) |
+| `repo/tests/` | Tüm e2e testleri — `backend/` (Jest+Supertest), `frontend/` (Playwright) | [repo/README.md](repo/README.md#testler) |
 
-Local development için önce `repo/` içinde Docker servislerini başlatın:
+Yerel geliştirme için önce `repo/` içinde Docker servislerini başlatın:
 
 ```bash
 cd repo
@@ -153,40 +155,40 @@ cd repo/frontend && npm run test:e2e
 
 ## 🔄 CI/CD
 
-GitHub Actions workflows run automatically on every push and pull request:
+GitHub Actions iş akışları her push ve pull request'te otomatik çalışır.
 
-Workflow dosyaları git deposunun **kök** dizinindeki `.github/workflows/`
+İş akışı dosyaları git deposunun **kök** dizinindeki `.github/workflows/`
 içinde durur (GitHub Actions yalnızca burayı okur — bu yüzden `repo/`
 içine taşınmaz).
 
-| Workflow | Triggers on | Steps |
-|----------|-------------|-------|
-| **Backend CI** | `repo/backend/**`, `repo/tests/backend/**` | Prisma migrate → lint → unit tests + coverage → e2e tests → build → OpenAPI generation + drift check |
-| **Frontend CI** | `repo/frontend/**`, `repo/tests/frontend/**` | lint → unit tests + coverage → build → Lighthouse CI |
+| İş Akışı | Tetikleyen | Adımlar |
+|----------|------------|---------|
+| **Backend CI** | `repo/backend/**`, `repo/tests/backend/**` | Prisma migrate → lint → birim testleri + kapsam → e2e testleri → derleme → OpenAPI üretimi + drift kontrolü |
+| **Frontend CI** | `repo/frontend/**`, `repo/tests/frontend/**` | lint → birim testleri + kapsam → derleme → Lighthouse CI |
 
-### OpenAPI Spec
+### OpenAPI Şeması
 
-The generated API spec lives at `repo/docs/openapi.yaml` (and `repo/docs/openapi.json`).  
-**Run `npm run openapi:generate` inside `repo/backend/` after modifying any controller or DTO**, then commit the updated files. CI will fail with `git diff --exit-code` if the committed spec drifts from what the app generates.
+Üretilen API şeması `repo/docs/openapi.yaml` (ve `repo/docs/openapi.json`) konumundadır.  
+**Herhangi bir controller veya DTO değiştirdikten sonra `repo/backend/` içinde `npm run openapi:generate` çalıştırın** ve güncellenen dosyaları commit'leyin. Commit'lenen şema uygulamanın ürettiğinden saparsa CI, `git diff --exit-code` ile başarısız olur.
 
-Interactive Swagger UI is available at `http://localhost:3000/api/docs` when running in development mode.
+Geliştirme modunda etkileşimli Swagger UI: `http://localhost:3000/api/docs`.
 
-### Branch Protection
+### Dal Koruması
 
-The `main` branch is protected in GitHub settings (**Settings → Branches → Branch protection rules**):
+`main` dalı GitHub ayarlarında korunur (**Settings → Branches → Branch protection rules**):
 
-- Require status checks to pass before merging
-- Required checks: **Backend CI / test** and **Frontend CI / test**
-- PRs cannot be merged while either workflow is red
+- Birleştirmeden önce status check'lerin geçmesi zorunludur
+- Zorunlu check'ler: **Backend CI / test** ve **Frontend CI / test**
+- İş akışlarından biri kırmızıyken PR birleştirilemez
 
-### Lighthouse Budgets
+### Lighthouse Bütçeleri
 
-The frontend CI enforces Lighthouse score budgets on the production build:
+Frontend CI, production derlemesinde Lighthouse skor bütçelerini zorunlu kılar:
 
-| Category | Minimum Score |
+| Kategori | Minimum Skor |
 |----------|--------------|
-| Performance | 85 |
-| Accessibility | 95 |
+| Performans | 85 |
+| Erişilebilirlik | 95 |
 
 ## 📁 Klasör Yapısı
 
@@ -207,7 +209,7 @@ The frontend CI enforces Lighthouse score budgets on the production build:
     └── docs/                   (ADR, diyagram, screenshot, openapi.yaml)
 ```
 
-## 🛣 Roadmap
+## 🛣 Yol Haritası
 
 - [x] V1 — MVP (bu teslim)
 - [ ] V2 — Gerçek exchange entegrasyonu (order verme, Binance API), tahmin modeli
