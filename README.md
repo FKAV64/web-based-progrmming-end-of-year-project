@@ -8,26 +8,43 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 ![Backend CI](https://github.com/FKAV64/web-based-progrmming-end-of-year-project/actions/workflows/backend-ci.yml/badge.svg)
 ![Frontend CI](https://github.com/FKAV64/web-based-progrmming-end-of-year-project/actions/workflows/frontend-ci.yml/badge.svg)
-[![Demo](https://img.shields.io/website?label=demo&url=https%3A%2F%2Fangular-rxjs-kripto-dashboard.vercel.app)](https://angular-rxjs-kripto-dashboard.vercel.app)
+[![Demo](https://img.shields.io/website?label=demo&url=https%3A%2F%2Fweb-based-progrmming-end-of-year-pr.vercel.app)](https://web-based-progrmming-end-of-year-pr.vercel.app)
 
 ## 🎯 Özet
 
-[*1-2 paragraf: Ürün ne yapıyor, kime, hangi problemi çözüyor? Jargon yok.*]
+Angular + RxJS Kripto Dashboard, kripto para yatırımcılarının portföylerini ve
+takip listelerini tek bir ekrandan yönetebilmesi için geliştirilmiş tam yığın
+(full-stack) bir web uygulamasıdır. WebSocket üzerinden gerçek zamanlı fiyatlar,
+interaktif grafikler, kişisel watchlist, kâr/zarar takibi yapan portföy,
+fiyat alarmları (web-push bildirimli), haber/duygu akışı ve çoklu para birimi
+desteği sunar.
+
+Borsa uygulamalarının dağınık ve reklam yoğun arayüzleri yerine; sade, hızlı,
+TR/EN dil destekli, koyu mod ve PWA (ana ekrana ekle + push) özellikli, kişiye
+özel bir izleme paneli sağlar. Backend tarafında güvenli kimlik doğrulama
+(Argon2 + JWT rotasyonu), alarm değerlendirme motoru ve önbellekli piyasa
+verisi bulunur.
 
 ## 🎥 Demo
 
-🔗 **Canlı Demo:** https://angular-rxjs-kripto-dashboard.vercel.app  
-👤 **Demo Hesap:** `demo@example.com` · `demo123`
+🔗 **Canlı Demo:** https://web-based-progrmming-end-of-year-pr.vercel.app  
+👤 **Demo Hesap:** `demo@example.com` · `Demo#123`
 
-![Demo GIF](repo/docs/demo.gif)
+### Ekran Görüntüleri
 
-> _Not: Ekran görüntülerini ve demo GIF'ini kendi `repo/` içinde istediğiniz klasör yapısında tutabilirsiniz. Aşağıdaki görsel yolları örnektir; gerçek dosya konumlarınıza göre güncelleyin._
+Görseller: [`repo/docs/screenshots/`](repo/docs/screenshots/)
 
-### Ekran Görüntüleri (Örnek yerleşim)
+| Giriş | Kayıt | Dashboard (boş) |
+|-------|-------|-----------------|
+| ![login](repo/docs/screenshots/01-login.png) | ![register](repo/docs/screenshots/02-register.png) | ![dashboard empty](repo/docs/screenshots/03-dashboard-empty.png) |
 
-| Landing | Dashboard | Mobile |
-|---------|-----------|--------|
-| ![landing](repo/docs/screenshots/01-landing.png) | ![dashboard](repo/docs/screenshots/02-dashboard.png) | ![mobile](repo/docs/screenshots/03-mobile.png) |
+| Dashboard (dolu) | Piyasalar | Coin Detay |
+|------------------|-----------|------------|
+| ![dashboard populated](repo/docs/screenshots/04-dashboard-populated.png) | ![markets](repo/docs/screenshots/05-markets.png) | ![coin detail](repo/docs/screenshots/06-coin-detail.png) |
+
+| Mobil (responsive) | Koyu Mod |
+|--------------------|----------|
+| ![mobile](repo/docs/screenshots/07-mobile.png) | ![dark mode](repo/docs/screenshots/08-dark-mode.png) |
 
 ## ✨ Ana Özellikler
 
@@ -42,19 +59,31 @@
 
 ## 🧰 Tech Stack
 
-**Frontend:** `Angular 17+ (standalone components, signals)`, `Angular Material veya PrimeNG`, `Tailwind CSS`  
-**Reaktiflik:** `RxJS 7+ (Observable, Subject, operators)`  
-**Grafik:** `Chart.js veya ApexCharts (ng2-charts wrapper)`  
-**Veri Kaynağı:** `CoinGecko API (free tier)`, `Binance WebSocket`, `Alternative.me Fear & Greed API`  
-**State:** `NgRx Signal Store veya service-tabanlı`  
-**Test:** `Jest + Angular Testing Library`  
-**Hosting:** `Firebase Hosting / Cloudflare Pages`  
+**Frontend:** `Angular 17 (standalone components, signals)`, `Angular Material`, `Tailwind CSS 3`  
+**Reaktiflik:** `RxJS 7 (Observable, Subject, operators)`  
+**Grafik:** `ApexCharts (ng-apexcharts)`  
+**Backend:** `NestJS 11`, `Prisma 5`, `PostgreSQL 16`, `Redis 7`  
+**Veri Kaynağı:** `CoinGecko API`, `Binance WebSocket`, `Alternative.me Fear & Greed`, `RSS haber akışı`  
+**State:** `Servis tabanlı (Angular signals + RxJS)`  
+**Auth:** `Argon2id + JWT — Bearer access (15dk, gövde) + httpOnly refresh cookie (7g, rotasyon, logout-all)`  
+**Test:** `Jest + Supertest (backend), Jest + Angular Testing Library (frontend), Playwright (e2e)`  
+**Hosting:** `Vercel (frontend) · Railway (backend)`  
 
 > Teknoloji seçimlerinin detaylı gerekçesi: [PROJE-RAPORU.md · Bölüm 7](PROJE-RAPORU.md#7-teknoloji-yığını-tech-stack)
 
 ## 🏗 Mimari
 
-[*Mimari diyagramınızı buraya ekleyiniz — örn. `repo/docs/diagrams/container.png`*]
+```
+[Tarayıcı PWA]  ── HTTPS ──>  [NestJS API (Railway)]  ──>  [PostgreSQL 16]
+       │                              │                └──>  [Redis 7]
+       │                              └── WSS proxy ──>  [Binance WebSocket]
+       └── Vercel üzerinde dağıtılır
+```
+
+Frontend (Angular SPA) Vercel'de, backend (NestJS API) Railway'de çalışır.
+Piyasa anlık görüntüleri Redis'te önbelleklenir; kalıcı veri PostgreSQL'de
+Prisma ORM ile tutulur. Diyagram ve ayrıntılar:
+`repo/docs/diagrams/architecture.md`.
 
 [Detaylı mimari ve ADR'lar →](PROJE-RAPORU.md#8-sistem-mimarisi)
 
@@ -62,13 +91,15 @@
 
 | Klasör | Açıklama | README |
 |--------|----------|--------|
-| `frontend/` | Angular 17 SPA — UI, RxJS streams, charts | [frontend/README.md](frontend/README.md) |
-| `backend/` | NestJS 10 API — Prisma, PostgreSQL, Redis | [backend/README.md](backend/README.md) |
+| `repo/frontend/` | Angular 17 SPA — UI, RxJS streams, charts | [repo/frontend/README.md](repo/frontend/README.md) |
+| `repo/backend/` | NestJS 11 API — Prisma, PostgreSQL, Redis | [repo/backend/README.md](repo/backend/README.md) |
+| `repo/tests/` | Tüm e2e testleri — `backend/` (Jest+Supertest), `frontend/` (Playwright) | [repo/README.md](repo/README.md#testing) |
 
-Local development için önce Docker servislerini başlatın:
+Local development için önce `repo/` içinde Docker servislerini başlatın:
 
 ```bash
-docker compose up -d   # PostgreSQL 16 + Redis 7 + Prisma migrations
+cd repo
+docker compose up -d   # PostgreSQL 16 + Redis 7 + tek seferlik Prisma migrator
 ```
 
 ## 🚀 Kurulum
@@ -82,50 +113,61 @@ docker compose up -d   # PostgreSQL 16 + Redis 7 + Prisma migrations
 
 ```bash
 # 1) Repo'yu klonla
-git clone https://github.com/KULLANICI_ADI/final-p06-angular-rxjs-kr.git
-cd final-p06-angular-rxjs-kr
+git clone https://github.com/FKAV64/web-based-progrmming-end-of-year-project.git
+cd web-based-progrmming-end-of-year-project/repo
 
-# 2) Environment dosyası
-cp .env.example .env
-# .env içindekileri doldurun (DATABASE_URL, JWT_SECRET, ...)
-
-# 3) Bağımlılıkları yükle
-npm install
-
-# 4) Docker servislerini başlat
+# 2) Docker servislerini başlat (PostgreSQL 16 + Redis 7)
+#    PostgreSQL sağlıklı olduğunda tek seferlik migrator Prisma
+#    şemasını otomatik uygular.
 docker compose up -d
-# PostgreSQL ayağa kalktıktan sonra Prisma migration container'ı
-# schema'yı otomatik uygular.
 
-# 5) Çalıştır
-npm start
+# 3) Backend
+cd backend
+cp .env.example .env          # .env içindeki secret'ları doldurun
+npm install
+npm run start:dev             # API: http://localhost:3000/api
+
+# 4) Frontend (yeni terminal)
+cd ../frontend
+npm install
+npm start                     # Uygulama: http://localhost:4200
 ```
 
-Proje: http://localhost:4200
+Proje: http://localhost:4200 · API: http://localhost:3000/api
 
 ## 🧪 Test
 
+Tüm e2e testleri `repo/tests/` altına taşınmıştır (unit `*.spec.ts`
+dosyaları Angular/Nest geleneği gereği kaynak yanında kalır).
+
 ```bash
-# Backend unit + e2e
-cd backend && npm test && npm run test:e2e
+# Backend unit + e2e (PostgreSQL + Redis ayakta olmalı)
+cd repo/backend && npm test && npm run test:e2e
 
 # Frontend unit
-cd frontend && npm test
+cd repo/frontend && npm run test:ci
+
+# Frontend e2e (backend + frontend çalışır durumda olmalı)
+cd repo/frontend && npm run test:e2e
 ```
 
 ## 🔄 CI/CD
 
 GitHub Actions workflows run automatically on every push and pull request:
 
+Workflow dosyaları git deposunun **kök** dizinindeki `.github/workflows/`
+içinde durur (GitHub Actions yalnızca burayı okur — bu yüzden `repo/`
+içine taşınmaz).
+
 | Workflow | Triggers on | Steps |
 |----------|-------------|-------|
-| **Backend CI** | `backend/**` | lint → unit tests + coverage → e2e tests → build → OpenAPI generation + drift check |
-| **Frontend CI** | `frontend/**` | lint → unit tests + coverage → build → Lighthouse CI |
+| **Backend CI** | `repo/backend/**`, `repo/tests/backend/**` | Prisma migrate → lint → unit tests + coverage → e2e tests → build → OpenAPI generation + drift check |
+| **Frontend CI** | `repo/frontend/**`, `repo/tests/frontend/**` | lint → unit tests + coverage → build → Lighthouse CI |
 
 ### OpenAPI Spec
 
-The generated API spec lives at `docs/openapi.yaml` (and `docs/openapi.json`).  
-**Run `npm run openapi:generate` inside `backend/` after modifying any controller or DTO**, then commit the updated files. CI will fail with `git diff --exit-code` if the committed spec drifts from what the app generates.
+The generated API spec lives at `repo/docs/openapi.yaml` (and `repo/docs/openapi.json`).  
+**Run `npm run openapi:generate` inside `repo/backend/` after modifying any controller or DTO**, then commit the updated files. CI will fail with `git diff --exit-code` if the committed spec drifts from what the app generates.
 
 Interactive Swagger UI is available at `http://localhost:3000/api/docs` when running in development mode.
 
@@ -152,13 +194,17 @@ The frontend CI enforces Lighthouse score budgets on the production build:
 .
 ├── README.md                   (bu dosya — özet, kurulum, demo)
 ├── PROJE-RAPORU.md             (uzun form final raporu — markdown)
-├── PROJE-RAPORU-SABLON.docx    (uzun form final raporu — Word)
-├── DEVELOPMENT-PLAN (1).md     (faz-faz uygulama planı)
-├── docker-compose.yml          (PostgreSQL 16 + Redis 7 — local dev)
 ├── LICENSE
-├── .env.example
-├── frontend/                   (Angular 17 SPA — Phase 7+)
-└── backend/                    (NestJS 10 API — Phase 1+)
+├── .github/workflows/          (CI — git kökünde olmalı: backend-ci, frontend-ci)
+└── repo/                       (çalışan kaynak kod)
+    ├── README.md               (teknik proje README'si)
+    ├── docker-compose.yml      (PostgreSQL 16 + Redis 7 + Prisma migrator)
+    ├── DEVELOPMENT-PLAN.md     (faz-faz uygulama planı)
+    ├── LICENSE · .env.example
+    ├── backend/                (NestJS 11 API — Prisma, PostgreSQL, Redis)
+    ├── frontend/               (Angular 17 SPA — RxJS, signals, ApexCharts)
+    ├── tests/                  (e2e: backend/ Jest+Supertest · frontend/ Playwright)
+    └── docs/                   (ADR, diyagram, screenshot, openapi.yaml)
 ```
 
 ## 🛣 Roadmap

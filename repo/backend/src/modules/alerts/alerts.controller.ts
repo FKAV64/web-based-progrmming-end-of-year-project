@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Query,
   Req,
@@ -60,7 +61,7 @@ export class AlertsController {
   @ApiOperation({ summary: 'Delete a price alert' })
   @ApiParam({ name: 'id', description: 'Alert UUID' })
   @ApiResponse({ status: 204, description: 'Deleted' })
-  async remove(@Req() req: Request, @Param('id') id: string) {
+  async remove(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
     const userId = (req.user as { userId: string }).userId;
     await this.alertsService.remove(userId, id);
   }

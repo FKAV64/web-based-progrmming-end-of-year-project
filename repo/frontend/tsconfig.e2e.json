@@ -2,7 +2,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@playwright/test": ["node_modules/@playwright/test"],
+      "@playwright/test/*": ["node_modules/@playwright/test/*"]
+    }
   },
-  "include": ["e2e/**/*.ts", "playwright.config.ts"]
+  "include": ["../tests/frontend/**/*.ts", "playwright.config.ts"]
 }

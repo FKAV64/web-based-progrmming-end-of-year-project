@@ -754,6 +754,30 @@
         <source>Bağlanıyor...</source>
         <target>Connecting...</target>
       </trans-unit>
+      <trans-unit id="alarmModal.title" datatype="html">
+        <source>ALARM TETİKLENDİ</source>
+        <target>ALARM TRIGGERED</target>
+      </trans-unit>
+      <trans-unit id="alarmModal.condition" datatype="html">
+        <source>Koşul</source>
+        <target>Condition</target>
+      </trans-unit>
+      <trans-unit id="alarmModal.target" datatype="html">
+        <source>Hedef</source>
+        <target>Target</target>
+      </trans-unit>
+      <trans-unit id="alarmModal.current" datatype="html">
+        <source>Mevcut</source>
+        <target>Current</target>
+      </trans-unit>
+      <trans-unit id="alarmModal.time" datatype="html">
+        <source>Zaman</source>
+        <target>Time</target>
+      </trans-unit>
+      <trans-unit id="alarmModal.dismiss" datatype="html">
+        <source> ALARMI KAPAT </source>
+        <target> DISMISS ALARM </target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

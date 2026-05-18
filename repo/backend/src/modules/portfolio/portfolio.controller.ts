@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -64,7 +65,7 @@ export class PortfolioController {
   @ApiResponse({ status: 200, description: 'Updated position' })
   async update(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdatePortfolioPositionDto,
   ) {
     const userId = (req.user as { userId: string }).userId;
@@ -77,7 +78,7 @@ export class PortfolioController {
   @ApiResponse({ status: 200, description: 'Closed position record' })
   async close(
     @Req() req: Request,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ClosePortfolioPositionDto,
   ) {
     const userId = (req.user as { userId: string }).userId;
@@ -91,7 +92,7 @@ export class PortfolioController {
   @ApiOperation({ summary: 'Delete a portfolio position' })
   @ApiParam({ name: 'id', description: 'Position UUID' })
   @ApiResponse({ status: 204, description: 'Deleted' })
-  async remove(@Req() req: Request, @Param('id') id: string) {
+  async remove(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {
     const userId = (req.user as { userId: string }).userId;
     await this.portfolioService.remove(userId, id);
   }

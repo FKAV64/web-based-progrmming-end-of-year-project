@@ -2,8 +2,47 @@
 
 > **Project Code:** P06
 > **Frontend:** Angular 17 · RxJS 7 · Tailwind · Angular Material · ApexCharts
-> **Backend:** NestJS 10 · Prisma 5 · PostgreSQL 16 · Redis (CoinGecko cache only)
+> **Backend:** NestJS 11 · Prisma 5 · PostgreSQL 16 · Redis (CoinGecko cache only)
 > **Audience for this document:** Claude Code (or any coding agent) executing the build phase by phase
+
+---
+
+## ⚠️ Güncelleme Notu / Errata (2026-05-18) — Deviations From the Original Plan
+
+This plan describes the *intended* build. The following points were
+changed during implementation and supersede the corresponding planned
+steps below (notably the CSRF and test-layout sections):
+
+1. **CSRF: `csurf` was removed.** The planned double-submit `csurf`
+   middleware + `XSRF-TOKEN`/`X-XSRF-TOKEN` flow broke every
+   cross-origin POST in the Vercel→Railway production split, so it was
+   removed. CSRF is now handled **structurally**: the access token is a
+   **Bearer token returned in the response body** (held client-side, not
+   a cookie), so mutating endpoints carry no ambient cookie credential.
+   The only cookie-authenticated endpoint, `POST /api/auth/refresh`, is
+   protected by token rotation + CORS pinned to `FRONTEND_ORIGIN` + a
+   `SameSite` cookie. (`csurf` and `@types/csurf` were removed from
+   `backend/package.json` and the lockfile on 2026-05-18; nothing in
+   `src/` imports them. Build/lint/103 unit/20 e2e + Docker image
+   re-verified green afterwards.)
+2. **Refresh-cookie attributes are environment-aware** (not a fixed
+   `SameSite=Lax`): cross-site (prod, or `FRONTEND_ORIGIN` starting with
+   `https://`) → `Secure` + `SameSite=None`; local dev → `SameSite=Lax`.
+3. **Instant logout-all** added: `POST /api/auth/logout-all` sets
+   `User.logoutAllAt`; `JwtStrategy` rejects any token issued before it
+   (three-layer revocation: refresh-row + `logoutAllAt` + cookie clear).
+4. **Test layout changed.** All end-to-end suites were moved out of the
+   apps into `repo/tests/` — backend e2e (Jest+Supertest) under
+   `repo/tests/backend/` (`jest-e2e.json` lives there), frontend e2e
+   (Playwright) under `repo/tests/frontend/`. Unit `*.spec.ts` files
+   stay colocated with their source per Angular/Nest convention.
+5. **CI workflows live at the git repository root** (`.github/`), not
+   under `repo/`, because GitHub Actions only reads workflows from the
+   repo root. Path filters include `repo/tests/**`.
+6. Backend is **NestJS 11** (not 10).
+
+See `docs/adr/ADR-007-threat-model.md` (2026-05-18) and
+`docs/security-scan-2026-05-18.md` for the current security posture.
 
 ---
 
@@ -1465,10 +1504,10 @@ CoinGecko is hit at most 4 times/minute (15s cadence), regardless of how many us
    - Register a fresh user → land on dashboard with live prices ticking.
    - Add a portfolio position → reload → persists.
    - Create an alert at a low price → notification arrives within ~15s (snapshot cadence).
-4. **Seed a demo user** via a one-shot script: `npm run seed:demo` in backend, creates `demo@example.com` / `demo123` (matches the README's published creds). Document this — it's a deliberate exception to "no hardcoded creds in prod" because the spec promises this account.
+4. **Seed a demo user** via a one-shot script: `npm run seed:demo` in backend, creates `demo@example.com` / `Demo#123` (matches the README's published creds). Document this — it's a deliberate exception to "no hardcoded creds in prod" because the spec promises this account.
 5. Update root `README.md` with both live URLs, screenshots (capture 8: landing, login, dashboard empty/full, markets, coin detail, mobile, dark mode, error state).
 
-**Acceptance:** Visiting the live frontend URL, logging in with `demo@example.com / demo123`, sees a dashboard with live prices and seeded demo data (1-2 watchlist items, 1 portfolio position, 1 alert).
+**Acceptance:** Visiting the live frontend URL, logging in with `demo@example.com / Demo#123`, sees a dashboard with live prices and seeded demo data (1-2 watchlist items, 1 portfolio position, 1 alert).
 
 **Commit:** `chore(deploy): deploy backend to railway + frontend to vercel + seed demo`
 
@@ -1488,7 +1527,7 @@ The project is "done" when **all** of the following are true:
 - [ ] All 5 Playwright E2E scenarios pass.
 - [ ] OWASP ZAP baseline scan: no high-severity findings.
 - [ ] CI green on both subprojects.
-- [ ] Live demo URL works with `demo@example.com / demo123`.
+- [ ] Live demo URL works with `demo@example.com / Demo#123`.
 - [ ] `README.md` has 8+ screenshots and both live URLs.
 - [ ] `docs/openapi.yaml` exists, validates as OpenAPI 3.x, regenerates cleanly via `npm run openapi:generate`.
 - [ ] CoinGecko traffic verified ≤ 4 requests/min in production logs (snapshot fetcher only).
