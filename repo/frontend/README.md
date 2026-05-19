@@ -1,27 +1,74 @@
-# CryptoDashboardFrontend
+# Frontend — Kripto Dashboard SPA
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Angular 17 ile geliştirilmiş tek sayfa uygulama (SPA): standalone
+bileşenler + signals + RxJS, Angular Material + Tailwind CSS, grafikler
+için ApexCharts, PWA (service worker + Web Push) ve TR/EN i18n.
 
-## Development server
+Backend API'si `repo/backend/` altındadır; bu uygulama
+`http://localhost:3000/api` adresindeki REST API'ye ve `/ws/alerts`
+WebSocket'ine bağlanır.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Özellikler / sayfalar
 
-## Code scaffolding
+- `/login`, `/register` — kimlik doğrulama (Bearer access token istemci
+  belleğinde, `refresh_token` httpOnly çerez).
+- `/dashboard` — özet + Fear & Greed duyarlılığı.
+- `/markets` — top‑100 canlı fiyat tablosu (WebSocket).
+- `/coin/:id` — coin detayı + ApexCharts grafik (Binance OHLC).
+- `/watchlist`, `/portfolio`, `/alerts`, `/news`, `/settings`.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Reaktif durum yönetimi servis tabanlıdır (Angular signals + RxJS); her
+özellik route bazında lazy-load edilir.
 
-## Build
+## Geliştirme sunucusu
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm install
+npm start          # ng serve → http://localhost:4200 (canlı yeniden yükleme)
+```
 
-## Running unit tests
+## Derleme
 
-Run `ng test` to execute the unit tests with Jest. For CI, use `npm run test:ci`.
+```bash
+npm run build      # scripts/build-i18n.mjs — TR + EN production derlemesi
+                   # çıktı: dist/crypto-dashboard-frontend/browser/ (+ /en)
+npm run watch      # development yapılandırmasıyla izleme modunda derleme
+```
 
-## Running end-to-end tests
+## Birim testleri
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+npm test           # ng test (Jest — @angular-builders/jest)
+npm run test:ci    # jest --coverage --runInBand (CI'da kullanılır)
+```
 
-## Further help
+Birim testleri (`*.spec.ts`) Angular geleneği gereği `src/` içinde
+kaynağının yanında durur.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Uçtan-uca (e2e) testler
+
+Playwright e2e süiti depo kökündeki `repo/tests/frontend/` altına
+taşınmıştır (`playwright.config.ts` `testDir`'i oraya işaret eder).
+Çalışması için hem backend hem frontend ayakta olmalıdır.
+
+```bash
+npm run test:e2e      # playwright test
+npm run test:e2e:ui   # playwright test --ui
+```
+
+## Lint
+
+```bash
+npm run lint       # tsc --noEmit --project tsconfig.app.json
+```
+
+## i18n
+
+Kaynak dil Türkçe'dir; çeviriler `src/locale/messages.xlf` (kaynak) ve
+`src/locale/messages.en.xlf` (İngilizce). `npm run build` her iki dili
+de üretir (İngilizce çıktı `/en/` alt yolunda).
+
+## PWA
+
+`@angular/service-worker` ile kurulabilir; `ngsw-config.json` cache
+yapılandırmasını, Web Push ise fiyat alarmı bildirimlerini sağlar.
