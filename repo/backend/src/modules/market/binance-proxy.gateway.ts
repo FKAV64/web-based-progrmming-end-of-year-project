@@ -152,7 +152,11 @@ export class BinanceProxyGateway
     this.activeStreams.add(stream);
     if (this.binanceWs?.readyState === WebSocket.OPEN) {
       this.binanceWs.send(
-        JSON.stringify({ method: 'SUBSCRIBE', params: [stream], id: Date.now() }),
+        JSON.stringify({
+          method: 'SUBSCRIBE',
+          params: [stream],
+          id: Date.now(),
+        }),
       );
     }
   }

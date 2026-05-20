@@ -148,7 +148,7 @@ export class AuthController {
     // If we're in production or the configured frontend origin is an external HTTPS URL,
     // we must treat this as a cross-site deployment, requiring SameSite=None and Secure=true.
     const isCrossSite = isProd || frontendOrigin.startsWith('https://');
-    
+
     return {
       httpOnly: true,
       secure: isCrossSite,

@@ -125,7 +125,7 @@ docker compose up -d
 
 # 3) Backend
 cd backend
-cp .env.example .env          # .env içindeki secret'ları doldurun
+cp .env.example .env          # repo/backend/.env.example'dan kopyalayın ve secret'ları doldurun
 npm install
 npm run start:dev             # API: http://localhost:3000/api
 
@@ -201,8 +201,7 @@ Frontend CI, production derlemesinde Lighthouse skor bütçelerini zorunlu kıla
 └── repo/                       (çalışan kaynak kod)
     ├── README.md               (teknik proje README'si)
     ├── docker-compose.yml      (PostgreSQL 16 + Redis 7 + Prisma migrator)
-    ├── DEVELOPMENT-PLAN.md     (faz-faz uygulama planı)
-    ├── LICENSE · .env.example
+    ├── LICENSE
     ├── backend/                (NestJS 11 API — Prisma, PostgreSQL, Redis)
     ├── frontend/               (Angular 17 SPA — RxJS, signals, ApexCharts)
     ├── tests/                  (e2e: backend/ Jest+Supertest · frontend/ Playwright)
@@ -237,4 +236,4 @@ MIT © 2026 **ABDOU VALERIO FOMA KENFACK** — Tam metin için [LICENSE](LICENSE
 
 ---
 
-<sub>🤖 Bu projede [Claude Code](https://claude.com/claude-code) ve [Cursor](https://cursor.sh) gibi AI asistanları kullanılmıştır. Tüm mimari kararlar ve kullanım tercihleri öğrenci tarafından yapılmıştır.</sub>
+<sub>🤖 Bu projede Claude Code, ChatGPT ve editör içi AI yardımcıları kullanılmıştır. Tüm mimari kararlar ve kullanım tercihleri öğrenci tarafından yapılmıştır.</sub>

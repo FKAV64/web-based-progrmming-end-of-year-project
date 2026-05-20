@@ -15,7 +15,10 @@ describe('AlertsEvaluatorService', () => {
   let pushMock: { send: jest.Mock };
   let auditMock: { log: jest.Mock };
   let coingeckoMock: { getExchangeRates: jest.Mock };
-  let notifyGatewayMock: { notifyUser: jest.Mock; hasActiveSessions: jest.Mock };
+  let notifyGatewayMock: {
+    notifyUser: jest.Mock;
+    hasActiveSessions: jest.Mock;
+  };
   let binanceGatewayMock: { addServerSubscription: jest.Mock };
 
   beforeEach(async () => {
@@ -82,7 +85,11 @@ describe('AlertsEvaluatorService', () => {
       { id: 'bitcoin', symbol: 'btc', current_price: 51000 },
     ]);
 
-    await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+    await service.handleBinanceTick({
+      symbol: 'BTCUSDT',
+      price: 51000,
+      timestamp: Date.now(),
+    });
 
     expect(prismaMock.priceAlert.findMany).not.toHaveBeenCalled();
   });
@@ -109,7 +116,7 @@ describe('AlertsEvaluatorService', () => {
       coinId: 'bitcoin',
       condition: 'ABOVE',
       targetPrice: 50000 as unknown as import('@prisma/client').Prisma.Decimal,
-      currency: 'USD' as import('@prisma/client').Currency,
+      currency: 'USD',
       triggeredAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -121,7 +128,9 @@ describe('AlertsEvaluatorService', () => {
       { id: 'bitcoin', symbol: 'btc', current_price: 51000 },
     ]);
 
-    expect(binanceGatewayMock.addServerSubscription).toHaveBeenCalledWith('btcusdt@miniTicker');
+    expect(binanceGatewayMock.addServerSubscription).toHaveBeenCalledWith(
+      'btcusdt@miniTicker',
+    );
   });
 
   // ── handleBinanceTick ──────────────────────────────────────────────────────
@@ -150,7 +159,11 @@ describe('AlertsEvaluatorService', () => {
       service.addToCache(btcAlert);
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
 
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
 
       expect(prismaMock.priceAlert.updateMany).toHaveBeenCalledWith({
         where: { id: 'alert-1', triggeredAt: null },
@@ -175,11 +188,16 @@ describe('AlertsEvaluatorService', () => {
         ...btcAlert,
         id: 'alert-2',
         condition: 'BELOW' as const,
-        targetPrice: 55000 as unknown as import('@prisma/client').Prisma.Decimal,
+        targetPrice:
+          55000 as unknown as import('@prisma/client').Prisma.Decimal,
       });
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
 
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
 
       expect(pushMock.send).toHaveBeenCalledTimes(1);
     });
@@ -187,17 +205,26 @@ describe('AlertsEvaluatorService', () => {
     it('does not fire when price does not meet condition', async () => {
       service.addToCache({
         ...btcAlert,
-        targetPrice: 60000 as unknown as import('@prisma/client').Prisma.Decimal,
+        targetPrice:
+          60000 as unknown as import('@prisma/client').Prisma.Decimal,
       });
 
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
 
       expect(prismaMock.priceAlert.updateMany).not.toHaveBeenCalled();
       expect(pushMock.send).not.toHaveBeenCalled();
     });
 
     it('returns early for unknown symbol without any DB call', async () => {
-      await service.handleBinanceTick({ symbol: 'XYZUSDT', price: 100, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'XYZUSDT',
+        price: 100,
+        timestamp: Date.now(),
+      });
 
       expect(prismaMock.priceAlert.updateMany).not.toHaveBeenCalled();
     });
@@ -206,7 +233,11 @@ describe('AlertsEvaluatorService', () => {
       service.addToCache(btcAlert);
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 0 });
 
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
 
       expect(prismaMock.priceAlert.updateMany).toHaveBeenCalledTimes(1);
       expect(pushMock.send).not.toHaveBeenCalled();
@@ -218,11 +249,19 @@ describe('AlertsEvaluatorService', () => {
       service.addToCache(btcAlert);
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
 
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
 
       // A second tick for the same alert should not trigger updateMany again.
       prismaMock.priceAlert.updateMany.mockClear();
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 52000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 52000,
+        timestamp: Date.now(),
+      });
 
       expect(prismaMock.priceAlert.updateMany).not.toHaveBeenCalled();
     });
@@ -232,7 +271,11 @@ describe('AlertsEvaluatorService', () => {
       service.addToCache(btcAlert);
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
 
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
 
       expect(notifyGatewayMock.notifyUser).toHaveBeenCalledTimes(1);
       expect(pushMock.send).not.toHaveBeenCalled();
@@ -252,19 +295,26 @@ describe('AlertsEvaluatorService', () => {
         id: 'alert-new',
         userId: 'user-1',
         coinId: 'bitcoin',
-        condition: 'ABOVE' as import('@prisma/client').AlertCondition,
-        targetPrice: 50000 as unknown as import('@prisma/client').Prisma.Decimal,
-        currency: 'USD' as import('@prisma/client').Currency,
+        condition: 'ABOVE',
+        targetPrice:
+          50000 as unknown as import('@prisma/client').Prisma.Decimal,
+        currency: 'USD',
         triggeredAt: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
 
-      expect(binanceGatewayMock.addServerSubscription).toHaveBeenCalledWith('btcusdt@miniTicker');
+      expect(binanceGatewayMock.addServerSubscription).toHaveBeenCalledWith(
+        'btcusdt@miniTicker',
+      );
 
       // The alert should now be evaluated on ticks.
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
       expect(pushMock.send).toHaveBeenCalledTimes(1);
     });
 
@@ -273,9 +323,9 @@ describe('AlertsEvaluatorService', () => {
         id: 'alert-no-sym',
         userId: 'user-1',
         coinId: 'unknowncoin',
-        condition: 'ABOVE' as import('@prisma/client').AlertCondition,
+        condition: 'ABOVE',
         targetPrice: 1 as unknown as import('@prisma/client').Prisma.Decimal,
-        currency: 'USD' as import('@prisma/client').Currency,
+        currency: 'USD',
         triggeredAt: null,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -295,7 +345,8 @@ describe('AlertsEvaluatorService', () => {
         userId: 'user-1',
         coinId: 'bitcoin',
         condition: 'ABOVE' as import('@prisma/client').AlertCondition,
-        targetPrice: 50000 as unknown as import('@prisma/client').Prisma.Decimal,
+        targetPrice:
+          50000 as unknown as import('@prisma/client').Prisma.Decimal,
         currency: 'USD' as import('@prisma/client').Currency,
         triggeredAt: null,
         createdAt: new Date(),
@@ -308,7 +359,11 @@ describe('AlertsEvaluatorService', () => {
 
       // a2 should still trigger; a1 should not.
       prismaMock.priceAlert.updateMany.mockResolvedValue({ count: 1 });
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
       expect(prismaMock.priceAlert.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { id: 'a2', triggeredAt: null } }),
       );
@@ -326,9 +381,10 @@ describe('AlertsEvaluatorService', () => {
         id: 'only-alert',
         userId: 'user-1',
         coinId: 'bitcoin',
-        condition: 'ABOVE' as import('@prisma/client').AlertCondition,
-        targetPrice: 50000 as unknown as import('@prisma/client').Prisma.Decimal,
-        currency: 'USD' as import('@prisma/client').Currency,
+        condition: 'ABOVE',
+        targetPrice:
+          50000 as unknown as import('@prisma/client').Prisma.Decimal,
+        currency: 'USD',
         triggeredAt: null,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -337,7 +393,11 @@ describe('AlertsEvaluatorService', () => {
       service.removeFromCache('only-alert', 'bitcoin');
 
       // No alerts remain — tick should be a complete no-op.
-      await service.handleBinanceTick({ symbol: 'BTCUSDT', price: 51000, timestamp: Date.now() });
+      await service.handleBinanceTick({
+        symbol: 'BTCUSDT',
+        price: 51000,
+        timestamp: Date.now(),
+      });
       expect(prismaMock.priceAlert.updateMany).not.toHaveBeenCalled();
     });
   });

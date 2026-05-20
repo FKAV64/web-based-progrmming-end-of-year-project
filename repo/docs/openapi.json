@@ -868,34 +868,6 @@
           "Push"
         ]
       }
-    },
-    "/api/dev/trigger-snapshot": {
-      "post": {
-        "operationId": "DevController_triggerSnapshot",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Dev"
-        ]
-      }
-    },
-    "/api/dev/seed-market-data": {
-      "post": {
-        "operationId": "DevController_seedMarketData",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Dev"
-        ]
-      }
     }
   },
   "info": {

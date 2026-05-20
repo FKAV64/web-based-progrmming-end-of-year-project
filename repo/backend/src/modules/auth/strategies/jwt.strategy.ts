@@ -31,7 +31,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
     if (!user) throw new UnauthorizedException();
     // Reject tokens issued before the last logout-all (covers the full 15-min access token window)
-    if (user.logoutAllAt && payload.iat && payload.iat * 1000 < user.logoutAllAt.getTime()) {
+    if (
+      user.logoutAllAt &&
+      payload.iat &&
+      payload.iat * 1000 < user.logoutAllAt.getTime()
+    ) {
       throw new UnauthorizedException('Session revoked');
     }
     return { userId: payload.sub, email: payload.email, role: payload.role };

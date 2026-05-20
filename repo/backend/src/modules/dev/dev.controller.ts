@@ -22,9 +22,9 @@ export class DevController {
 
   @Post('trigger-snapshot')
   triggerSnapshot() {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV !== 'development') {
       throw new ForbiddenException(
-        'This endpoint is not available in production',
+        'This endpoint is only available in development',
       );
     }
 
@@ -46,9 +46,9 @@ export class DevController {
 
   @Post('seed-market-data')
   async seedMarketData() {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV !== 'development') {
       throw new ForbiddenException(
-        'This endpoint is not available in production',
+        'This endpoint is only available in development',
       );
     }
 

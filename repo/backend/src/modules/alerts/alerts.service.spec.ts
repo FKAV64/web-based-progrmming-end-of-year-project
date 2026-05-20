@@ -79,9 +79,9 @@ describe('AlertsService', () => {
 
     const result = await service.create('user-1', {
       coinId: 'bitcoin',
-      condition: 'ABOVE' as any,
+      condition: 'ABOVE',
       targetPrice: '50000',
-      currency: 'USD' as any,
+      currency: 'USD',
     });
 
     expect(result).toBe(createdAlert);
@@ -105,7 +105,12 @@ describe('AlertsService', () => {
 
     await service.remove('user-1', 'alert-1');
 
-    expect(prismaMock.priceAlert.delete).toHaveBeenCalledWith({ where: { id: 'alert-1' } });
-    expect(evaluatorMock.removeFromCache).toHaveBeenCalledWith('alert-1', 'bitcoin');
+    expect(prismaMock.priceAlert.delete).toHaveBeenCalledWith({
+      where: { id: 'alert-1' },
+    });
+    expect(evaluatorMock.removeFromCache).toHaveBeenCalledWith(
+      'alert-1',
+      'bitcoin',
+    );
   });
 });

@@ -1,28 +1,3 @@
-<!--
-========================================================================
- PROJE RAPORU ŞABLONU — BMU1208 Web Tabanlı Programlama
- Bitlis Eren Üniversitesi — Dr. Öğr. Üyesi Davut ARI
-========================================================================
-
- Bu dosya final proje raporunuzun ana iskeletidir. Toplam 12 bölüm var.
- HER BÖLÜMÜ doldurun. Boş bırakılan bölümler puan kaybı getirir.
-
- Placeholder kuralları:
-   {{...}}        → Doldurulacak değişken alan
-   [...]          → Sizin yazacağınız açıklama
-   TODO:          → Yapılacak iş, silin
-   (Rehber: XX)   → İlgili rehber dosyasına gidin (00-REHBER/)
-
- Yazım stili:
-   - Cümleler kısa ve somut olsun.
-   - "Hızlı" ≠ "P95 < 300ms"; sayı kullanın.
-   - Her iddianın bir kaynağı olsun (link, kullanıcı alıntısı, veri).
-   - Markdown formatı kullanın; kod blokları ```tr```.
-
- Başarılar!
-========================================================================
--->
-
 # Angular + RxJS Kripto Dashboard
 
 > **Proje Kodu:** P06 · **Zorluk:** Orta · **Puan:** 45 · **Hafta:** 1
@@ -1549,7 +1524,7 @@ geri dönüş → daha fazla alarm/izleme.
 - [ ] Rakip analizi ekran görüntüleri — eklenmedi
 - [ ] Demo video (`demo.mp4`/`demo.gif`) — eklenmedi
 - [x] `LICENSE` — MIT (`repo/LICENSE` + kök `LICENSE`)
-- [x] `.env.example` — `repo/backend/.env.example` (+ kök `repo/.env.example`)
+- [x] `.env.example` — `repo/backend/.env.example`
 
 ---
 
