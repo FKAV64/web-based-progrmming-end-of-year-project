@@ -57,4 +57,3 @@ describe('MarketsComponent — skeleton loader', () => {
     expect(table).not.toBeNull();
   });
 });
-

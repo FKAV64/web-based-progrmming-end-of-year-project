@@ -1,4 +1,4 @@
-// Generate 20-coin fixture with realistic sparkline data (168 points each)
+//Generate 20-coin fixture with realistic sparkline data (168 points each)
 const coins = [
   { id: 'bitcoin', symbol: 'btc', name: 'Bitcoin', price: 78000, mcap: 1536e9, rank: 1, vol: 28e9, supply: 19.7e6, maxSupply: 21e6, ath: 108786 },
   { id: 'ethereum', symbol: 'eth', name: 'Ethereum', price: 2368, mcap: 285e9, rank: 2, vol: 12e9, supply: 120.3e6, maxSupply: null, ath: 4878 },

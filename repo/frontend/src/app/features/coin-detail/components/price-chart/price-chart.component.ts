@@ -55,7 +55,7 @@ const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
   standalone: true,
   imports: [CommonModule, NgApexchartsModule, MatProgressSpinnerModule],
   template: `
-    <div 
+    <div
       class="relative min-h-[430px] rounded border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
       (mouseenter)="onMouseEnter()"
       (mouseleave)="onMouseLeave()"
@@ -160,7 +160,7 @@ export class PriceChartComponent implements OnChanges {
   private readonly cache = new Map<string, OHLC[]>();
   private fetchKey = '';
   private liveTickSub: Subscription | null = null;
-  
+
   // Custom tooltip state
   hoveredIndex: number | null = null;
   mouseX = 0;
@@ -283,10 +283,10 @@ export class PriceChartComponent implements OnChanges {
       last.low = Math.min(last.low, tick.price);
     }
 
-    // We no longer block updates when hovered. 
+    // We no longer block updates when hovered.
     // The custom tooltip will read from the updated klines array naturally!
     this.syncSeries(true);
-    
+
     // Trigger change detection to update the custom tooltip with live prices
     if (this.hoveredIndex !== null) {
       this.cdr.markForCheck();
@@ -442,7 +442,7 @@ export class PriceChartComponent implements OnChanges {
       width: this.chartType === 'candle' ? 1 : 2,
     };
     this.colors = this.chartType === 'area' ? ['#2563eb'] : ['#26a69a'];
-    
+
     // Disable native tooltip visual for candlestick to use our custom one,
     // but keep enabled=true so ApexCharts still calculates dataPointIndex on hover
     this.tooltip = {
@@ -452,7 +452,7 @@ export class PriceChartComponent implements OnChanges {
       x: { formatter: (value: number | string) => this.formatTime(value, this.interval) },
       y: { formatter: (value: number) => this.formatPrice(value) },
     };
-    
+
     this.grid = { borderColor: muted, strokeDashArray: 3 };
     this.theme = { mode: dark ? 'dark' : 'light' };
 
