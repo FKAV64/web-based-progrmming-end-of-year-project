@@ -14,6 +14,7 @@ import { PortfolioService, PortfolioPositionView } from '../../core/services/sta
 import { SettingsService } from '../../core/services/state/settings.service';
 import { PriceChangeBadgeComponent } from '../../shared/components/price-change-badge/price-change-badge.component';
 import { CurrencyConverterPipe } from '../../shared/pipes/currency-converter.pipe';
+import { ensureApexchartsWheelPatch } from '../../shared/utils/ensure-apexcharts-wheel-patch';
 import { AddPositionDialogComponent } from './dialogs/add-position-dialog.component';
 import { ClosePositionDialogComponent } from './dialogs/close-position-dialog.component';
 import { EditPositionDialogComponent } from './dialogs/edit-position-dialog.component';
@@ -352,6 +353,8 @@ export class PortfolioComponent {
   isHovered = signal(false);
 
   constructor() {
+    ensureApexchartsWheelPatch();
+
     effect(() => {
       const rows = this.allocationRows();
       const hovered = this.isHovered();

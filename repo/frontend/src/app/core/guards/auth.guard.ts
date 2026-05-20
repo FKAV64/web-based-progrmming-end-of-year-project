@@ -2,7 +2,14 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/state/auth.service';
 
-const FAST_REDIRECT_URLS = new Set(['', '/', '/index.html']);
+const FAST_REDIRECT_URLS = new Set([
+  '',
+  '/',
+  '/index.html',
+  '/en',
+  '/en/',
+  '/en/index.html',
+]);
 
 export const authGuard: CanActivateFn = async (_, state) => {
   const auth = inject(AuthService);
@@ -14,6 +21,7 @@ export const authGuard: CanActivateFn = async (_, state) => {
 
   const requestedUrl = state.url ?? '';
   if (!FAST_REDIRECT_URLS.has(requestedUrl) && !auth.isInitialized()) {
+    auth.startInit();
     await auth.waitForInit();
     if (auth.isAuthenticated()) {
       return true;

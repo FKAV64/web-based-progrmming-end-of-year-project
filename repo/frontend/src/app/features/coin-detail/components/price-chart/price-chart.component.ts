@@ -21,6 +21,7 @@ import { MarketApiService } from '../../../../core/services/api/market.api';
 import { SettingsService } from '../../../../core/services/state/settings.service';
 import { BINANCE_WS } from '../../../../core/services/ws/binance-ws.token';
 import { PriceTick } from '../../../../core/models/price-tick.model';
+import { ensureApexchartsWheelPatch } from '../../../../shared/utils/ensure-apexcharts-wheel-patch';
 
 const INTERVAL_MS: Record<Exclude<BinanceInterval, '1M'>, number> = {
   '1m': 60_000,
@@ -178,6 +179,8 @@ export class PriceChartComponent implements OnChanges {
   }
 
   constructor() {
+    ensureApexchartsWheelPatch();
+
     effect(() => {
       this.settings.theme();
       this.settings.locale();

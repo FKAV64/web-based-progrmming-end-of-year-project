@@ -1,4 +1,4 @@
-import { ApplicationConfig, ENVIRONMENT_INITIALIZER, importProvidersFrom, isDevMode } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -8,12 +8,19 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { AuthService } from './core/services/state/auth.service';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { DarkModeOverlayContainer } from './core/providers/dark-mode-overlay.provider';
 
-function startAuthInit(auth: AuthService) {
-  return () => auth.startInit();
+function shouldEnableServiceWorker(): boolean {
+  if (isDevMode()) {
+    return false;
+  }
+
+  if (typeof location === 'undefined') {
+    return true;
+  }
+
+  return !['localhost', '127.0.0.1', '::1'].includes(location.hostname);
 }
 
 export const appConfig: ApplicationConfig = {
@@ -28,14 +35,8 @@ export const appConfig: ApplicationConfig = {
       provide: OverlayContainer,
       useClass: DarkModeOverlayContainer,
     },
-    {
-      provide: ENVIRONMENT_INITIALIZER,
-      useFactory: startAuthInit,
-      deps: [AuthService],
-      multi: true,
-    },
     provideServiceWorker('custom-sw.js', {
-      enabled: !isDevMode(),
+      enabled: shouldEnableServiceWorker(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],

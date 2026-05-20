@@ -24,6 +24,7 @@ export class AuthService {
   private api = inject(AuthApiService);
   private router = inject(Router);
   private initPromise: Promise<void> | null = null;
+  private initScheduled = false;
 
   readonly currentUser = signal<User | null>(null);
   readonly accessToken = signal<string | null>(null);
@@ -82,7 +83,28 @@ export class AuthService {
   }
 
   startInit(): void {
+    this.initScheduled = false;
     void this.init();
+  }
+
+  scheduleInit(): void {
+    if (this.initPromise || this.initScheduled || this.isInitialized()) {
+      return;
+    }
+
+    const run = () => {
+      this.initScheduled = false;
+      this.startInit();
+    };
+
+    this.initScheduled = true;
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(run, { timeout: 1000 });
+      return;
+    }
+
+    setTimeout(run, 500);
   }
 
   waitForInit(): Promise<void> {
