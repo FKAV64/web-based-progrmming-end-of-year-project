@@ -11,18 +11,6 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { credentialsInterceptor } from './core/interceptors/credentials.interceptor';
 import { DarkModeOverlayContainer } from './core/providers/dark-mode-overlay.provider';
 
-function shouldEnableServiceWorker(): boolean {
-  if (isDevMode()) {
-    return false;
-  }
-
-  if (typeof location === 'undefined') {
-    return true;
-  }
-
-  return !['localhost', '127.0.0.1', '::1'].includes(location.hostname);
-}
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
@@ -36,7 +24,7 @@ export const appConfig: ApplicationConfig = {
       useClass: DarkModeOverlayContainer,
     },
     provideServiceWorker('custom-sw.js', {
-      enabled: shouldEnableServiceWorker(),
+      enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],

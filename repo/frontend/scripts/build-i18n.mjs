@@ -12,11 +12,14 @@ function run(cmd) {
   execSync(cmd, { stdio: 'inherit', cwd: root, env });
 }
 
-// 1. Turkish (source locale) production build
-run('ng build --configuration production');
+const isCI = process.argv.includes('--ci');
+const config = isCI ? 'ci' : 'production';
 
-// 2. English production build to a temp directory
-run('ng build --configuration production,en --output-path dist/en-temp');
+// 1. Turkish (source locale) build
+run(`ng build --configuration ${config}`);
+
+// 2. English build to a temp directory
+run(`ng build --configuration ${config},en --output-path dist/en-temp`);
 
 // 3. Copy English browser output into the Turkish browser tree at /en/
 // Angular's application builder puts each localized build in browser/{locale}/,

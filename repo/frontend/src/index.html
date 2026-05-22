@@ -8,19 +8,23 @@
   <meta name="description" content="Bitcoin, Ethereum ve diğer kripto paraların canlı fiyat takibi. Portföy yönetimi, fiyat alarmları ve kripto haberleri tek ekranda.">
   <meta name="robots" content="index, follow">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
-  <script>
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      window.deferredPrompt = e;
-    });
-  </script>
+  <style>
+    .app-splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#111827;color:#fff;font-family:system-ui,sans-serif}
+    .app-splash h1{font-size:2.25rem;font-weight:700;letter-spacing:-.025em;padding:0 2rem}
+    .app-splash p{margin-top:.75rem;font-size:.875rem;opacity:.5}
+  </style>
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <div class="app-splash">
+      <h1>Kripto Dashboard</h1>
+      <p>Yükleniyor…</p>
+    </div>
+  </app-root>
   <noscript>Bu uygulamayı kullanmaya devam etmek için lütfen JavaScript'i etkinleştirin.</noscript>
+  <script>window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.deferredPrompt=e})</script>
 </body>
 </html>
+
