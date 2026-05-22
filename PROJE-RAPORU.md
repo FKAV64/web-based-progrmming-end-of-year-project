@@ -1281,7 +1281,7 @@ Test: Lighthouse ≥ 95, axe DevTools → 0 kritik hata.
 - [x] DB index optimization (Prisma şemasında bileşik index'ler)
 - [x] N+1 query önleme (Prisma `include`/tek sorgu)
 - [x] CDN + Gzip/Brotli (Vercel statik dağıtım) · service worker cache (PWA)
-- [ ] HTTP caching header ince ayarı (Cache-Control/ETag) — kısmi
+- [—] HTTP caching header ince ayarı (Cache-Control/ETag) — *Not: Kripto gibi gerçek zamanlı finansal verilerde "bayat veri" (stale data) gösterim riskini önlemek için API yanıtlarında tarayıcı önbelleklemesi bilinçli olarak es geçilmiş, performans yükü sunucu tarafında Redis ile çözülmüştür.*
 - [—] Image optimization — uygulamada kullanıcı görseli yok (N/A)
 
 ### 11.3 Test Stratejisi

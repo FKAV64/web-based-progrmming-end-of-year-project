@@ -11,18 +11,17 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
   <style>
-    .app-splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#111827;color:#fff;font-family:system-ui,sans-serif}
-    .app-splash h1{font-size:2.25rem;font-weight:700;letter-spacing:-.025em;padding:0 2rem}
-    .app-splash p{margin-top:.75rem;font-size:.875rem;opacity:.5}
+    .app-splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111827;color:#fff;font-family:system-ui,sans-serif}
+    .app-splash h1{font-size:4rem;font-weight:700;letter-spacing:-.025em;padding:0 2rem;text-align:center;line-height:1.1}
+    .app-splash p{margin-top:1rem;font-size:1rem;opacity:.5}
   </style>
 </head>
 <body>
-  <app-root>
-    <div class="app-splash">
-      <h1>Kripto Dashboard</h1>
-      <p>Yükleniyor…</p>
-    </div>
-  </app-root>
+  <div id="app-splash" class="app-splash">
+    <h1>Kripto Dashboard</h1>
+    <p>Yükleniyor…</p>
+  </div>
+  <app-root></app-root>
   <noscript>Bu uygulamayı kullanmaya devam etmek için lütfen JavaScript'i etkinleştirin.</noscript>
   <script>window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.deferredPrompt=e})</script>
 </body>

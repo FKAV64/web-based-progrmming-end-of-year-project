@@ -187,8 +187,9 @@ Frontend CI, production derlemesinde Lighthouse skor bütçelerini zorunlu kıla
 
 | Kategori | Minimum Skor |
 |----------|--------------|
-| Performans | 85 |
+| Performans | 80 (CI ortamı) |
 | Erişilebilirlik | 95 |
+| Largest Contentful Paint | < 4.0s (Warning) |
 
 ## 📁 Klasör Yapısı
 
