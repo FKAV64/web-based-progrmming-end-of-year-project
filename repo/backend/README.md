@@ -18,12 +18,16 @@ yeni bir Docker volume şemayı otomatik alır.
 Ardından bu `backend/` klasöründe:
 
 ```bash
-cp .env.example .env
+cp .env.example .env   # backend/.env.example'dan kopyalayın
 npm install
 npm run start:dev
 ```
 
 API `http://localhost:3000/api` adresinde çalışır.
+
+`/api/dev/*` yardımcı uçları yalnızca `NODE_ENV=development` iken
+yüklenir; fixture tabanlı frontend e2e akışları için backend'i
+`npm run start:dev` ile başlatın.
 
 ## Prisma kurulumu
 

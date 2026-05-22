@@ -1,10 +1,7 @@
 try {
   importScripts('./ngsw-worker.js');
-  // SW debug log — remove before final submission if desired
-  console.log('[SW] Angular worker loaded');
-} catch (error) {
-  // SW debug log — remove before final submission if desired
-  console.log('[SW] Angular worker unavailable, running push-only worker:', error);
+} catch {
+  // Fall back to a push-only worker when Angular's generated worker is absent.
 }
 
 self.addEventListener('push', (event) => {
@@ -13,28 +10,24 @@ self.addEventListener('push', (event) => {
   if (event.data) {
     try {
       data = event.data.json();
-    } catch (error) {
-      // SW debug log — remove before final submission if desired
-      console.log('[SW] Push payload parse failed:', error);
+    } catch {
+      return;
     }
   }
 
-  // SW debug log — remove before final submission if desired
-  console.log('[SW] Push received:', data);
-
   if (!data) {
-    // SW debug log — remove before final submission if desired
-    console.log('[SW] Push event has no data');
     return;
   }
 
   if (data.type === 'force-logout') {
     event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-        for (const client of clientList) {
-          client.postMessage({ type: 'FORCE_LOGOUT' });
-        }
-      }),
+      clients
+        .matchAll({ type: 'window', includeUncontrolled: true })
+        .then((clientList) => {
+          for (const client of clientList) {
+            client.postMessage({ type: 'FORCE_LOGOUT' });
+          }
+        }),
     );
     return;
   }
@@ -53,23 +46,23 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
-  // SW debug log — remove before final submission if desired
-  console.log('[SW] Notification clicked');
   event.notification.close();
 
   const url = event.notification.data?.url || '/alerts';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(url) && 'focus' in client) {
-          return client.focus();
+    clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url.includes(url) && 'focus' in client) {
+            return client.focus();
+          }
         }
-      }
 
-      if (clients.openWindow) {
-        return clients.openWindow(url);
-      }
-    }),
+        if (clients.openWindow) {
+          return clients.openWindow(url);
+        }
+      }),
   );
 });

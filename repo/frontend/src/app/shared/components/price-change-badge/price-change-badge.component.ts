@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   template: `
-    <span 
+    <span
       class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium font-mono"
       [ngClass]="{
         'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400': percentage >= 0,

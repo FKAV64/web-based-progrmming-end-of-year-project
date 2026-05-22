@@ -486,23 +486,6 @@ paths:
       security: *ref_13
       summary: Remove a push subscription
       tags: *ref_14
-  /api/dev/trigger-snapshot:
-    post:
-      operationId: DevController_triggerSnapshot
-      parameters: []
-      responses:
-        '201':
-          description: ''
-      tags: &ref_15
-        - Dev
-  /api/dev/seed-market-data:
-    post:
-      operationId: DevController_seedMarketData
-      parameters: []
-      responses:
-        '201':
-          description: ''
-      tags: *ref_15
 info:
   title: Crypto Dashboard API
   description: Final project for BMU1208 Web-Based Programming

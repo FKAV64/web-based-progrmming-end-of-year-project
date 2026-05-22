@@ -72,10 +72,8 @@ Eren Üniversitesi'nde geliştirilmiştir.
 repo/
 ├── README.md                # bu dosya
 ├── LICENSE                  # MIT
-├── .env.example             # kök ortam değişkeni şablonu
 ├── .gitignore
 ├── docker-compose.yml       # PostgreSQL 16 + Redis 7 + tek seferlik Prisma migrator
-├── DEVELOPMENT-PLAN.md      # faz-faz uygulama planı
 ├── backend/                 # NestJS 11 API (Prisma, PostgreSQL, Redis)
 │   ├── src/                 #   modüller: auth, users, market, watchlist,
 │   │                        #   portfolio, alerts, push, settings, health,
@@ -126,7 +124,7 @@ docker compose up -d
 
 # 3. Backend
 cd backend
-cp .env.example .env          # ardından secret'ları doldurun (aşağıya bakın)
+cp .env.example .env          # repo/backend/.env.example'dan kopyalayın, ardından secret'ları doldurun
 npm install
 npm run start:dev             # API: http://localhost:3000/api
 
@@ -153,6 +151,7 @@ Backend yapılandırmasını `backend/.env` dosyasından okur (şablon:
 | `ARGON2_TIME_COST` / `ARGON2_MEMORY_COST` | Argon2 hash parametreleri |
 | `PORT` | API portu (varsayılan `3000`) |
 | `COINGECKO_API_KEY` | İsteğe bağlı CoinGecko API anahtarı |
+| `DISABLE_THROTTLE` / `DISABLE_BINANCE_PROXY` | Geliştirme sırasında isteğe bağlı yerel geçişler |
 
 ## Uygulamaları Çalıştırma
 
@@ -164,6 +163,10 @@ npm run start:prod     # derlenmiş dist/ ile çalıştır
 npm run prisma:setup   # prisma generate + migrate deploy (elle yedek yöntem)
 npm run openapi:generate  # docs/openapi.{yaml,json} yeniden üret
 ```
+
+`/api/dev/*` yardımcı uçları yalnızca `NODE_ENV=development` iken
+yüklenir; Playwright frontend e2e akışı için backend'i `npm run start:dev`
+ile başlatın.
 
 **Frontend** (`frontend/`)
 

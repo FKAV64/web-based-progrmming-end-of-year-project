@@ -48,6 +48,8 @@ describe('PushService', () => {
     }).compile();
 
     service = module.get<PushService>(PushService);
+    jest.spyOn((service as any).logger, 'error').mockImplementation();
+    jest.spyOn((service as any).logger, 'warn').mockImplementation();
     jest.clearAllMocks();
   });
 

@@ -127,7 +127,12 @@ export class AlertsEvaluatorService implements OnApplicationBootstrap {
 
     const triggered: { alert: PriceAlert; priceInAlertCurrency: number }[] = [];
     for (const alert of alerts) {
-      const price = this.convert(tick.price, 'USD', alert.currency, this.lastRates);
+      const price = this.convert(
+        tick.price,
+        'USD',
+        alert.currency,
+        this.lastRates,
+      );
       const fired =
         (alert.condition === 'ABOVE' && price >= Number(alert.targetPrice)) ||
         (alert.condition === 'BELOW' && price <= Number(alert.targetPrice));
@@ -190,7 +195,9 @@ export class AlertsEvaluatorService implements OnApplicationBootstrap {
     this.insertIntoCache(alert);
     const wsSymbol = this.coinIdToWsSymbol.get(alert.coinId);
     if (wsSymbol) {
-      this.binanceGateway.addServerSubscription(`${wsSymbol.toLowerCase()}@miniTicker`);
+      this.binanceGateway.addServerSubscription(
+        `${wsSymbol.toLowerCase()}@miniTicker`,
+      );
     }
   }
 
@@ -219,7 +226,9 @@ export class AlertsEvaluatorService implements OnApplicationBootstrap {
     for (const coinId of this.alertsByCoinId.keys()) {
       const wsSymbol = this.coinIdToWsSymbol.get(coinId);
       if (wsSymbol) {
-        this.binanceGateway.addServerSubscription(`${wsSymbol.toLowerCase()}@miniTicker`);
+        this.binanceGateway.addServerSubscription(
+          `${wsSymbol.toLowerCase()}@miniTicker`,
+        );
       }
     }
   }

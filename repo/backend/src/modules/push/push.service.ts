@@ -100,13 +100,18 @@ export class PushService {
   }
 
   async sendForceLogout(userId: string) {
-    const subs = await this.prisma.pushSubscription.findMany({ where: { userId } });
+    const subs = await this.prisma.pushSubscription.findMany({
+      where: { userId },
+    });
     if (subs.length === 0) return;
     const payloadStr = JSON.stringify({ type: 'force-logout' });
     for (const sub of subs) {
       try {
         await webpush.sendNotification(
-          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dhKey, auth: sub.authKey } },
+          {
+            endpoint: sub.endpoint,
+            keys: { p256dh: sub.p256dhKey, auth: sub.authKey },
+          },
           payloadStr,
         );
       } catch (error: unknown) {

@@ -332,7 +332,11 @@ describe('BinanceProxyGateway', () => {
   describe('binance.tick event', () => {
     it('emits binance.tick for valid miniTicker frames', () => {
       const binance = gateway['binanceWs'] as any;
-      const tick = JSON.stringify({ s: 'BTCUSDT', c: '51000.00', E: 1234567890 });
+      const tick = JSON.stringify({
+        s: 'BTCUSDT',
+        c: '51000.00',
+        E: 1234567890,
+      });
 
       binance.emit('message', Buffer.from(tick));
 

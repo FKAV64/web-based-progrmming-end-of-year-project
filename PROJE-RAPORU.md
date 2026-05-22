@@ -1,28 +1,3 @@
-<!--
-========================================================================
- PROJE RAPORU ŞABLONU — BMU1208 Web Tabanlı Programlama
- Bitlis Eren Üniversitesi — Dr. Öğr. Üyesi Davut ARI
-========================================================================
-
- Bu dosya final proje raporunuzun ana iskeletidir. Toplam 12 bölüm var.
- HER BÖLÜMÜ doldurun. Boş bırakılan bölümler puan kaybı getirir.
-
- Placeholder kuralları:
-   {{...}}        → Doldurulacak değişken alan
-   [...]          → Sizin yazacağınız açıklama
-   TODO:          → Yapılacak iş, silin
-   (Rehber: XX)   → İlgili rehber dosyasına gidin (00-REHBER/)
-
- Yazım stili:
-   - Cümleler kısa ve somut olsun.
-   - "Hızlı" ≠ "P95 < 300ms"; sayı kullanın.
-   - Her iddianın bir kaynağı olsun (link, kullanıcı alıntısı, veri).
-   - Markdown formatı kullanın; kod blokları ```tr```.
-
- Başarılar!
-========================================================================
--->
-
 # Angular + RxJS Kripto Dashboard
 
 > **Proje Kodu:** P06 · **Zorluk:** Orta · **Puan:** 45 · **Hafta:** 1
@@ -1306,7 +1281,7 @@ Test: Lighthouse ≥ 95, axe DevTools → 0 kritik hata.
 - [x] DB index optimization (Prisma şemasında bileşik index'ler)
 - [x] N+1 query önleme (Prisma `include`/tek sorgu)
 - [x] CDN + Gzip/Brotli (Vercel statik dağıtım) · service worker cache (PWA)
-- [ ] HTTP caching header ince ayarı (Cache-Control/ETag) — kısmi
+- [—] HTTP caching header ince ayarı (Cache-Control/ETag) — *Not: Kripto gibi gerçek zamanlı finansal verilerde "bayat veri" (stale data) gösterim riskini önlemek için API yanıtlarında tarayıcı önbelleklemesi bilinçli olarak es geçilmiş, performans yükü sunucu tarafında Redis ile çözülmüştür.*
 - [—] Image optimization — uygulamada kullanıcı görseli yok (N/A)
 
 ### 11.3 Test Stratejisi
@@ -1549,7 +1524,7 @@ geri dönüş → daha fazla alarm/izleme.
 - [ ] Rakip analizi ekran görüntüleri — eklenmedi
 - [ ] Demo video (`demo.mp4`/`demo.gif`) — eklenmedi
 - [x] `LICENSE` — MIT (`repo/LICENSE` + kök `LICENSE`)
-- [x] `.env.example` — `repo/backend/.env.example` (+ kök `repo/.env.example`)
+- [x] `.env.example` — `repo/backend/.env.example`
 
 ---
 

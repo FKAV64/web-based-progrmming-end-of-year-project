@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, afterNextRender, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -50,6 +50,10 @@ export class RegisterComponent {
   hidePassword = signal(true);
 
   constructor() {
+    afterNextRender(() => {
+      this.auth.scheduleInit();
+    });
+
     effect(() => {
       if (!this.auth.isInitialized() || !this.auth.isAuthenticated() || this.loading()) {
         return;

@@ -21,7 +21,7 @@ describe('PriceChangeBadgeComponent', () => {
   it('should display positive percentage correctly', () => {
     component.percentage = 5.25;
     fixture.detectChanges();
-    
+
     const spanElement = fixture.nativeElement.querySelector('span');
     expect(spanElement.classList).toContain('text-green-800');
     expect(spanElement.textContent).toContain('5.25%');
@@ -30,7 +30,7 @@ describe('PriceChangeBadgeComponent', () => {
   it('should display negative percentage correctly', () => {
     component.percentage = -3.14;
     fixture.detectChanges();
-    
+
     const spanElement = fixture.nativeElement.querySelector('span');
     expect(spanElement.classList).toContain('text-red-800');
     expect(spanElement.textContent).toContain('3.14%');

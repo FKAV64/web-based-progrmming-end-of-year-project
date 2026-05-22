@@ -3,9 +3,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
-import { AppModule } from '../src/app.module';
 
 async function generate() {
+  // The committed OpenAPI artifact should reflect the production API surface.
+  process.env.NODE_ENV = 'production';
+  // Load the module after setting NODE_ENV so AppModule can skip dev-only imports.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { AppModule } = require('../src/app.module');
   const app = await NestFactory.create(AppModule, { logger: false });
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()

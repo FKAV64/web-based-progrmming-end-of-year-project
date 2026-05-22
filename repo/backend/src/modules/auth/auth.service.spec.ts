@@ -109,7 +109,11 @@ describe('AuthService', () => {
 
       await expect(
         service.register(
-          { email: 'test@example.com', password: 'Test1234', name: 'Test User' },
+          {
+            email: 'test@example.com',
+            password: 'Test1234',
+            name: 'Test User',
+          },
           '',
           '',
         ),

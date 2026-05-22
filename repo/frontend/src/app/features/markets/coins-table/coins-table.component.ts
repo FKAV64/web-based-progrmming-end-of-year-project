@@ -28,6 +28,7 @@ import { SettingsService } from '../../../core/services/state/settings.service';
 import { ExchangeRatesService } from '../../../core/services/state/exchange-rates.service';
 import { PriceChangeBadgeComponent } from '../../../shared/components/price-change-badge/price-change-badge.component';
 import { CurrencyConverterPipe } from '../../../shared/pipes/currency-converter.pipe';
+import { ensureApexchartsWheelPatch } from '../../../shared/utils/ensure-apexcharts-wheel-patch';
 
 interface SparklineOptions {
   series: { data: number[] }[];
@@ -134,6 +135,8 @@ export class CoinsTableComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private paginatorIntl: MatPaginatorIntl) {
+    ensureApexchartsWheelPatch();
+
     this.paginatorIntl.itemsPerPageLabel = 'Sayfa başına kayıt:';
     this.paginatorIntl.nextPageLabel = 'Sonraki sayfa';
     this.paginatorIntl.previousPageLabel = 'Önceki sayfa';

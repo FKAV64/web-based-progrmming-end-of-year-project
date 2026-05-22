@@ -19,9 +19,13 @@ import { AlertsModule } from './modules/alerts/alerts.module';
 import { PushModule } from './modules/push/push.module';
 import { DevModule } from './modules/dev/dev.module';
 
+const configModule = ConfigModule.forRoot({ isGlobal: true });
+const devOnlyImports =
+  process.env.NODE_ENV === 'development' ? [DevModule] : [];
+
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    configModule,
     LoggerModule.forRoot(),
     ThrottlerModule.forRoot([{ name: 'default', ttl: 60_000, limit: 100 }]),
     EventEmitterModule.forRoot(),
@@ -36,7 +40,7 @@ import { DevModule } from './modules/dev/dev.module';
     PortfolioModule,
     AlertsModule,
     PushModule,
-    DevModule,
+    ...devOnlyImports,
   ],
   controllers: [HealthController],
   providers: [

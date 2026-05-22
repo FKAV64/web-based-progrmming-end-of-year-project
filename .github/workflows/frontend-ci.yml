@@ -50,6 +50,10 @@ jobs:
         working-directory: repo/frontend
         run: npm run build
 
+      - name: Build for Lighthouse CI
+        working-directory: repo/frontend
+        run: npm run build -- --ci
+
       - name: Run Lighthouse CI
         working-directory: repo/frontend
         run: |
