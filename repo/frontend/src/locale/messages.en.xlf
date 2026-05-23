@@ -108,7 +108,7 @@
       </trans-unit>
       <trans-unit id="form.full-name" datatype="html">
         <source>Ad Soyad (isteğe bağlı)</source>
-        <target>Full Name (optional)</target>
+        <target>Full Name</target>
       </trans-unit>
       <trans-unit id="form.password-complexity" datatype="html">
         <source>Şifre en az bir harf ve bir rakam içermelidir</source>
