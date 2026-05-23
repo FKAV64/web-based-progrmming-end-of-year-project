@@ -20,6 +20,7 @@ kullanılır:
 6. `06-coin-detail.png` — Mum grafikli coin detayı (1H aralığı)
 7. `07-mobile.png` — 375px responsive görünüm (Chrome DevTools)
 8. `08-dark-mode.png` — Koyu mod dashboard
+9. `09-error.png` — Hata durumu
 
 ## Rakip ekranları
 

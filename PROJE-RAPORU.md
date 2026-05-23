@@ -1021,7 +1021,7 @@ tutulur; **yalnızca `refresh_token` httpOnly cookie** olarak set edilir
 
 Hata kodları: 400 (validation), 401 (auth), 403 (yetki), 404,
 409 (çakışma), 429 (rate limit). Toplam ~35 işlem; tam şema için
-`repo/docs/openapi.yaml`.
+[repo/docs/openapi.yaml](repo/docs/openapi.yaml).
 
 ### 9.5 OpenAPI Spec
 
