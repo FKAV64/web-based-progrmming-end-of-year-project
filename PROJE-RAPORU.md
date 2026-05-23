@@ -101,8 +101,6 @@ hedefi: ~5.000 aktif kullanıcı ve sürdürülebilir freemium dönüşümü.
 
 ## 3. Problem ve Motivasyon
 
-*(Rehber: 04-PRD-VE-URUN-YONETIMI.md)*
-
 ### 3.1 Hangi Probleme Çözüm Getiriyoruz?
 
 Bireysel kripto yatırımcısı varlıklarını çoğu zaman birden fazla borsa,
@@ -147,8 +145,6 @@ alarmı sunarak bu dağınıklığı ve "an'ı kaçırma" kaygısını azaltıyo
 ---
 
 ## 4. Hedef Kitle ve Persona
-
-*(Rehber: 04-PRD-VE-URUN-YONETIMI.md — Persona + JTBD bölümleri)*
 
 ### 4.1 Birincil Segment
 
@@ -211,8 +207,6 @@ portföy/alarm aracı arayan kullanıcılar.
 
 ## 5. Ürün Gereksinimleri (PRD)
 
-*(Rehber: 04-PRD-VE-URUN-YONETIMI.md — PRD + User Story + Acceptance Criteria)*
-
 ### 5.1 Ana Hedef ve North Star Metric
 
 - **Ana hedef:** Kullanıcının kripto varlıklarını ve hedeflerini tek
@@ -247,9 +241,7 @@ portföy/alarm aracı arayan kullanıcılar.
 
 ### 5.3 Fonksiyonel Gereksinimler (User Stories)
 
-> Format: **[ID]** — As a **[persona]**, I want to **[action]**, so that **[benefit]**.  
-> **Acceptance Criteria (Given / When / Then)** her story'nin altında.  
-> Minimum **10 story**.
+Bu bölümde V1 kapsamındaki temel kullanıcı hikâyeleri ve her hikâye için kabul kriterleri yer alır.
 
 #### FR-01 — Kayıt
 
@@ -388,8 +380,6 @@ portföy/alarm aracı arayan kullanıcılar.
 
 ## 6. Piyasa ve Rekabet Analizi
 
-*(Rehber: 04-PRD-VE-URUN-YONETIMI.md — Rekabet Analizi)*
-
 ### 6.1 Pazar Büyüklüğü (TAM / SAM / SOM)
 
 - **TAM:** Global kripto sahibi bireysel kullanıcılar (yüz milyonlar
@@ -431,7 +421,8 @@ portföy/alarm aracı arayan kullanıcılar.
   1. Reklam yoğun, kişisel deneyim ikincil
   2. Sunucu tarafı kişisel alarm/portföy deneyimi sınırlı
   3. Sade "tek ekran" izleme akışı değil
-- **Screenshots:** *(eklenmedi — ders kapsamı dışı)*
+
+![CoinGecko rakip ekran görüntüsü](repo/docs/screenshots/competitors/01-coingecko.png)
 
 #### Rakip 2: CoinMarketCap
 
@@ -444,10 +435,11 @@ portföy/alarm aracı arayan kullanıcılar.
   2. Geniş veri ve sıralamalar
   3. Mobil uygulama
 - **Zayıf yönler:**
-  1. Reklam/again yoğun arayüz
+  1. Reklam yoğun arayüz
   2. Gelişmiş alarm/push deneyimi öne çıkmıyor
   3. Kişiselleştirme sınırlı
-- **Screenshots:** *(eklenmedi — ders kapsamı dışı)*
+
+![CoinMarketCap rakip ekran görüntüsü](repo/docs/screenshots/competitors/02-coinmarketcap.png)
 
 #### Rakip 3: Delta / Blockfolio tarzı portföy uygulamaları
 
@@ -463,7 +455,8 @@ portföy/alarm aracı arayan kullanıcılar.
   1. Mobil odaklı; kurulabilir hafif web (PWA) zayıf
   2. Gelişmiş özellikler premium ardında
   3. Sade/odaklı tek ekran deneyimi değil
-- **Screenshots:** *(eklenmedi — ders kapsamı dışı)*
+
+![Delta rakip ekran görüntüsü](repo/docs/screenshots/competitors/03-delta.png)
 
 ### 6.4 SWOT Analizi
 
@@ -493,8 +486,6 @@ portföy/alarm aracı arayan kullanıcılar.
 ---
 
 ## 7. Teknoloji Yığını (Tech Stack)
-
-*(Rehber: 03-TECH-STACK-KILAVUZU.md)*
 
 ### 7.1 Özet Tablo
 
@@ -619,8 +610,6 @@ Düşünüp **seçmediğiniz** teknolojiler — neden?
 
 ### 7.4 Tech Stack Mimari Kararı (ADR Özeti)
 
-En kritik 2-3 teknoloji kararı için ADR özeti (veya repo'nuzda bir `docs/adr/` klasörüne detay):
-
 - **ADR-001:** Veritabanı olarak PostgreSQL + Prisma — tip güvenliği,
   migration ve ilişkisel bütünlük (cascade silme KVKK için kritik).
 - **ADR-002:** Binance fiyat akışı için sunucu tarafı `ws` proxy gateway —
@@ -632,13 +621,11 @@ En kritik 2-3 teknoloji kararı için ADR özeti (veya repo'nuzda bir `docs/adr/
   yapısal CSRF güvenliği (`csurf` kaldırıldı); refresh uzun ömürlü sırrı
   JS'den izole eder.
 
-> Ayrıntılı ADR'lar: `repo/docs/adr/` (örn. `ADR-007-threat-model.md`).
+> Ayrıntılı ADR'lar: [repo/docs/adr/ADR-007-threat-model.md](repo/docs/adr/ADR-007-threat-model.md)
 
 ---
 
 ## 8. Sistem Mimarisi
-
-*(Rehber: 06-MIMARI-VE-DEVOPS.md — C4 modeli, ADR)*
 
 ### 8.1 Yüksek Seviye Mimari (C4 — Level 1: Context)
 
@@ -789,8 +776,6 @@ En az **3 ADR** yazın. Her biri `ADR-00X-[kısa-ad].md` formatında repo'nuzda 
 ---
 
 ## 9. Veri Modeli ve API Tasarımı
-
-*(Rehber: 06-MIMARI-VE-DEVOPS.md — Veri Modeli + API bölümü)*
 
 ### 9.1 ER Diyagram
 
@@ -1057,8 +1042,6 @@ kontrolü** yapar. Geliştirmede Swagger UI: `http://localhost:3000/api/docs`.
 
 ## 10. UI/UX Tasarımı
 
-*(Rehber: 05-UI-UX-TASARIM-REHBERI.md)*
-
 ### 10.1 Bilgi Mimarisi (Sitemap)
 
 ```
@@ -1154,15 +1137,24 @@ Tailwind `darkMode: 'class'` ile yönetilir.
 
 ### 10.4 Wireframe'ler (Low-Fi)
 
-Ekran başına 1 wireframe (repo'nuzdaki tasarım klasörüne koyup buraya ekleyin):
+Düşük sadakatli wireframe seti, uygulamanın temel akışlarını ve geleceğe dönük
+ekran ihtiyaçlarını aynı dokümanda toplar:
+[repo/docs/design/wireframes.md](repo/docs/design/wireframes.md)
 
-- [ ] Landing
-- [ ] Kayıt / Giriş
-- [ ] Dashboard (boş + dolu)
-- [ ] Ana CRUD ekranı
-- [ ] Detay sayfası
-- [ ] Ayarlar
-- [ ] Hata (404, 500)
+| Gereksinim | Wireframe | Not |
+|------------|-----------|-----|
+| Landing | [Landing](repo/docs/design/wireframes.md#landing) | Kavramsal pre-login vitrin ekranı; mevcut Angular route'u değildir. |
+| Kayıt / Giriş | [Kayıt / Giriş](repo/docs/design/wireframes.md#kayit-giris) | Mevcut `login` ve `register` akışlarının ortak low-fi taslağı. |
+| Dashboard (boş) | [Dashboard boş](repo/docs/design/wireframes.md#dashboard-bos) | Empty state ve onboarding mesajları odakta. |
+| Dashboard (dolu) | [Dashboard dolu](repo/docs/design/wireframes.md#dashboard-dolu) | Seed verili, widget yoğun ana görünüm. |
+| Ana CRUD ekranı | [Portfolio CRUD](repo/docs/design/wireframes.md#ana-crud-ekrani) | Mevcut uygulamada create/update/delete ağırlığı en yüksek akış portföy yönetimidir. |
+| Detay sayfası | [Detay sayfası](repo/docs/design/wireframes.md#detay-sayfasi) | Coin detay + grafik + hızlı aksiyonlar. |
+| Ayarlar | [Ayarlar](repo/docs/design/wireframes.md#ayarlar) | Tema, dil, para birimi ve KVKK işlemleri. |
+| Hata (404, 500) | [Hata ekranları](repo/docs/design/wireframes.md#hata-404-500) | `404` mevcut route fallback'ini, `500` ise gelecekteki tam sayfa hata durumunu temsil eder. |
+
+`Landing` ve `500` ekranları, mevcut ürün sürümünde route olarak bulunmayan ama
+ürün kapsamını ve beklenen kullanıcı deneyimini belgelemek için eklenen
+kavramsal wireframe'lerdir.
 
 ### 10.5 Mockup'lar (Hi-Fi)
 
@@ -1224,8 +1216,6 @@ Test: Lighthouse ≥ 95, axe DevTools → 0 kritik hata.
 ## 11. Güvenlik, Performans, Test
 
 ### 11.1 Güvenlik
-
-*(Rehber: 07-GUVENLIK-CHECKLIST.md)*
 
 **Uygulanan kontroller:**
 
@@ -1325,8 +1315,6 @@ cd repo/frontend && npm run test:e2e
 ---
 
 ## 12. Maliyet, Gelir Modeli, GTM
-
-*(Rehber: 08-MALIYET-VE-GELIR-MODELI-REHBERI.md)*
 
 ### 12.1 Business Model Canvas
 
@@ -1501,8 +1489,8 @@ geri dönüş → daha fazla alarm/izleme.
 | Araç | Kullanım yüzdesi | Ne için |
 |------|------------------|---------|
 | Claude Code | ~%70 | Kod üretme, refactoring, test, dokümantasyon |
-| ChatGPT | ~%15 | Fikir/araştırma, metin taslakları |
-| Cursor / Copilot | ~%15 | Editör içi autocomplete |
+| ChatGPT | ~%20 | Fikir/araştırma, metin taslakları |
+| Cursor / Copilot | ~%10 | Editör içi autocomplete |
 
 > Tüm mimari kararlar ve nihai tercihler öğrenci tarafından verilmiştir.
 
@@ -1519,13 +1507,11 @@ geri dönüş → daha fazla alarm/izleme.
 - [x] Mimari karar kayıtları (ADR) — `repo/docs/adr/`
 - [x] 8 ekran görüntüsü — [repo/docs/screenshots/](repo/docs/screenshots/) (01–08 PNG; §10.5'te gömülü)
 - [x] Mimari diyagramlar — bu raporda (Context/Container/Sequence/ERD/User flow, mermaid) + Türkçe doküman seti: [architecture.md](repo/docs/diagrams/architecture.md) · [erd.md](repo/docs/diagrams/erd.md) · [user-flow.md](repo/docs/diagrams/user-flow.md)
-- [ ] Wireframe + mockup (Figma) — eklenmedi
+- [x] Wireframe + mockup (Figma) — [wireframes.md](repo/docs/design/wireframes.md) + §10.5 ekranları + Figma bağlantısı
 - [x] OpenAPI spec — `repo/docs/openapi.yaml` (+ `openapi.json`), CI drift kontrollü
-- [ ] Rakip analizi ekran görüntüleri — eklenmedi
-- [ ] Demo video (`demo.mp4`/`demo.gif`) — eklenmedi
+- [x] Rakip analizi ekran görüntüleri — [repo/docs/screenshots/competitors/](repo/docs/screenshots/competitors/) (§6.3'te gömülü)
+- [x] Demo video (`demo.mp4`/`demo.gif`)
 - [x] `LICENSE` — MIT (`repo/LICENSE` + kök `LICENSE`)
 - [x] `.env.example` — `repo/backend/.env.example`
 
 ---
-
-<sub>Bu rapor `BMU1208 Web Tabanlı Programlama` dersi kapsamında, `final-projeler/00-REHBER/TEMPLATE-PROJE-RAPORU.md` şablonu kullanılarak hazırlanmıştır.</sub>

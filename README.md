@@ -29,6 +29,7 @@ verisi bulunur.
 
 🔗 **Canlı Demo:** https://web-based-progrmming-end-of-year-pr.vercel.app  
 👤 **Demo Hesap:** `demo@example.com` · `Demo#123`
+![Demo MP4](repo/docs/demo.mp4)
 
 ### Ekran Görüntüleri
 
