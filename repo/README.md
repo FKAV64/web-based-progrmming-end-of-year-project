@@ -150,8 +150,10 @@ Backend yapılandırmasını `backend/.env` dosyasından okur (şablon:
 | `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | Web Push (VAPID) anahtarları |
 | `ARGON2_TIME_COST` / `ARGON2_MEMORY_COST` | Argon2 hash parametreleri |
 | `PORT` | API portu (varsayılan `3000`) |
-| `COINGECKO_API_KEY` | İsteğe bağlı CoinGecko API anahtarı |
 | `DISABLE_THROTTLE` / `DISABLE_BINANCE_PROXY` | Geliştirme sırasında isteğe bağlı yerel geçişler |
+
+CoinGecko entegrasyonu public endpoint'i anonim kullanır; backend artık API
+anahtarı okumaz veya göndermeye çalışmaz.
 
 ## Uygulamaları Çalıştırma
 
