@@ -8,7 +8,6 @@ import { Cron } from '@nestjs/schedule';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { type Cache } from 'cache-manager';
-import { ConfigService } from '@nestjs/config';
 
 /**
  * Scheduled background service that polls the CoinGecko /coins/markets endpoint
@@ -36,7 +35,6 @@ export class CoingeckoFetcherService implements OnApplicationBootstrap {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly eventEmitter: EventEmitter2,
-    private readonly configService: ConfigService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -84,11 +82,7 @@ export class CoingeckoFetcherService implements OnApplicationBootstrap {
 
   private async fetchAndStore() {
     try {
-      const apiKey = this.configService.get<string>('COINGECKO_API_KEY') || '';
-      const fetchUrl = apiKey
-        ? `${this.url}&x_cg_demo_api_key=${apiKey}`
-        : this.url;
-      const response = await this.fetchWithRetry(fetchUrl, {
+      const response = await this.fetchWithRetry(this.url, {
         headers: {
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',

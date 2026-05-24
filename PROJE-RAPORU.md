@@ -361,7 +361,7 @@ Bu bölümde V1 kapsamındaki temel kullanıcı hikâyeleri ve her hikâye için
 
 | Bağımlılık | Risk | Azaltma |
 |------------|------|---------|
-| CoinGecko API | Rate limit / down | Redis snapshot cache + dev fixture fallback |
+| CoinGecko public API | Rate limit / down | Anonim public endpoint + Redis snapshot cache + dev fixture fallback |
 | Binance WebSocket | Coğrafi engel (HTTP 451) / kesinti | Sunucu tarafı proxy + otomatik reconnect; testte `DISABLE_BINANCE_PROXY` |
 | Alternative.me / RSS | Erişilemezse | Boş/önceki değeri koru, UI hata durumu |
 | Web Push (VAPID) | Tarayıcı izni reddi | Bildirim opsiyonel; uygulama içi alarm durumu yine güncellenir |
@@ -1325,7 +1325,7 @@ cd repo/frontend && npm run test:e2e
 | **Channels** | SEO/içerik, kripto toplulukları (Reddit/Discord/X), ürün avı (Product Hunt), öğrenci ağı |
 | **Customer Relationships** | Self-service; topluluk + GitHub issue geri bildirimi |
 | **Revenue Streams** | Freemium (ücretsiz çekirdek + ileride Pro abonelik) |
-| **Key Resources** | Geliştirici zamanı, 3. parti API kotaları (CoinGecko/Binance), hosting |
+| **Key Resources** | Geliştirici zamanı, 3. parti API rate limitleri (özellikle CoinGecko/Binance), hosting |
 | **Key Activities** | Platform geliştirme, güvenilirlik/uptime, veri entegrasyonu |
 | **Key Partners** | Vercel, Railway, CoinGecko, Binance, Alternative.me |
 | **Cost Structure** | Hosting + DB/Redis + domain; (V1'de marketing ~0, organik) |

@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CoingeckoFetcherService } from './coingecko-fetcher.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ConfigService } from '@nestjs/config';
 
 // Mock global fetch (service now uses Node.js built-in fetch, not undici)
 const mockFetch = jest.fn();
@@ -24,10 +23,6 @@ describe('CoingeckoFetcherService', () => {
         CoingeckoFetcherService,
         { provide: CACHE_MANAGER, useValue: { set: cacheSetMock } },
         { provide: EventEmitter2, useValue: { emit: emitMock } },
-        {
-          provide: ConfigService,
-          useValue: { get: jest.fn().mockReturnValue('dummy_key') },
-        },
       ],
     }).compile();
 
@@ -52,6 +47,9 @@ describe('CoingeckoFetcherService', () => {
     await service['fetchAndStore']();
 
     expect(mockFetch).toHaveBeenCalled();
+    const [url] = mockFetch.mock.calls[0];
+    expect(url).toContain('https://api.coingecko.com/api/v3/coins/markets');
+    expect(url).not.toContain('x_cg_demo_api_key');
     expect(cacheSetMock).toHaveBeenCalledWith('market:top', mockData, 60_000);
     expect(emitMock).toHaveBeenCalledWith('snapshot.updated', mockData);
   });

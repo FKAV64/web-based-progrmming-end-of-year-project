@@ -1,7 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { type Cache } from 'cache-manager';
-import { ConfigService } from '@nestjs/config';
 
 /**
  * CoinGecko REST API client with built-in caching and retry logic.
@@ -13,8 +12,8 @@ import { ConfigService } from '@nestjs/config';
  * - Exchange rates: 1 hour (BTC-relative rates are very stable)
  *
  * All requests include browser-like headers to reduce the chance of CoinGecko
- * treating the traffic as bot requests. An optional API key (COINGECKO_API_KEY)
- * is appended when configured to increase the rate limit.
+ * treating the traffic as bot requests while still using the public endpoint
+ * anonymously.
  *
  * @module CoingeckoService
  */
@@ -23,10 +22,7 @@ export class CoingeckoService {
   private readonly logger = new Logger('CoingeckoService');
   private readonly baseUrl = 'https://api.coingecko.com/api/v3';
 
-  constructor(
-    @Inject(CACHE_MANAGER) private readonly cache: Cache,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
 
   private async fetchWithRetry(
     url: string,
@@ -79,9 +75,7 @@ export class CoingeckoService {
     return this.cache.wrap(
       cacheKey,
       async () => {
-        const apiKey =
-          this.configService.get<string>('COINGECKO_API_KEY') || '';
-        const url = `${this.baseUrl}/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
+        const url = `${this.baseUrl}/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`;
         const response = await this.fetchWithRetry(url, {
           headers: this.getHeaders(),
           signal: AbortSignal.timeout(10000),
@@ -107,9 +101,7 @@ export class CoingeckoService {
     return this.cache.wrap(
       cacheKey,
       async () => {
-        const apiKey =
-          this.configService.get<string>('COINGECKO_API_KEY') || '';
-        const url = `${this.baseUrl}/coins/${id}/market_chart?vs_currency=usd&days=${days}${apiKey ? `&x_cg_demo_api_key=${apiKey}` : ''}`;
+        const url = `${this.baseUrl}/coins/${id}/market_chart?vs_currency=usd&days=${days}`;
         const response = await this.fetchWithRetry(url, {
           headers: this.getHeaders(),
           signal: AbortSignal.timeout(10000),
@@ -133,9 +125,7 @@ export class CoingeckoService {
     return this.cache.wrap(
       cacheKey,
       async () => {
-        const apiKey =
-          this.configService.get<string>('COINGECKO_API_KEY') || '';
-        const url = `${this.baseUrl}/exchange_rates${apiKey ? `?x_cg_demo_api_key=${apiKey}` : ''}`;
+        const url = `${this.baseUrl}/exchange_rates`;
         const response = await this.fetchWithRetry(url, {
           headers: this.getHeaders(),
           signal: AbortSignal.timeout(10000),
