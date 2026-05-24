@@ -9,7 +9,7 @@ describe('CoingeckoService', () => {
   let cacheWrapMock: jest.Mock;
 
   beforeEach(async () => {
-    cacheWrapMock = jest.fn(async (_key, factory) => factory());
+    cacheWrapMock = jest.fn((_key, factory) => factory());
     global.fetch = mockFetch as typeof global.fetch;
 
     const module: TestingModule = await Test.createTestingModule({
