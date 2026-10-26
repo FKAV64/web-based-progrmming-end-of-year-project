@@ -1,241 +1,249 @@
-# Angular + RxJS Kripto Dashboard
+# Angular + RxJS Crypto Dashboard
 
-> **RxJS'in gücü ile gerçek zamanlı kripto varlık izleme paneli**
+> **Real-time crypto-asset monitoring dashboard powered by RxJS**
 
-![Zorluk](https://img.shields.io/badge/Zorluk-Orta-yellow)
-![Puan](https://img.shields.io/badge/Puan-45-blue)
-![Hafta](https://img.shields.io/badge/Hafta-1-gray)
+![Difficulty](https://img.shields.io/badge/Difficulty-Medium-yellow)
+![Score](https://img.shields.io/badge/Score-45-blue)
+![Week](https://img.shields.io/badge/Week-1-gray)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 ![Backend CI](https://github.com/FKAV64/web-based-progrmming-end-of-year-project/actions/workflows/backend-ci.yml/badge.svg)
 ![Frontend CI](https://github.com/FKAV64/web-based-progrmming-end-of-year-project/actions/workflows/frontend-ci.yml/badge.svg)
 [![Demo](https://img.shields.io/website?label=demo&url=https%3A%2F%2Fweb-based-progrmming-end-of-year-pr.vercel.app)](https://web-based-progrmming-end-of-year-pr.vercel.app)
 
-## 🎯 Özet
+## 🎯 Summary
 
-Angular + RxJS Kripto Dashboard, kripto para yatırımcılarının portföylerini ve
-takip listelerini tek bir ekrandan yönetebilmesi için geliştirilmiş tam yığın
-(full-stack) bir web uygulamasıdır. WebSocket üzerinden gerçek zamanlı fiyatlar,
-interaktif grafikler, kişisel watchlist, kâr/zarar takibi yapan portföy,
-fiyat alarmları (web-push bildirimli), haber/duygu akışı ve çoklu para birimi
-desteği sunar.
+Angular + RxJS Crypto Dashboard is a full-stack web application developed to
+let cryptocurrency investors manage their portfolios and watchlists from a
+single screen. It provides real-time prices over WebSocket, interactive
+charts, a personal watchlist, a profit/loss-tracking portfolio, price alerts
+(with web-push notifications), a news/sentiment feed, and multi-currency
+support.
 
-Borsa uygulamalarının dağınık ve reklam yoğun arayüzleri yerine; sade, hızlı,
-TR/EN dil destekli, koyu mod ve PWA (ana ekrana ekle + push) özellikli, kişiye
-özel bir izleme paneli sağlar. Backend tarafında güvenli kimlik doğrulama
-(Argon2 + JWT rotasyonu), alarm değerlendirme motoru ve önbellekli piyasa
-verisi bulunur.
+Instead of the cluttered, advertising-heavy interfaces of exchange
+applications, it provides a simple, fast, personalized monitoring dashboard
+with TR/EN language support, dark mode, and PWA capabilities (add to home
+screen + push). The backend includes secure authentication (Argon2 + JWT
+rotation), an alert-evaluation engine, and cached market data.
 
 ## 🎥 Demo
 
-🔗 **Canlı Demo:** https://web-based-progrmming-end-of-year-pr.vercel.app  
-👤 **Demo Hesap:** `demo@example.com` · `Demo#123`
+🔗 **Live demo:** https://web-based-progrmming-end-of-year-pr.vercel.app<br>
+👤 **Demo account:** `demo@example.com` · `Demo#123`
 ![Demo MP4](repo/docs/demo.mp4)
 
-### Ekran Görüntüleri
+### Screenshots
 
-Görseller: [`repo/docs/screenshots/`](repo/docs/screenshots/)
+Images: [`repo/docs/screenshots/`](repo/docs/screenshots/)
 
-| Giriş | Kayıt | Dashboard (boş) |
-|-------|-------|-----------------|
+| Sign in | Register | Dashboard (empty) |
+|-------|-------|-------------------|
 | ![login](repo/docs/screenshots/01-login.png) | ![register](repo/docs/screenshots/02-register.png) | ![dashboard empty](repo/docs/screenshots/03-dashboard-empty.png) |
 
-| Dashboard (dolu) | Piyasalar | Coin Detay |
-|------------------|-----------|------------|
+| Dashboard (populated) | Markets | Coin detail |
+|-----------------------|---------|-------------|
 | ![dashboard populated](repo/docs/screenshots/04-dashboard-populated.png) | ![markets](repo/docs/screenshots/05-markets.png) | ![coin detail](repo/docs/screenshots/06-coin-detail.png) |
 
-| Mobil (responsive) | Koyu Mod |
-|--------------------|----------|
+| Mobile (responsive) | Dark mode |
+|---------------------|-----------|
 | ![mobile](repo/docs/screenshots/07-mobile.png) | ![dark mode](repo/docs/screenshots/08-dark-mode.png) |
 
-## ✨ Ana Özellikler
+## ✨ Key Features
 
-- ✅ Top 100 kripto gerçek zamanlı fiyat (WebSocket)
-- ✅ Çoklu grafik (mum, çizgi, area) — 1H / 1D / 1W / 1M / YTD
-- ✅ Kişisel watchlist + portföy takibi (adet × fiyat)
-- ✅ Fiyat uyarısı (üzerine/altına)
-- ✅ Haber/sosyal duygu analizi akışı
-- ✅ Karanlık mod + responsive dashboard
-- ✅ PWA: ana ekrana ekle + push notification (uyarı)
-- ✅ Çoklu para birimi (TRY, USD, EUR)
+- ✅ Real-time prices for the top 100 cryptocurrencies (WebSocket)
+- ✅ Multiple chart types (candlestick, line, area) — 1H / 1D / 1W / 1M / YTD
+- ✅ Personal watchlist + portfolio tracking (quantity × price)
+- ✅ Price alerts (above/below)
+- ✅ News/social-sentiment analysis feed
+- ✅ Dark mode + responsive dashboard
+- ✅ PWA: add to home screen + push notifications (alerts)
+- ✅ Multi-currency support (TRY, USD, EUR)
 
-## 🧰 Teknoloji Yığını
+## 🧰 Technology Stack
 
-**Frontend:** `Angular 17 (standalone components, signals)`, `Angular Material`, `Tailwind CSS 3`  
-**Reaktiflik:** `RxJS 7 (Observable, Subject, operators)`  
-**Grafik:** `ApexCharts (ng-apexcharts)`  
-**Backend:** `NestJS 11`, `Prisma 5`, `PostgreSQL 16`, `Redis 7`  
-**Veri Kaynağı:** `CoinGecko API`, `Binance WebSocket`, `Alternative.me Fear & Greed`, `RSS haber akışı`  
-**State:** `Servis tabanlı (Angular signals + RxJS)`  
-**Auth:** `Argon2id + JWT — Bearer access (15dk, gövde) + httpOnly refresh cookie (7g, rotasyon, logout-all)`  
-**Test:** `Jest + Supertest (backend), Jest + Angular Testing Library (frontend), Playwright (e2e)`  
-**Hosting:** `Vercel (frontend) · Railway (backend)`  
+**Frontend:** `Angular 17 (standalone components, signals)`, `Angular Material`, `Tailwind CSS 3`<br>
+**Reactivity:** `RxJS 7 (Observable, Subject, operators)`<br>
+**Charts:** `ApexCharts (ng-apexcharts)`<br>
+**Backend:** `NestJS 11`, `Prisma 5`, `PostgreSQL 16`, `Redis 7`<br>
+**Data Sources:** `CoinGecko API`, `Binance WebSocket`, `Alternative.me Fear & Greed`, `RSS news feed`<br>
+**State:** `Service-based (Angular signals + RxJS)`<br>
+**Auth:** `Argon2id + JWT — Bearer access (15 min, response body) + httpOnly refresh cookie (7 days, rotation, logout-all)`<br>
+**Tests:** `Jest + Supertest (backend), Jest + Angular Testing Library (frontend), Playwright (e2e)`<br>
+**Hosting:** `Vercel (frontend) · Railway (backend)`
 
-> Teknoloji seçimlerinin detaylı gerekçesi: [PROJE-RAPORU.md · Bölüm 7](PROJE-RAPORU.md#7-teknoloji-yığını-tech-stack)
+> Detailed rationale for the technology choices: [PROJE-RAPORU.md · Section 7](PROJE-RAPORU.md#7-teknoloji-yığını-tech-stack)
 
-## 🏗 Mimari
+## 🏗 Architecture
 
 ```
-[Tarayıcı PWA]  ── HTTPS ──>  [NestJS API (Railway)]  ──>  [PostgreSQL 16]
+[Browser PWA]   ── HTTPS ──>  [NestJS API (Railway)]  ──>  [PostgreSQL 16]
        │                              │                └──>  [Redis 7]
        │                              └── WSS proxy ──>  [Binance WebSocket]
-       └── Vercel üzerinde dağıtılır
+       └── Deployed on Vercel
 ```
 
-Frontend (Angular SPA) Vercel'de, backend (NestJS API) Railway'de çalışır.
-Piyasa anlık görüntüleri Redis'te önbelleklenir; kalıcı veri PostgreSQL'de
-Prisma ORM ile tutulur. Türkçe diyagram dokümanları:
-[mimari](repo/docs/diagrams/architecture.md) ·
+The frontend (Angular SPA) runs on Vercel and the backend (NestJS API) on
+Railway. Market snapshots are cached in Redis; persistent data is kept in
+PostgreSQL through Prisma ORM. Turkish diagram documentation:
+[architecture](repo/docs/diagrams/architecture.md) ·
 [ERD](repo/docs/diagrams/erd.md) ·
-[kullanıcı akışları](repo/docs/diagrams/user-flow.md).
+[user flows](repo/docs/diagrams/user-flow.md).
 
-[Detaylı mimari ve ADR'lar →](PROJE-RAPORU.md#8-sistem-mimarisi)
+[Detailed architecture and ADRs →](PROJE-RAPORU.md#8-sistem-mimarisi)
 
-## 📦 Alt Projeler
+## 📦 Subprojects
 
-| Klasör | Açıklama | README |
-|--------|----------|--------|
-| `repo/frontend/` | Angular 17 SPA — arayüz, RxJS akışları, grafikler | [repo/frontend/README.md](repo/frontend/README.md) |
+| Folder | Description | README |
+|--------|-------------|--------|
+| `repo/frontend/` | Angular 17 SPA — UI, RxJS flows, charts | [repo/frontend/README.md](repo/frontend/README.md) |
 | `repo/backend/` | NestJS 11 API — Prisma, PostgreSQL, Redis | [repo/backend/README.md](repo/backend/README.md) |
-| `repo/tests/` | Tüm e2e testleri — `backend/` (Jest+Supertest), `frontend/` (Playwright) | [repo/README.md](repo/README.md#testler) |
+| `repo/tests/` | All e2e tests — `backend/` (Jest+Supertest), `frontend/` (Playwright) | [repo/README.md](repo/README.md#tests) |
 
-Yerel geliştirme için önce `repo/` içinde Docker servislerini başlatın:
+For local development, first start the Docker services inside `repo/`:
 
 ```bash
 cd repo
-docker compose up -d   # PostgreSQL 16 + Redis 7 + tek seferlik Prisma migrator
+docker compose up -d   # PostgreSQL 16 + Redis 7 + one-time Prisma migrator
 ```
 
-## 🚀 Kurulum
+## 🚀 Setup
 
-### Gereksinimler
+### Requirements
 
 - Node.js ≥ 20
 - Docker + Docker Compose (local DB/Redis)
 
-### Adım Adım
+### Step by step
 
 ```bash
-# 1) Repo'yu klonla
+# 1) Clone the repository
 git clone https://github.com/FKAV64/web-based-progrmming-end-of-year-project.git
 cd web-based-progrmming-end-of-year-project/repo
 
-# 2) Docker servislerini başlat (PostgreSQL 16 + Redis 7)
-#    PostgreSQL sağlıklı olduğunda tek seferlik migrator Prisma
-#    şemasını otomatik uygular.
+# 2) Start Docker services (PostgreSQL 16 + Redis 7)
+#    The one-time Prisma migrator automatically applies the schema
+#    once PostgreSQL is healthy.
 docker compose up -d
 
 # 3) Backend
 cd backend
-cp .env.example .env          # repo/backend/.env.example'dan kopyalayın ve secret'ları doldurun
+cp .env.example .env          # copy from repo/backend/.env.example and fill in the secrets
 npm install
 npm run start:dev             # API: http://localhost:3000/api
 
-# 4) Frontend (yeni terminal)
+# 4) Frontend (new terminal)
 cd ../frontend
 npm install
-npm start                     # Uygulama: http://localhost:4200
+npm start                     # Application: http://localhost:4200
 ```
 
-Proje: http://localhost:4200 · API: http://localhost:3000/api
+Project: http://localhost:4200 · API: http://localhost:3000/api
 
-## 🧪 Test
+## 🧪 Tests
 
-Tüm e2e testleri `repo/tests/` altına taşınmıştır (unit `*.spec.ts`
-dosyaları Angular/Nest geleneği gereği kaynak yanında kalır).
+All e2e tests have been moved to `repo/tests/` (unit `*.spec.ts` files stay
+beside the source according to Angular/Nest conventions).
 
 ```bash
-# Backend unit + e2e (PostgreSQL + Redis ayakta olmalı)
+# Backend unit + e2e (PostgreSQL + Redis must be running)
 cd repo/backend && npm test && npm run test:e2e
 
 # Frontend unit
 cd repo/frontend && npm run test:ci
 
-# Frontend e2e (backend + frontend çalışır durumda olmalı)
+# Frontend e2e (backend + frontend must be running)
 cd repo/frontend && npm run test:e2e
 ```
 
 ## 🔄 CI/CD
 
-GitHub Actions iş akışları her push ve pull request'te otomatik çalışır.
+GitHub Actions workflows run automatically on every push and pull request.
 
-İş akışı dosyaları git deposunun **kök** dizinindeki `.github/workflows/`
-içinde durur (GitHub Actions yalnızca burayı okur — bu yüzden `repo/`
-içine taşınmaz).
+Workflow files reside in `.github/workflows/` at the **root** of the Git
+repository (GitHub Actions reads only this location—therefore they are not
+moved into `repo/`).
 
-| İş Akışı | Tetikleyen | Adımlar |
-|----------|------------|---------|
-| **Backend CI** | `repo/backend/**`, `repo/tests/backend/**` | Prisma migrate → lint → birim testleri + kapsam → e2e testleri → derleme → OpenAPI üretimi + drift kontrolü |
-| **Frontend CI** | `repo/frontend/**`, `repo/tests/frontend/**` | lint → birim testleri + kapsam → derleme → Lighthouse CI |
+| Workflow | Trigger | Steps |
+|----------|---------|-------|
+| **Backend CI** | `repo/backend/**`, `repo/tests/backend/**` | Prisma migrate → lint → unit tests + coverage → e2e tests → build → OpenAPI generation + drift check |
+| **Frontend CI** | `repo/frontend/**`, `repo/tests/frontend/**` | lint → unit tests + coverage → build → Lighthouse CI |
 
-### OpenAPI Şeması
+### OpenAPI Schema
 
-Üretilen API şeması `repo/docs/openapi.yaml` (ve `repo/docs/openapi.json`) konumundadır.  
-**Herhangi bir controller veya DTO değiştirdikten sonra `repo/backend/` içinde `npm run openapi:generate` çalıştırın** ve güncellenen dosyaları commit'leyin. Commit'lenen şema uygulamanın ürettiğinden saparsa CI, `git diff --exit-code` ile başarısız olur.
+The generated API schema is at `repo/docs/openapi.yaml` (and
+`repo/docs/openapi.json`).<br>
+**After changing any controller or DTO, run `npm run openapi:generate` inside
+`repo/backend/`** and commit the updated files. If the committed schema differs
+from the application's generated version, CI fails with `git diff --exit-code`.
 
-Geliştirme modunda etkileşimli Swagger UI: `http://localhost:3000/api/docs`.
+Interactive Swagger UI in development mode: `http://localhost:3000/api/docs`.
 
-### Dal Koruması
+### Branch protection
 
-`main` dalı GitHub ayarlarında korunur (**Settings → Branches → Branch protection rules**):
+The `main` branch is protected in GitHub settings (**Settings → Branches →
+Branch protection rules**):
 
-- Birleştirmeden önce status check'lerin geçmesi zorunludur
-- Zorunlu check'ler: **Backend CI / test** ve **Frontend CI / test**
-- İş akışlarından biri kırmızıyken PR birleştirilemez
+- Status checks must pass before merging.
+- Required checks: **Backend CI / test** and **Frontend CI / test**.
+- A PR cannot be merged while either workflow is failing.
 
-### Lighthouse Bütçeleri
+### Lighthouse budgets
 
-Frontend CI, production derlemesinde Lighthouse skor bütçelerini zorunlu kılar:
+Frontend CI enforces Lighthouse score budgets for the production build:
 
-| Kategori | Minimum Skor |
-|----------|--------------|
-| Performans | 80 (CI ortamı) |
-| Erişilebilirlik | 95 |
+| Category | Minimum score |
+|----------|---------------|
+| Performance | 80 (CI environment) |
+| Accessibility | 95 |
 | Largest Contentful Paint | < 4.0s (Warning) |
 
-## 📁 Klasör Yapısı
+## 📁 Folder Structure
 
 ```
 .
-├── README.md                   (bu dosya — özet, kurulum, demo)
-├── PROJE-RAPORU.md             (uzun form final raporu — markdown)
+├── README.md                   (this file — summary, setup, demo)
+├── PROJE-RAPORU.md             (long-form final report — Markdown)
 ├── LICENSE
-├── .github/workflows/          (CI — git kökünde olmalı: backend-ci, frontend-ci)
-└── repo/                       (çalışan kaynak kod)
-    ├── README.md               (teknik proje README'si)
+├── .github/workflows/          (CI — must be at the Git root: backend-ci, frontend-ci)
+└── repo/                       (working source code)
+    ├── README.md               (technical project README)
     ├── docker-compose.yml      (PostgreSQL 16 + Redis 7 + Prisma migrator)
     ├── LICENSE
     ├── backend/                (NestJS 11 API — Prisma, PostgreSQL, Redis)
     ├── frontend/               (Angular 17 SPA — RxJS, signals, ApexCharts)
     ├── tests/                  (e2e: backend/ Jest+Supertest · frontend/ Playwright)
-    └── docs/                   (ADR, diyagram, screenshot, openapi.yaml)
+    └── docs/                   (ADR, diagrams, screenshots, openapi.yaml)
 ```
 
-## 🛣 Yol Haritası
+## 🛣 Roadmap
 
-- [x] V1 — MVP (bu teslim)
-- [ ] V2 — Gerçek exchange entegrasyonu (order verme, Binance API), tahmin modeli
-- [ ] V3 — AI destekli otomatik alım/satım stratejisi (DCA bot)
+- [x] V1 — MVP (this submission)
+- [ ] V2 — Real exchange integration (placing orders, Binance API), prediction model
+- [ ] V3 — AI-assisted automated trading strategy (DCA bot)
 
-## 🤝 Katkı
+## 🤝 Contributing
 
-Bu proje **BMU1208 Web Tabanlı Programlama** dersi kapsamında **Bitlis Eren Üniversitesi** — **Bilgisayar Mühendisliği** bölümünde bir final ödevi olarak geliştirilmiştir.
+This project was developed as a final assignment for the **BMU1208 Web-Based
+Programming** course in the **Computer Engineering** department at **Bitlis
+Eren University**.
 
-Ders yürütücüsü: **Dr. Öğr. Üyesi Davut ARI**
+Course instructor: **Dr. Davut ARI**
 
-Kod katkısı beklenmez, ancak fikir / feedback için issue açabilirsiniz.
+Code contributions are not expected, but you may open an issue for ideas or
+feedback.
 
-## 📜 Lisans
+## 📜 License
 
-MIT © 2026 **ABDOU VALERIO FOMA KENFACK** — Tam metin için [LICENSE](LICENSE).
+MIT © 2026 **ABDOU VALERIO FOMA KENFACK** — See [LICENSE](LICENSE) for the
+full text.
 
-## 🙋‍♂️ İletişim
+## 🙋‍♂️ Contact
 
-- **Öğrenci:** ABDOU VALERIO FOMA KENFACK
-- **Öğrenci No:** 24080410152
-- **E-posta:** fomavalerio@gmail.com
-- **Ders:** BMU1208 · Web Tabanlı Programlama
-- **Kurum:** Bitlis Eren Üniversitesi — Mühendislik-Mimarlık Fakültesi
+- **Student:** ABDOU VALERIO FOMA KENFACK
+- **Student No.:** 24080410152
+- **Email:** fomavalerio@gmail.com
+- **Course:** BMU1208 · Web-Based Programming
+- **Institution:** Bitlis Eren University — Faculty of Engineering and Architecture
 
 ---
 
-<sub>🤖 Bu projede Claude Code, ChatGPT ve editör içi AI yardımcıları kullanılmıştır. Tüm mimari kararlar ve kullanım tercihleri öğrenci tarafından yapılmıştır.</sub>
+<sub>🤖 Claude Code, ChatGPT, and in-editor AI assistants were used in this project. All architectural decisions and usage choices were made by the student.</sub>

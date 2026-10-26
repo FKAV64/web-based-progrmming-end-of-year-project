@@ -1,42 +1,43 @@
-# Ekran Görüntüleri
+# Screenshots
 
-Bu klasör iki ayrı görsel setini barındırır:
+This folder contains two separate image sets:
 
-1. Ürünün canlı dağıtımdan alınan uygulama ekran görüntüleri
-2. `PROJE-RAPORU.md` §6.3 için kullanılan rakip ekran görüntüleri
+1. Application screenshots taken from the live deployment
+2. Competitor screenshots used for `PROJE-RAPORU.md` §6.3
 
-Canlı URL: https://web-based-progrmming-end-of-year-pr.vercel.app
+Live URL: https://web-based-progrmming-end-of-year-pr.vercel.app
 
-## Uygulama ekranları
+## Application screens
 
-Bu dosyalar kök `README.md` ile `PROJE-RAPORU.md` §10.5 içinde gömülü olarak
-kullanılır:
+These files are embedded in the root `README.md` and in `PROJE-RAPORU.md`
+§10.5:
 
-1. `01-login.png` — Giriş sayfası (açık mod)
-2. `02-register.png` — Kayıt sayfası
-3. `03-dashboard-empty.png` — Veri eklenmeden önce dashboard
-4. `04-dashboard-populated.png` — Portföy + watchlist seed'li dashboard
-5. `05-markets.png` — Coin tablosuyla Piyasalar sayfası
-6. `06-coin-detail.png` — Mum grafikli coin detayı (1H aralığı)
-7. `07-mobile.png` — 375px responsive görünüm (Chrome DevTools)
-8. `08-dark-mode.png` — Koyu mod dashboard
-9. `09-error.png` — Hata durumu
+1. `01-login.png` — Sign-in page (light mode)
+2. `02-register.png` — Registration page
+3. `03-dashboard-empty.png` — Dashboard before data is added
+4. `04-dashboard-populated.png` — Dashboard seeded with a portfolio + watchlist
+5. `05-markets.png` — Markets page with a coin table
+6. `06-coin-detail.png` — Coin detail with a candlestick chart (1H range)
+7. `07-mobile.png` — 375px responsive view (Chrome DevTools)
+8. `08-dark-mode.png` — Dashboard in dark mode
+9. `09-error.png` — Error state
 
-## Rakip ekranları
+## Competitor screens
 
-Rakip analizi görselleri [`competitors/`](competitors/) klasöründe tutulur ve
-`PROJE-RAPORU.md` §6.3 içinde gömülü kullanılır:
+Competitor-analysis images are kept in the [`competitors/`](competitors/)
+folder and embedded in `PROJE-RAPORU.md` §6.3:
 
-1. `competitors/01-coingecko.png` — CoinGecko ana görünümü
-2. `competitors/02-coinmarketcap.png` — CoinMarketCap ana görünümü
-3. `competitors/03-delta.png` — Delta portföy uygulaması görünümü
+1. `competitors/01-coingecko.png` — CoinGecko main view
+2. `competitors/02-coinmarketcap.png` — CoinMarketCap main view
+3. `competitors/03-delta.png` — Delta portfolio application view
 
-## Yakalama ve adlandırma notları
+## Capture and naming notes
 
-- Uygulama ekranları için mevcut `01-08` dosya adlarını koruyun; kök
-  `README.md` ve `PROJE-RAPORU.md` §10.5 bu adlara bağlıdır.
-- Rakip ekranlarında `competitors/NN-slug.png` adlandırması kullanılır.
-- Biçim tercihi PNG'dir.
-- Uygulama ekranlarında masaüstü için 1920×1080, mobil için 375×812 hedeflenir.
-- Rakip ekranları dış servislerden alındığı için çözünürlük birebir standart
-  olmayabilir; önemli olan arayüz kıyaslamasını okunur biçimde korumaktır.
+- Preserve the existing `01-08` filenames for application screens; the root
+  `README.md` and `PROJE-RAPORU.md` §10.5 depend on these names.
+- Competitor screens use the `competitors/NN-slug.png` naming convention.
+- PNG is the preferred format.
+- Target 1920×1080 for desktop application screens and 375×812 for mobile.
+- Since competitor screens come from external services, their resolution may
+  not be standardized exactly; what matters is preserving a legible interface
+  comparison.
