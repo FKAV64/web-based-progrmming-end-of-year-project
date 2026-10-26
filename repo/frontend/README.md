@@ -1,55 +1,54 @@
-# Frontend — Kripto Dashboard SPA
+# Frontend — Crypto Dashboard SPA
 
-Angular 17 ile geliştirilmiş tek sayfa uygulama (SPA): standalone
-bileşenler + signals + RxJS, Angular Material + Tailwind CSS, grafikler
-için ApexCharts, PWA (service worker + Web Push) ve TR/EN i18n.
+Single-page application (SPA) built with Angular 17: standalone
+components + signals + RxJS, Angular Material + Tailwind CSS, ApexCharts
+for charts, PWA (service worker + Web Push), and TR/EN i18n.
 
-Backend API'si `repo/backend/` altındadır; bu uygulama
-`http://localhost:3000/api` adresindeki REST API'ye ve `/ws/alerts`
-WebSocket'ine bağlanır.
+The backend API is under `repo/backend/`; this application connects to the
+REST API at `http://localhost:3000/api` and the `/ws/alerts` WebSocket.
 
-## Özellikler / sayfalar
+## Features / pages
 
-- `/login`, `/register` — kimlik doğrulama (Bearer access token istemci
-  belleğinde, `refresh_token` httpOnly çerez).
-- `/dashboard` — özet + Fear & Greed duyarlılığı.
-- `/markets` — top‑100 canlı fiyat tablosu (WebSocket).
-- `/coin/:id` — coin detayı + ApexCharts grafik (Binance OHLC).
+- `/login`, `/register` — authentication (Bearer access token in client
+  memory, `refresh_token` httpOnly cookie).
+- `/dashboard` — overview + Fear & Greed sentiment.
+- `/markets` — live top‑100 price table (WebSocket).
+- `/coin/:id` — coin detail + ApexCharts chart (Binance OHLC).
 - `/watchlist`, `/portfolio`, `/alerts`, `/news`, `/settings`.
 
-Reaktif durum yönetimi servis tabanlıdır (Angular signals + RxJS); her
-özellik route bazında lazy-load edilir.
+Reactive state management is service-based (Angular signals + RxJS); every
+feature is lazy-loaded by route.
 
-## Geliştirme sunucusu
+## Development server
 
 ```bash
 npm install
-npm start          # ng serve → http://localhost:4200 (canlı yeniden yükleme)
+npm start          # ng serve → http://localhost:4200 (live reload)
 ```
 
-## Derleme
+## Build
 
 ```bash
-npm run build      # scripts/build-i18n.mjs — TR + EN production derlemesi
-                   # çıktı: dist/crypto-dashboard-frontend/browser/ (+ /en)
-npm run watch      # development yapılandırmasıyla izleme modunda derleme
+npm run build      # scripts/build-i18n.mjs — TR + EN production build
+                   # output: dist/crypto-dashboard-frontend/browser/ (+ /en)
+npm run watch      # build in watch mode with the development configuration
 ```
 
-## Birim testleri
+## Unit tests
 
 ```bash
 npm test           # ng test (Jest — @angular-builders/jest)
-npm run test:ci    # jest --coverage --runInBand (CI'da kullanılır)
+npm run test:ci    # jest --coverage --runInBand (used in CI)
 ```
 
-Birim testleri (`*.spec.ts`) Angular geleneği gereği `src/` içinde
-kaynağının yanında durur.
+Unit tests (`*.spec.ts`) reside next to their source in `src/`, following
+the Angular convention.
 
-## Uçtan-uca (e2e) testler
+## End-to-end (e2e) tests
 
-Playwright e2e süiti depo kökündeki `repo/tests/frontend/` altına
-taşınmıştır (`playwright.config.ts` `testDir`'i oraya işaret eder).
-Çalışması için hem backend hem frontend ayakta olmalıdır.
+The Playwright e2e suite has been moved to `repo/tests/frontend/` at the
+repository root (`playwright.config.ts` points its `testDir` there). Both
+the backend and frontend must be running for it to work.
 
 ```bash
 npm run test:e2e      # playwright test
@@ -64,11 +63,12 @@ npm run lint       # tsc --noEmit --project tsconfig.app.json
 
 ## i18n
 
-Kaynak dil Türkçe'dir; çeviriler `src/locale/messages.xlf` (kaynak) ve
-`src/locale/messages.en.xlf` (İngilizce). `npm run build` her iki dili
-de üretir (İngilizce çıktı `/en/` alt yolunda).
+The source language is Turkish; translations are in `src/locale/messages.xlf`
+(source) and `src/locale/messages.en.xlf` (English). `npm run build`
+generates both languages (the English output is under the `/en/` subpath).
 
 ## PWA
 
-`@angular/service-worker` ile kurulabilir; `ngsw-config.json` cache
-yapılandırmasını, Web Push ise fiyat alarmı bildirimlerini sağlar.
+It can be installed with `@angular/service-worker`; `ngsw-config.json`
+provides the cache configuration, while Web Push provides price-alert
+notifications.
